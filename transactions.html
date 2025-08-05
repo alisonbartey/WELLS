@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Transactions - Wells Fargo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+    }
+    header {
+      background-color: #c8102e;
+      color: white;
+      text-align: center;
+      padding: 1em;
+    }
+    .container {
+      max-width: 700px;
+      margin: 2em auto;
+      background: white;
+      padding: 2em;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+    }
+    h2 {
+      color: #c8102e;
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1em;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #eee;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Wells Fargo Transactions</h1>
+</header>
+
+<div class="container">
+  <h2>Transaction History</h2>
+  <table id="transactionsTable">
+    <thead>
+      <tr>
+        <th>To</th>
+        <th>Amount</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<script>
+  const BASE_URL = 'https://backend15-nnmy.onrender.com';
+
+  async function loadTransactions() {
+    const token = localStorage.getItem('userToken');
+
+    const res = await fetch(`${BASE_URL}/api/bank/transactions`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    const data = await res.json();
+    const tbody = document.querySelector('#transactionsTable tbody');
+
+    data.transactions.forEach(tx => {
+      const row = `
+        <tr>
+          <td>${tx.toEmail}</td>
+          <td>$${tx.amount}</td>
+          <td>${new Date(tx.timestamp).toLocaleString()}</td>
+        </tr>
+      `;
+      tbody.innerHTML += row;
+    });
+  }
+
+  loadTransactions();
+</script>
+
+</body>
+</html>
