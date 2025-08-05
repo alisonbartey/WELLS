@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Settings - Wells Fargo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+    }
+    header {
+      background-color: #c8102e;
+      color: white;
+      padding: 1em;
+      text-align: center;
+    }
+    .container {
+      max-width: 500px;
+      margin: 2em auto;
+      background: white;
+      padding: 2em;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+    }
+    h2 {
+      color: #c8102e;
+      text-align: center;
+    }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #c8102e;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #a50f24;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Wells Fargo Settings</h1>
+</header>
+
+<div class="container">
+  <h2>Update Password</h2>
+  <form id="settingsForm">
+    <input type="password" id="newPassword" placeholder="New Password" required />
+    <button type="submit">Update</button>
+  </form>
+</div>
+
+<script>
+  const BASE_URL = 'https://backend15-nnmy.onrender.com';
+
+  document.getElementById('settingsForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem('userToken');
+    const password = document.getElementById('newPassword').value;
+
+    const res = await fetch(`${BASE_URL}/api/bank/settings`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ password })
+    });
+
+    const data = await res.json();
+    alert(data.message || 'Password Updated');
+  });
+</script>
+
+</body>
+</html>
