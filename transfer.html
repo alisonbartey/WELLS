@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Transfer Funds - Wells Fargo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+      margin: 0;
+    }
+    header {
+      background-color: #c8102e;
+      color: white;
+      padding: 1em;
+      text-align: center;
+    }
+    .container {
+      max-width: 500px;
+      background: white;
+      padding: 2em;
+      margin: 2em auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+    }
+    h2 {
+      color: #c8102e;
+      text-align: center;
+    }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #c8102e;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #a50f24;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Wells Fargo Online Banking</h1>
+</header>
+
+<div class="container">
+  <h2>Transfer Funds</h2>
+  <form id="transferForm">
+    <input type="email" id="toEmail" placeholder="Recipient's Email" required />
+    <input type="number" id="amount" placeholder="Amount to Transfer" required />
+    <button type="submit">Send Money</button>
+  </form>
+</div>
+
+<script>
+  const BASE_URL = 'https://backend15-nnmy.onrender.com';
+
+  document.getElementById('transferForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const token = localStorage.getItem('userToken');
+    const toEmail = document.getElementById('toEmail').value;
+    const amount = document.getElementById('amount').value;
+
+    const res = await fetch(`${BASE_URL}/api/bank/transfer`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ toEmail, amount })
+    });
+
+    const data = await res.json();
+    alert(data.message || 'Transfer Completed');
+  });
+</script>
+
+</body>
+</html>
