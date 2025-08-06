@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Wells Fargo | Dashboard</title>
   <link rel="icon" href="logo.png" type="image/png" />
-  <link rel="stylesheet" href="styles.css">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -82,7 +81,7 @@
       margin: 15px 0;
     }
 
-    button.logout {
+    button.logout, button.token-btn {
       background-color: #b31b1b;
       color: white;
       padding: 10px 20px;
@@ -91,10 +90,10 @@
       border-radius: 5px;
       cursor: pointer;
       display: block;
-      margin: 30px auto 0;
+      margin: 20px auto 0;
     }
 
-    button.logout:hover {
+    button.logout:hover, button.token-btn:hover {
       background-color: #911010;
     }
   </style>
@@ -119,7 +118,8 @@
     <p><strong>Email:</strong> <span id="email">Loading...</span></p>
     <p><strong>Balance:</strong> ₦<span id="balance">Loading...</span></p>
 
-    <button class="logout" onclick="logout()">Logout</button>
+    <button class="token-btn" onclick="showToken()">🔐 Show Token</button>
+    <button class="logout" onclick="logout()">🚪 Logout</button>
   </div>
 
   <script>
@@ -128,7 +128,7 @@
 
     if (!token) {
       alert('Not logged in');
-      window.location.href = 'index.html'; // ✅ Redirect to login page
+      window.location.href = 'index.html';
     }
 
     async function fetchUser() {
@@ -140,29 +140,36 @@
           }
         });
 
-        const data = await res.json();
+        const text = await res.text();
+        console.log("Raw response from /me:", text);
 
-        if (!res.ok) {
-          throw new Error(data.message || 'Unauthorized');
-        }
+        const data = JSON.parse(text);
+
+        if (!res.ok) throw new Error(data.error || 'Unauthorized');
 
         document.getElementById('name').innerText = data.name;
         document.getElementById('email').innerText = data.email;
         document.getElementById('balance').innerText = parseFloat(data.balance).toFixed(2);
       } catch (err) {
+        console.error('User fetch failed:', err);
         alert('Session expired or unauthorized. Please log in again.');
         localStorage.removeItem('userToken');
-        window.location.href = 'index.html'; // ✅ Redirect to login page
+        window.location.href = 'index.html';
       }
     }
 
     function logout() {
       localStorage.removeItem('userToken');
-      window.location.href = 'index.html'; // ✅ Redirect to login page
+      window.location.href = 'index.html';
     }
 
     function toggleDarkMode() {
       document.body.classList.toggle('dark');
+    }
+
+    function showToken() {
+      const t = localStorage.getItem('userToken');
+      alert('Token:\n' + t);
     }
 
     fetchUser();
