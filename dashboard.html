@@ -7,140 +7,127 @@
   <link rel="icon" href="logo.png" type="image/png" />
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f6f9;
+      font-family: Arial, sans-serif;
       margin: 0;
-      padding: 0;
+      background-color: #f8f9fa;
+      color: #000;
     }
 
-    header {
-      background-color: #003366;
-      color: white;
+    nav {
+      background-color: #b31b1b;
+      padding: 15px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 15px 20px;
+      color: white;
     }
 
-    header img {
-      height: 40px;
-    }
-
-    header .right-side {
+    nav .nav-left {
       display: flex;
       align-items: center;
-      gap: 20px;
+    }
+
+    nav .nav-left img {
+      height: 40px;
+      margin-right: 15px;
+    }
+
+    nav .nav-links a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    nav .nav-links a:hover {
+      text-decoration: underline;
     }
 
     .container {
+      max-width: 900px;
+      margin: 40px auto;
       padding: 20px;
-      max-width: 800px;
-      margin: auto;
     }
 
-    .greeting {
-      font-size: 24px;
-      font-weight: bold;
-      color: #0b2e59;
+    h2 {
+      color: #b31b1b;
     }
 
-    .date {
-      color: gray;
-      margin-bottom: 20px;
-    }
-
-    .alert {
-      background-color: #ffe5e5;
-      border-left: 4px solid red;
-      padding: 10px 15px;
-      margin-bottom: 25px;
-      font-weight: bold;
-      color: #a00000;
-      border-radius: 5px;
+    .accounts {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
 
     .account-card {
-      background: white;
-      border-radius: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
       padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      background-color: #fff;
+      box-shadow: 0 0 5px rgba(0,0,0,0.05);
     }
 
-    .account-type {
+    .account-title {
       font-size: 18px;
-      font-weight: 600;
-      color: #003366;
-    }
-
-    .account-number {
-      color: gray;
-      font-size: 14px;
+      font-weight: bold;
     }
 
     .balance {
-      font-size: 22px;
-      font-weight: bold;
+      font-size: 24px;
       margin-top: 10px;
+      color: #333;
     }
 
-    .balance-label {
-      color: gray;
-      font-size: 13px;
-    }
-
-    .sign-off {
-      background-color: #e60000;
+    .logout {
+      margin-top: 40px;
+      display: block;
+      background-color: #b31b1b;
       color: white;
       border: none;
-      padding: 8px 14px;
-      border-radius: 5px;
+      padding: 12px 24px;
       font-weight: bold;
+      border-radius: 4px;
       cursor: pointer;
     }
 
-    .sign-off:hover {
-      background-color: #cc0000;
+    .logout:hover {
+      background-color: #911010;
     }
   </style>
 </head>
 <body>
-  <header>
-    <img src="logo.png" alt="Wells Fargo Logo">
-    <div class="right-side">
-      <span id="welcome-name">Loading...</span>
-      <button class="sign-off" onclick="logout()">Sign Off</button>
+  <nav>
+    <div class="nav-left">
+      <img src="logo.png" alt="Wells Fargo Logo" />
+      <div class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="transfer.html">Transfer</a>
+        <a href="transactions.html">Transactions</a>
+        <a href="settings.html">Settings</a>
+      </div>
     </div>
-  </header>
+    <button class="logout" onclick="logout()">Sign Off</button>
+  </nav>
 
   <div class="container">
-    <div class="greeting" id="greeting">Good day, User</div>
-    <div class="date" id="today-date">Wednesday, August 6, 2025</div>
+    <h2>Welcome back, <span id="userName">...</span></h2>
+    <p>Your accounts at a glance:</p>
 
-    <div class="alert">
-      ⚠️ Security Alert<br>
-      Last sign on: <span id="last-sign">Loading...</span>
-    </div>
+    <div class="accounts">
+      <div class="account-card">
+        <div class="account-title">Everyday Checking</div>
+        <div class="balance" id="checkingBalance">$0.00</div>
+      </div>
 
-    <div class="account-card">
-      <div class="account-type">EVERYDAY CHECKING</div>
-      <div class="account-number">••••7890</div>
-      <div class="balance" id="checking-balance">$0.00</div>
-      <div class="balance-label">Available balance</div>
-    </div>
+      <div class="account-card">
+        <div class="account-title">Way2Save® Savings</div>
+        <div class="balance" id="savingsBalance">$0.00</div>
+      </div>
 
-    <div class="account-card">
-      <div class="account-type">WAY2SAVE SAVINGS</div>
-      <div class="account-number">••••4321</div>
-      <div class="balance" id="savings-balance">$0.00</div>
-      <div class="balance-label">Available balance</div>
-    </div>
-
-    <div class="account-card">
-      <div class="account-type">ACTIVE CASH VISA PLATINUM</div>
-      <div class="account-number">••••5678</div>
-      <div class="balance" id="card-balance">$0.00</div>
-      <div class="balance-label">Available balance</div>
+      <div class="account-card">
+        <div class="account-title">Active Cash Visa® Platinum</div>
+        <div class="balance">$0.00</div>
+      </div>
     </div>
   </div>
 
@@ -149,13 +136,14 @@
     const token = localStorage.getItem('userToken');
 
     if (!token) {
-      alert("Session expired. Redirecting...");
-      window.location.href = "index.html";
+      alert('You are not logged in.');
+      window.location.href = 'index.html';
     }
 
     async function fetchUser() {
       try {
         const res = await fetch(`${BASE_URL}/api/auth/me`, {
+          method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -163,41 +151,18 @@
 
         const data = await res.json();
 
-        if (!res.ok) throw new Error(data.error || "Unauthorized");
+        if (!res.ok) throw new Error(data.message || 'Unauthorized');
 
-        // Set user name and balances
-        const username = data.name.split(" ")[0];
-        document.getElementById("greeting").innerText = `Good day, ${username}`;
-        document.getElementById("welcome-name").innerText = data.name;
-
-        const usd = n => new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD'
-        }).format(n);
-
-        document.getElementById("checking-balance").innerText = usd(data.balance);
-        document.getElementById("savings-balance").innerText = usd(data.balance * 0.1875); // fake secondary balance
-        document.getElementById("card-balance").innerText = usd(0); // hardcoded for example
-
-        // Update last sign-on (placeholder for now)
-        const lastSignDate = new Date();
-        lastSignDate.setDate(lastSignDate.getDate() - 1);
-        document.getElementById("last-sign").innerText = lastSignDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-
-        // Set today's date
-        const today = new Date();
-        document.getElementById("today-date").innerText = today.toLocaleDateString('en-US', {
-          weekday: 'long',
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        });
+        // Set UI elements
+        document.getElementById('userName').innerText = data.name;
+        const fullBalance = parseFloat(data.balance);
+        document.getElementById('checkingBalance').innerText = fullBalance.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+        document.getElementById('savingsBalance').innerText = (fullBalance * 0.2).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 
       } catch (err) {
-        console.error("Dashboard error:", err);
-        alert("Session expired or unauthorized. Redirecting to login.");
+        alert('Session expired. Please login again.');
         localStorage.removeItem('userToken');
-        window.location.href = "index.html";
+        window.location.href = 'index.html';
       }
     }
 
