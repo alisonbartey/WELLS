@@ -3,131 +3,176 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Wells Fargo - Login</title>
+  <title>Wells Fargo | Dashboard</title>
   <link rel="icon" href="logo.png" type="image/png" />
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f8f9fa;
       margin: 0;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+      background-color: #f8f9fa;
+      color: #000;
+      transition: background-color 0.3s, color 0.3s;
     }
 
-    .login-container {
-      background-color: #fff;
+    body.dark {
+      background-color: #121212;
+      color: #f1f1f1;
+    }
+
+    nav {
+      background-color: #b31b1b;
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-left img {
+      height: 40px;
+      margin-right: 15px;
+    }
+
+    .nav-links a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    .dark-toggle {
+      cursor: pointer;
+      padding: 5px 10px;
+      border: none;
+      background: white;
+      color: #b31b1b;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+
+    .container {
       padding: 30px;
+      max-width: 600px;
+      margin: 40px auto;
+      background: white;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 400px;
+    }
+
+    body.dark .container {
+      background: #1e1e1e;
+    }
+
+    h2 {
+      color: #b31b1b;
       text-align: center;
     }
 
-    .login-container img {
-      width: 120px;
-      margin-bottom: 15px;
-    }
-
-    .login-container h2 {
-      margin-bottom: 20px;
-      color: #b31b1b;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      background-color: #b31b1b;
-      border: none;
-      color: white;
-      font-weight: bold;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #a11616;
-    }
-
     p {
-      margin-top: 15px;
+      font-size: 18px;
+      margin: 15px 0;
     }
 
-    a {
-      color: #b31b1b;
-      text-decoration: none;
+    button.logout, button.token-btn {
+      background-color: #b31b1b;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+      display: block;
+      margin: 20px auto 0;
     }
 
-    a:hover {
-      text-decoration: underline;
+    button.logout:hover, button.token-btn:hover {
+      background-color: #911010;
     }
   </style>
 </head>
 <body>
-  <div class="login-container">
-    <img src="logo.png" alt="Wells Fargo Logo" />
-    <h2>Welcome Back</h2>
+  <nav>
+    <div class="nav-left">
+      <img src="logo.png" alt="Wells Fargo Logo" />
+      <div class="nav-links">
+        <a href="dashboard.html">🏠 Dashboard</a>
+        <a href="transfer.html">💸 Transfer</a>
+        <a href="transactions.html">📄 Transactions</a>
+        <a href="settings.html">⚙️ Settings</a>
+      </div>
+    </div>
+    <button class="dark-toggle" onclick="toggleDarkMode()">🌓 Toggle</button>
+  </nav>
 
-    <form id="login-form">
-      <input type="email" id="email" placeholder="Email Address" required />
-      <input type="password" id="password" placeholder="Password" required />
-      <button type="submit">Login</button>
-    </form>
+  <div class="container">
+    <h2>Welcome to Wells Fargo</h2>
+    <p><strong>Name:</strong> <span id="name">Loading...</span></p>
+    <p><strong>Email:</strong> <span id="email">Loading...</span></p>
+    <p><strong>Balance:</strong> ₦<span id="balance">Loading...</span></p>
 
-    <p>Don't have an account? <a href="signup.html">Sign up here</a></p>
+    <button class="token-btn" onclick="showToken()">🔐 Show Token</button>
+    <button class="logout" onclick="logout()">🚪 Logout</button>
   </div>
 
   <script>
     const BASE_URL = 'https://backend15-nnmy.onrender.com';
+    const token = localStorage.getItem('userToken');
 
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+    if (!token) {
+      alert('Not logged in');
+      window.location.href = 'index.html';
+    }
 
+    async function fetchUser() {
       try {
-        const res = await fetch(`${BASE_URL}/api/auth/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
+        const res = await fetch(`${BASE_URL}/api/auth/me`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
         });
 
         const text = await res.text();
-        console.log("Raw response:", text);
+        console.log("Raw response from /me:", text);
 
-        let data = {};
-        try {
-          data = JSON.parse(text);
-        } catch (err) {
-          alert("Unexpected response format.");
-          return;
-        }
+        const data = JSON.parse(text);
 
-        if (res.ok && data.token) {
-          localStorage.setItem('userToken', data.token);
-          localStorage.setItem('userName', data.name);
-          localStorage.setItem('userEmail', data.email);
-          localStorage.setItem('userBalance', data.balance);
-          window.location.href = 'dashboard.html';
-        } else {
-          alert(data.error || data.message || 'Login failed.');
-        }
+        if (!res.ok) throw new Error(data.error || 'Unauthorized');
+
+        document.getElementById('name').innerText = data.name;
+        document.getElementById('email').innerText = data.email;
+        document.getElementById('balance').innerText = parseFloat(data.balance).toFixed(2);
       } catch (err) {
-        console.error("Fetch error:", err);
-        alert('⚠ Network error. Please check your connection or try again later.');
+        console.error('User fetch failed:', err);
+        alert('Session expired or unauthorized. Please log in again.');
+        localStorage.removeItem('userToken');
+        window.location.href = 'index.html';
       }
-    });
+    }
+
+    function logout() {
+      localStorage.removeItem('userToken');
+      window.location.href = 'index.html';
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark');
+    }
+
+    function showToken() {
+      const t = localStorage.getItem('userToken');
+      alert('Token:\n' + t);
+    }
+
+    fetchUser();
   </script>
 </body>
 </html>
