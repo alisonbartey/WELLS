@@ -7,14 +7,14 @@
   <link rel="icon" href="logo.png" type="image/png" />
   <style>
     body {
-      font-family: Arial, sans-serif;
       margin: 0;
-      background-color: #f4f4f4;
-      color: #333;
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      color: #000;
       transition: background-color 0.3s, color 0.3s;
     }
 
-    header {
+    nav {
       background-color: #b31b1b;
       color: white;
       padding: 10px 20px;
@@ -23,13 +23,14 @@
       justify-content: space-between;
     }
 
-    header img {
-      height: 40px;
+    nav .left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
     }
 
-    nav {
-      display: flex;
-      gap: 15px;
+    nav img {
+      height: 40px;
     }
 
     nav a {
@@ -38,87 +39,92 @@
       font-weight: bold;
     }
 
-    nav a:hover {
-      text-decoration: underline;
+    nav .right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .container {
-      padding: 20px;
-    }
-
-    .user-info {
-      background-color: white;
-      padding: 20px;
+    .dashboard {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 30px;
+      background: #fff;
       border-radius: 8px;
-      max-width: 400px;
-      margin: 20px auto;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
-    button.logout {
-      background-color: #b31b1b;
-      color: white;
-      border: none;
+    .dashboard h2 {
+      margin-bottom: 20px;
+      color: #b31b1b;
+    }
+
+    button {
       padding: 10px 20px;
-      margin-top: 20px;
+      background-color: #b31b1b;
+      border: none;
+      color: white;
+      font-weight: bold;
       border-radius: 4px;
       cursor: pointer;
     }
 
-    button.logout:hover {
+    button:hover {
       background-color: #a11616;
     }
 
     .dark-mode {
       background-color: #121212;
-      color: #e0e0e0;
-    }
-
-    .dark-mode .user-info {
-      background-color: #1e1e1e;
-      color: #e0e0e0;
-    }
-
-    .dark-toggle {
-      background: none;
       color: white;
-      border: 1px solid white;
-      padding: 5px 10px;
-      border-radius: 4px;
-      cursor: pointer;
     }
 
-    .dark-toggle:hover {
-      background-color: white;
-      color: #b31b1b;
+    .dark-mode .dashboard {
+      background-color: #1e1e1e;
+      color: white;
+    }
+
+    .dark-mode nav {
+      background-color: #000;
+    }
+
+    .dark-mode a {
+      color: #fff;
+    }
+
+    .toggle-btn {
+      cursor: pointer;
+      padding: 5px 10px;
+      border: 1px solid #fff;
+      border-radius: 4px;
+      font-size: 12px;
     }
   </style>
 </head>
 <body>
-  <header>
-    <img src="logo.png" alt="Wells Fargo Logo" />
-    <nav>
+  <nav>
+    <div class="left">
+      <img src="logo.png" alt="Wells Fargo Logo" />
       <a href="dashboard.html">🏠 Dashboard</a>
       <a href="transfer.html">💸 Transfer</a>
       <a href="transactions.html">📄 Transactions</a>
       <a href="settings.html">⚙️ Settings</a>
-      <button class="dark-toggle" onclick="toggleDarkMode()">🌓</button>
-      <button class="logout" onclick="logout()">Logout</button>
-    </nav>
-  </header>
-
-  <div class="container">
-    <div class="user-info">
-      <h2>Welcome to Wells Fargo</h2>
-      <p><strong>Name:</strong> <span id="name">Loading...</span></p>
-      <p><strong>Email:</strong> <span id="email">Loading...</span></p>
-      <p><strong>Balance:</strong> $<span id="balance">Loading...</span></p>
     </div>
+    <div class="right">
+      <span class="toggle-btn" onclick="toggleDarkMode()">🌙 Toggle Dark</span>
+      <button onclick="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <div class="dashboard">
+    <h2>Welcome to Wells Fargo</h2>
+    <p><strong>Name:</strong> <span id="name">Loading...</span></p>
+    <p><strong>Email:</strong> <span id="email">Loading...</span></p>
+    <p><strong>Balance:</strong> ₦<span id="balance">Loading...</span></p>
   </div>
 
   <script>
     const BASE_URL = 'https://backend15-nnmy.onrender.com';
-    const token = localStorage.getItem('userToken');
+    const token = localStorage.getItem('userToken'); // ✅ make sure it's 'userToken'
 
     if (!token) {
       alert('Not logged in');
@@ -128,20 +134,25 @@
     async function fetchUser() {
       try {
         const res = await fetch(`${BASE_URL}/api/auth/me`, {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
         });
 
-        if (!res.ok) {
-          throw new Error('Unauthorized');
-        }
-
         const data = await res.json();
-        document.getElementById('name').innerText = data.name;
-        document.getElementById('email').innerText = data.email;
-        document.getElementById('balance').innerText = parseFloat(data.balance).toFixed(2);
+
+        if (res.ok) {
+          document.getElementById('name').innerText = data.name;
+          document.getElementById('email').innerText = data.email;
+          document.getElementById('balance').innerText = data.balance.toFixed(2);
+        } else {
+          alert('Session expired or unauthorized. Please log in again.');
+          localStorage.removeItem('userToken');
+          window.location.href = 'login.html';
+        }
       } catch (err) {
-        alert('Session expired or unauthorized. Please log in again.');
-        logout();
+        alert('Network error.');
+        console.error(err);
       }
     }
 
