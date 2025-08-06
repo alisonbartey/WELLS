@@ -1,23 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="stylesheet" href="styles.css">
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Wells Fargo | Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" href="logo.png" type="image/png" />
+  <style>
+    :root {
+      --primary: #b31b1b;
+      --background: #f4f4f4;
+      --text: #000;
+      --card: #fff;
+    }
+
+    body.dark {
+      --background: #121212;
+      --text: #eaeaea;
+      --card: #1e1e1e;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: var(--background);
+      color: var(--text);
+      margin: 0;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background-color: var(--primary);
+      color: white;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header img {
+      height: 40px;
+    }
+
+    nav {
+      background-color: #eee;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+      background-color: var(--card);
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-top: 30px;
+      border-radius: 8px;
+    }
+
+    h2 {
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    .user-info p {
+      margin: 5px 0;
+      font-size: 16px;
+    }
+
+    .logout-btn {
+      background-color: var(--primary);
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+
+    .logout-btn:hover {
+      background-color: #a11616;
+    }
+
+    .transactions {
+      margin-top: 30px;
+    }
+
+    .transactions ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .transactions li {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .dark-toggle {
+      background: transparent;
+      border: 2px solid white;
+      color: white;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h2>Welcome to Wells Fargo</h2>
-  <div id="user-info">
-    <p><strong>Name:</strong> <span id="name">Loading...</span></p>
-    <p><strong>Email:</strong> <span id="email">Loading...</span></p>
-    <p><strong>Balance:</strong> $<span id="balance">Loading...</span></p>
-  </div>
+  <header>
+    <img src="logo.png" alt="Wells Fargo Logo">
+    <div>
+      <button class="dark-toggle" onclick="toggleDarkMode()">🌙</button>
+    </div>
+  </header>
 
-  <button onclick="logout()">Logout</button>
+  <nav>
+    <a href="dashboard.html">🏠 Dashboard</a>
+    <a href="transfer.html">💸 Transfer</a>
+    <a href="transactions.html">📄 Transactions</a>
+    <a href="settings.html">⚙️ Settings</a>
+  </nav>
+
+  <div class="container">
+    <h2>Welcome</h2>
+    <div class="user-info">
+      <p><strong>Name:</strong> <span id="name">Loading...</span></p>
+      <p><strong>Email:</strong> <span id="email">Loading...</span></p>
+      <p><strong>Balance:</strong> $<span id="balance">Loading...</span></p>
+    </div>
+
+    <button class="logout-btn" onclick="logout()">Logout</button>
+
+    <div class="transactions">
+      <h3>Recent Transactions</h3>
+      <ul id="transaction-list">
+        <li>Loading...</li>
+      </ul>
+    </div>
+  </div>
 
   <script>
     const BASE_URL = 'https://backend15-nnmy.onrender.com';
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('userToken');
 
     if (!token) {
       alert('Not logged in');
@@ -25,30 +165,69 @@
     }
 
     async function fetchUser() {
-      const res = await fetch(`${BASE_URL}/api/auth/me`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
+      try {
+        const res = await fetch(`${BASE_URL}/api/auth/me`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          document.getElementById('name').innerText = data.name;
+          document.getElementById('email').innerText = data.email;
+          document.getElementById('balance').innerText = data.balance.toFixed(2);
+        } else {
+          alert('Session expired or unauthorized');
+          window.location.href = 'login.html';
         }
-      });
+      } catch {
+        alert('Failed to fetch user details');
+      }
+    }
 
-      const data = await res.json();
+    async function fetchTransactions() {
+      try {
+        const res = await fetch(`${BASE_URL}/api/transactions`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
 
-      if (res.ok) {
-        document.getElementById('name').innerText = data.name;
-        document.getElementById('email').innerText = data.email;
-        document.getElementById('balance').innerText = data.balance.toFixed(2);
-      } else {
-        alert('Session expired or unauthorized');
-        window.location.href = 'login.html';
+        const data = await res.json();
+        const list = document.getElementById('transaction-list');
+        list.innerHTML = '';
+
+        if (Array.isArray(data) && data.length > 0) {
+          data.forEach(tx => {
+            const item = document.createElement('li');
+            item.textContent = `${tx.timestamp.split('T')[0]} - $${tx.amount} to ${tx.toUser?.name || tx.toUser?.email || 'Unknown'}`;
+            list.appendChild(item);
+          });
+        } else {
+          list.innerHTML = '<li>No transactions found.</li>';
+        }
+      } catch {
+        document.getElementById('transaction-list').innerHTML = '<li>Error loading transactions</li>';
       }
     }
 
     function logout() {
-      localStorage.removeItem('token');
+      localStorage.removeItem('userToken');
       window.location.href = 'login.html';
     }
 
+    function toggleDarkMode() {
+      const isDark = document.body.classList.toggle('dark');
+      localStorage.setItem('darkMode', isDark);
+    }
+
+    function applyDarkMode() {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark');
+      }
+    }
+
+    applyDarkMode();
     fetchUser();
+    fetchTransactions();
   </script>
 </body>
 </html>
