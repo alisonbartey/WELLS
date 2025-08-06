@@ -1,85 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Settings - Wells Fargo</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wells Fargo | Settings</title>
+  <link rel="icon" href="logo.png" type="image/png" />
+  <link rel="stylesheet" href="styles.css" />
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f7f7f7;
       margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
     }
+
     header {
-      background-color: #c8102e;
+      background-color: #b31b1b;
       color: white;
-      padding: 1em;
-      text-align: center;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
+
+    header img {
+      height: 40px;
+    }
+
+    nav a {
+      margin-left: 20px;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
     .container {
-      max-width: 500px;
-      margin: 2em auto;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
       background: white;
-      padding: 2em;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #ccc;
+      margin-top: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    h2 {
-      color: #c8102e;
-      text-align: center;
+
+    .container h2 {
+      color: #b31b1b;
     }
-    input, button {
+
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+
+    input {
       width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-      border-radius: 5px;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 4px;
       border: 1px solid #ccc;
     }
+
     button {
-      background-color: #c8102e;
+      margin-top: 20px;
+      background-color: #b31b1b;
       color: white;
-      font-weight: bold;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 4px;
       cursor: pointer;
+      font-weight: bold;
     }
+
     button:hover {
-      background-color: #a50f24;
+      background-color: #a11616;
+    }
+
+    .dark-mode {
+      background-color: #121212;
+      color: white;
+    }
+
+    .dark-mode .container {
+      background-color: #1e1e1e;
+      color: white;
+    }
+
+    .toggle-btn {
+      background: none;
+      border: 1px solid white;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 20px;
     }
   </style>
 </head>
 <body>
+  <header>
+    <img src="logo.png" alt="Wells Fargo Logo" />
+    <nav>
+      <a href="dashboard.html">🏠 Dashboard</a>
+      <a href="transfer.html">💸 Transfer</a>
+      <a href="transactions.html">📄 Transactions</a>
+      <a href="settings.html">⚙️ Settings</a>
+      <button class="toggle-btn" onclick="toggleDarkMode()">🌓</button>
+      <a href="#" onclick="logout()">🚪 Logout</a>
+    </nav>
+  </header>
 
-<header>
-  <h1>Wells Fargo Settings</h1>
-</header>
+  <div class="container">
+    <h2>⚙️ Account Settings</h2>
+    <form id="settings-form">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" placeholder="Your full name" required />
 
-<div class="container">
-  <h2>Update Password</h2>
-  <form id="settingsForm">
-    <input type="password" id="newPassword" placeholder="New Password" required />
-    <button type="submit">Update</button>
-  </form>
-</div>
+      <label for="password">New Password</label>
+      <input type="password" id="password" placeholder="New password" required />
 
-<script>
-  const BASE_URL = 'https://backend15-nnmy.onrender.com';
+      <button type="submit">Update Profile</button>
+    </form>
+  </div>
 
-  document.getElementById('settingsForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
+  <script>
+    const BASE_URL = 'https://backend15-nnmy.onrender.com';
     const token = localStorage.getItem('userToken');
-    const password = document.getElementById('newPassword').value;
 
-    const res = await fetch(`${BASE_URL}/api/bank/settings`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({ password })
+    if (!token) {
+      alert('Not logged in.');
+      window.location.href = 'index.html';
+    }
+
+    async function fetchUserInfo() {
+      const res = await fetch(`${BASE_URL}/api/auth/me`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        document.getElementById('name').value = data.name;
+      } else {
+        alert('Unauthorized');
+        window.location.href = 'index.html';
+      }
+    }
+
+    fetchUserInfo();
+
+    document.getElementById('settings-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const res = await fetch(`${BASE_URL}/api/user/update`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ name, password })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          alert('Profile updated successfully!');
+        } else {
+          alert(data.error || 'Update failed.');
+        }
+      } catch (err) {
+        alert('⚠ Network error. Please try again.');
+      }
     });
 
-    const data = await res.json();
-    alert(data.message || 'Password Updated');
-  });
-</script>
+    function logout() {
+      localStorage.removeItem('userToken');
+      window.location.href = 'index.html';
+    }
 
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+    }
+  </script>
 </body>
 </html>
