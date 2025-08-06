@@ -167,5 +167,16 @@
 
     fetchUser();
   </script>
+  <button onclick="showToken()">Show My Token</button>
+  <script>
+  function showToken() {
+    const token = localStorage.getItem('userToken');
+    if (token) {
+      prompt('Your token is:', token);  // 📋 This lets you copy it
+    } else {
+      alert('No token found. Please log in first.');
+    }
+  }
+</script>
 </body>
 </html>
