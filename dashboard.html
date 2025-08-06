@@ -7,119 +7,141 @@
   <link rel="icon" href="logo.png" type="image/png" />
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f9;
       margin: 0;
-      background-color: #f8f9fa;
-      color: #000;
-      transition: background-color 0.3s, color 0.3s;
+      padding: 0;
     }
 
-    body.dark {
-      background-color: #121212;
-      color: #f1f1f1;
-    }
-
-    nav {
-      background-color: #b31b1b;
-      padding: 15px;
+    header {
+      background-color: #003366;
+      color: white;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      padding: 15px 20px;
     }
 
-    .nav-left {
+    header img {
+      height: 40px;
+    }
+
+    header .right-side {
       display: flex;
       align-items: center;
-    }
-
-    .nav-left img {
-      height: 40px;
-      margin-right: 15px;
-    }
-
-    .nav-links a {
-      color: white;
-      margin: 0 10px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .nav-links a:hover {
-      text-decoration: underline;
-    }
-
-    .dark-toggle {
-      cursor: pointer;
-      padding: 5px 10px;
-      border: none;
-      background: white;
-      color: #b31b1b;
-      border-radius: 4px;
-      font-weight: bold;
+      gap: 20px;
     }
 
     .container {
-      padding: 30px;
-      max-width: 600px;
-      margin: 40px auto;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
     }
 
-    body.dark .container {
-      background: #1e1e1e;
-    }
-
-    h2 {
-      color: #b31b1b;
-      text-align: center;
-    }
-
-    p {
-      font-size: 18px;
-      margin: 15px 0;
-    }
-
-    button.logout, button.token-btn {
-      background-color: #b31b1b;
-      color: white;
-      padding: 10px 20px;
-      border: none;
+    .greeting {
+      font-size: 24px;
       font-weight: bold;
-      border-radius: 5px;
-      cursor: pointer;
-      display: block;
-      margin: 20px auto 0;
+      color: #0b2e59;
     }
 
-    button.logout:hover, button.token-btn:hover {
-      background-color: #911010;
+    .date {
+      color: gray;
+      margin-bottom: 20px;
+    }
+
+    .alert {
+      background-color: #ffe5e5;
+      border-left: 4px solid red;
+      padding: 10px 15px;
+      margin-bottom: 25px;
+      font-weight: bold;
+      color: #a00000;
+      border-radius: 5px;
+    }
+
+    .account-card {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .account-type {
+      font-size: 18px;
+      font-weight: 600;
+      color: #003366;
+    }
+
+    .account-number {
+      color: gray;
+      font-size: 14px;
+    }
+
+    .balance {
+      font-size: 22px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .balance-label {
+      color: gray;
+      font-size: 13px;
+    }
+
+    .sign-off {
+      background-color: #e60000;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .sign-off:hover {
+      background-color: #cc0000;
     }
   </style>
 </head>
 <body>
-  <nav>
-    <div class="nav-left">
-      <img src="logo.png" alt="Wells Fargo Logo" />
-      <div class="nav-links">
-        <a href="dashboard.html">🏠 Dashboard</a>
-        <a href="transfer.html">💸 Transfer</a>
-        <a href="transactions.html">📄 Transactions</a>
-        <a href="settings.html">⚙️ Settings</a>
-      </div>
+  <header>
+    <img src="logo.png" alt="Wells Fargo Logo">
+    <div class="right-side">
+      <span id="welcome-name">Loading...</span>
+      <button class="sign-off" onclick="logout()">Sign Off</button>
     </div>
-    <button class="dark-toggle" onclick="toggleDarkMode()">🌓 Toggle</button>
-  </nav>
+  </header>
 
   <div class="container">
-    <h2>Welcome to Wells Fargo</h2>
-    <p><strong>Name:</strong> <span id="name">Loading...</span></p>
-    <p><strong>Email:</strong> <span id="email">Loading...</span></p>
-    <p><strong>Balance:</strong> $<span id="balance">Loading...</span></p>
+    <div class="greeting" id="greeting">Good day, User</div>
+    <div class="date" id="today-date">Wednesday, August 6, 2025</div>
 
-    <button class="token-btn" onclick="showToken()">🔐 Show Token</button>
-    <button class="logout" onclick="logout()">🚪 Logout</button>
+    <div class="alert">
+      ⚠️ Security Alert<br>
+      Last sign on: <span id="last-sign">Loading...</span>
+    </div>
+
+    <div class="account-card">
+      <div class="account-type">EVERYDAY CHECKING</div>
+      <div class="account-number">••••7890</div>
+      <div class="balance" id="checking-balance">$0.00</div>
+      <div class="balance-label">Available balance</div>
+    </div>
+
+    <div class="account-card">
+      <div class="account-type">WAY2SAVE SAVINGS</div>
+      <div class="account-number">••••4321</div>
+      <div class="balance" id="savings-balance">$0.00</div>
+      <div class="balance-label">Available balance</div>
+    </div>
+
+    <div class="account-card">
+      <div class="account-type">ACTIVE CASH VISA PLATINUM</div>
+      <div class="account-number">••••5678</div>
+      <div class="balance" id="card-balance">$0.00</div>
+      <div class="balance-label">Available balance</div>
+    </div>
   </div>
 
   <script>
@@ -127,49 +149,61 @@
     const token = localStorage.getItem('userToken');
 
     if (!token) {
-      alert('Not logged in');
-      window.location.href = 'index.html';
+      alert("Session expired. Redirecting...");
+      window.location.href = "index.html";
     }
 
     async function fetchUser() {
       try {
         const res = await fetch(`${BASE_URL}/api/auth/me`, {
-          method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
 
-        const text = await res.text();
-        console.log("Raw response from /me:", text);
+        const data = await res.json();
 
-        const data = JSON.parse(text);
+        if (!res.ok) throw new Error(data.error || "Unauthorized");
 
-        if (!res.ok) throw new Error(data.error || 'Unauthorized');
+        // Set user name and balances
+        const username = data.name.split(" ")[0];
+        document.getElementById("greeting").innerText = `Good day, ${username}`;
+        document.getElementById("welcome-name").innerText = data.name;
 
-        document.getElementById('name').innerText = data.name;
-        document.getElementById('email').innerText = data.email;
-        document.getElementById('balance').innerText = parseFloat(data.balance).toFixed(2);
+        const usd = n => new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD'
+        }).format(n);
+
+        document.getElementById("checking-balance").innerText = usd(data.balance);
+        document.getElementById("savings-balance").innerText = usd(data.balance * 0.1875); // fake secondary balance
+        document.getElementById("card-balance").innerText = usd(0); // hardcoded for example
+
+        // Update last sign-on (placeholder for now)
+        const lastSignDate = new Date();
+        lastSignDate.setDate(lastSignDate.getDate() - 1);
+        document.getElementById("last-sign").innerText = lastSignDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+        // Set today's date
+        const today = new Date();
+        document.getElementById("today-date").innerText = today.toLocaleDateString('en-US', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+
       } catch (err) {
-        console.error('User fetch failed:', err);
-        alert('Session expired or unauthorized. Please log in again.');
+        console.error("Dashboard error:", err);
+        alert("Session expired or unauthorized. Redirecting to login.");
         localStorage.removeItem('userToken');
-        window.location.href = 'index.html';
+        window.location.href = "index.html";
       }
     }
 
     function logout() {
       localStorage.removeItem('userToken');
       window.location.href = 'index.html';
-    }
-
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark');
-    }
-
-    function showToken() {
-      const t = localStorage.getItem('userToken');
-      alert('Token:\n' + t);
     }
 
     fetchUser();
