@@ -218,115 +218,123 @@
     </div>
   </div>
 
-  <footer style="background-color: #f8f9fa; padding: 30px 20px; font-size: 14px; border-top: 1px solid #ddd;">
-  <div style="max-width: 1000px; margin: auto;">
-    <section style="margin-bottom: 20px;">
-      <h3 style="color: #003366; font-size: 16px;">Security Center</h3>
-      <ul style="list-style: disc; padding-left: 20px; margin: 10px 0;">
-        <li>Never share your password, account, or personal information</li>
-        <li>We will never ask for your account information via email</li>
-        <li>Report suspicious activity immediately</li>
-        <li>Always access your account through wellsfargo.com</li>
-      </ul>
-      <a href="#" style="color: #003366; text-decoration: underline;">Learn more about online security</a>
-    </section>
+  <footer>
+    <div style="max-width: 1000px; margin: auto;">
+      <section style="margin-bottom: 20px;">
+        <h3 style="color: #003366; font-size: 16px;">Security Center</h3>
+        <ul style="list-style: disc; padding-left: 20px; margin: 10px 0;">
+          <li>Never share your password, account, or personal information</li>
+          <li>We will never ask for your account information via email</li>
+          <li>Report suspicious activity immediately</li>
+          <li>Always access your account through wellsfargo.com</li>
+        </ul>
+        <a href="#" style="color: #003366; text-decoration: underline;">Learn more about online security</a>
+      </section>
 
-    <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
-      <div style="flex: 1; min-width: 180px; margin-bottom: 20px;">
-        <h4 style="color: #003366;">Products & Services</h4>
-        <ul style="list-style: none; padding: 0; margin: 0;">
-          <li>Checking Accounts</li>
-          <li>Credit Cards</li>
-          <li>Home Loans</li>
-          <li>Personal Loans</li>
-          <li>Retirement</li>
-        </ul>
+      <div class="footer-links">
+        <div>
+          <h4 style="color: #003366;">Products & Services</h4>
+          <a href="#">Checking Accounts</a>
+          <a href="#">Credit Cards</a>
+          <a href="#">Home Loans</a>
+          <a href="#">Personal Loans</a>
+          <a href="#">Retirement</a>
+        </div>
+        <div>
+          <h4 style="color: #003366;">Online Security</h4>
+          <a href="#">Security Center</a>
+          <a href="#">Fraud Information</a>
+          <a href="#">Report Fraud</a>
+          <a href="#">Privacy & Cookies</a>
+        </div>
+        <div>
+          <h4 style="color: #003366;">Customer Service</h4>
+          <a href="#">Contact Us</a>
+          <a href="#">FAQs</a>
+          <a href="#">Find ATMs/Branches</a>
+          <a href="#">Accessibility</a>
+        </div>
       </div>
-      <div style="flex: 1; min-width: 180px; margin-bottom: 20px;">
-        <h4 style="color: #003366;">Online Security</h4>
-        <ul style="list-style: none; padding: 0; margin: 0;">
-          <li>Security Center</li>
-          <li>Fraud Information</li>
-          <li>Report Fraud</li>
-          <li>Privacy & Cookies</li>
-        </ul>
-      </div>
-      <div style="flex: 1; min-width: 180px; margin-bottom: 20px;">
-        <h4 style="color: #003366;">Customer Service</h4>
-        <ul style="list-style: none; padding: 0; margin: 0;">
-          <li>Contact Us</li>
-          <li>FAQs</li>
-          <li>Find ATMs/Branches</li>
-          <li>Accessibility</li>
-        </ul>
-      </div>
+
+      <p style="margin-top: 20px; color: #555;">
+        © 2024 Wells Fargo Bank, N.A. All rights reserved. Member FDIC. Equal Housing Lender
+      </p>
+      <p style="margin-top: 5px; color: #555;">
+        <a href="#" style="color: #003366; text-decoration: underline;">Privacy</a> |
+        <a href="#" style="color: #003366; text-decoration: underline;">Security</a> |
+        <a href="#" style="color: #003366; text-decoration: underline;">Terms & Conditions</a> |
+        <a href="#" style="color: #003366; text-decoration: underline;">Ad Choices</a>
+      </p>
     </div>
-
-    <p style="margin-top: 20px; color: #555;">
-      © 2024 Wells Fargo Bank, N.A. All rights reserved. Member FDIC. Equal Housing Lender
-    </p>
-    <p style="margin-top: 5px; color: #555;">
-      <a href="#" style="color: #003366; text-decoration: underline;">Privacy</a> |
-      <a href="#" style="color: #003366; text-decoration: underline;">Security</a> |
-      <a href="#" style="color: #003366; text-decoration: underline;">Terms & Conditions</a> |
-      <a href="#" style="color: #003366; text-decoration: underline;">Ad Choices</a>
-    </p>
-  </div>
-</footer>
+  </footer>
 
   <script>
-  const BASE_URL = 'https://backend15-nnmy.onrender.com';
-  const token = localStorage.getItem('userToken');
+    const BASE_URL = 'https://backend15-nnmy.onrender.com';
+    const token = localStorage.getItem('userToken');
 
-  if (!token) {
-    alert('You are not logged in.');
-    window.location.href = 'index.html';
-  }
+    if (!token) {
+      alert('You are not logged in.');
+      window.location.href = 'index.html';
+    }
 
-  async function fetchUser() {
-    try {
-      const res = await fetch(`${BASE_URL}/api/auth/me`, {
-        method: 'GET',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+    async function fetchUser() {
+      try {
+        const res = await fetch(`${BASE_URL}/api/auth/me`, {
+          method: 'GET',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Unauthorized');
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Unauthorized');
 
-      document.getElementById('userName').innerText = data.name;
-      document.getElementById('profilePhoto').src = data.profilePhoto || 'https://randomuser.me/api/portraits/men/75.jpg';
-    } catch (err) {
-      alert('Session expired. Please login again.');
+        document.getElementById('userName').innerText = data.name;
+        document.getElementById('profilePhoto').src = data.profilePhoto || 'https://randomuser.me/api/portraits/men/75.jpg';
+
+        // Optional: If auth/me includes transactions
+        const txList = document.getElementById('transactionsList');
+        txList.innerHTML = '';
+        if (data.transactions && data.transactions.length) {
+          data.transactions.forEach(tx => {
+            const li = document.createElement('li');
+            li.innerHTML = `${tx.description || 'Transaction'} <span style="color:${tx.amount < 0 ? 'red' : 'green'};">${tx.amount < 0 ? '-' : '+'}$${Math.abs(tx.amount).toFixed(2)}</span>`;
+            txList.appendChild(li);
+          });
+        } else {
+          txList.innerHTML = '<li>No transactions found.</li>';
+        }
+      } catch (err) {
+        alert('Session expired. Please login again.');
+        localStorage.removeItem('userToken');
+        window.location.href = 'index.html';
+      }
+    }
+
+    async function fetchBalance() {
+      try {
+        const res = await fetch(`${BASE_URL}/api/bank/balance`, {
+          method: 'GET',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to fetch balance');
+
+        const fullBalance = parseFloat(data.balance || 0);
+        document.getElementById('checkingBalance').innerText = fullBalance.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+        document.getElementById('savingsBalance').innerText = (fullBalance * 0.2).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+      } catch (err) {
+        console.error('Balance fetch error:', err);
+      }
+    }
+
+    function logout() {
       localStorage.removeItem('userToken');
       window.location.href = 'index.html';
     }
-  }
 
-  async function fetchBalance() {
-    try {
-      const res = await fetch(`${BASE_URL}/api/bank/balance`, {
-        method: 'GET',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to fetch balance');
-
-      const fullBalance = parseFloat(data.balance || 0);
-      document.getElementById('checkingBalance').innerText = fullBalance.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-      document.getElementById('savingsBalance').innerText = (fullBalance * 0.2).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-    } catch (err) {
-      console.error('Balance fetch error:', err);
-    }
-  }
-
-  function logout() {
-    localStorage.removeItem('userToken');
-    window.location.href = 'index.html';
-  }
-
-  fetchUser();
-  fetchBalance();
-</script>
+    // Run on page load
+    fetchUser();
+    fetchBalance();
+  </script>
 </body>
 </html>
