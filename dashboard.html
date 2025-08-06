@@ -176,7 +176,7 @@
       </div>
     </div>
     <div>
-    <img alt="Profile Photo" class="profile-photo" id="profilePhoto"/>
+      <img alt="Profile Photo" class="profile-photo" id="profilePhoto" src="fallback.png" />
       <button class="logout" onclick="logout()">Sign Off</button>
     </div>
   </nav>
@@ -288,9 +288,12 @@
         if (!res.ok) throw new Error(data.message || 'Unauthorized');
 
         document.getElementById('userName').innerText = data.name;
-        document.getElementById('profilePhoto').src = data.profilePhoto || 'https://randomuser.me/api/portraits/men/75.jpg';
 
-        // Optional: If auth/me includes transactions
+        const profileImg = document.getElementById('profilePhoto');
+        profileImg.src = (data.profilePhoto && data.profilePhoto.trim() !== '') 
+          ? data.profilePhoto 
+          : 'fallback.png';
+
         const txList = document.getElementById('transactionsList');
         txList.innerHTML = '';
         if (data.transactions && data.transactions.length) {
@@ -332,7 +335,6 @@
       window.location.href = 'index.html';
     }
 
-    // Run on page load
     fetchUser();
     fetchBalance();
   </script>
