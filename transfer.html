@@ -88,6 +88,10 @@
       font-weight: bold;
     }
 
+    #balance-box {
+      margin-bottom: 20px;
+    }
+
     /* Dark Mode */
     body.dark {
       background-color: #121212;
@@ -128,6 +132,11 @@
 
   <main>
     <h2>💸 Transfer Funds</h2>
+
+    <div id="balance-box">
+      <strong>Current Balance:</strong> <span id="user-balance">Loading...</span>
+    </div>
+
     <form id="transfer-form">
       <input type="email" id="toEmail" placeholder="Recipient's Email" required />
       <input type="number" id="amount" placeholder="Amount (USD)" min="1" required />
@@ -145,11 +154,38 @@
       window.location.href = 'index.html';
     }
 
+    // 🔄 Fetch and show balance
+    async function fetchUserBalance() {
+      try {
+        const res = await fetch(`${BASE_URL}/api/bank/balance`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        const data = await res.json();
+        const balanceEl = document.getElementById('user-balance');
+
+        if (res.ok && data.balance != null) {
+          balanceEl.textContent = `$${data.balance.toFixed(2)}`;
+        } else {
+          balanceEl.textContent = 'Unavailable';
+        }
+      } catch (err) {
+        console.error('Balance fetch error:', err);
+        document.getElementById('user-balance').textContent = 'Error';
+      }
+    }
+
+    // Initial fetch
+    fetchUserBalance();
+
     document.getElementById('transfer-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const toEmail = document.getElementById('toEmail').value;
       const amount = parseFloat(document.getElementById('amount').value);
       const msg = document.getElementById('transfer-message');
+
       msg.textContent = '';
       msg.style.color = 'black';
 
@@ -169,6 +205,8 @@
         if (res.ok) {
           msg.style.color = 'green';
           msg.textContent = '✅ Transfer successful!';
+          document.getElementById('transfer-form').reset();
+          fetchUserBalance(); // 🔄 update balance after success
         } else {
           msg.style.color = 'red';
           msg.textContent = data.error || '❌ Transfer failed.';
@@ -184,7 +222,7 @@
       document.body.classList.toggle('dark');
     });
   </script>
-
+  
   <footer style="background-color: #f8f9fa; padding: 30px 20px; font-size: 14px; border-top: 1px solid #ddd;">
     <div style="max-width: 1000px; margin: auto;">
       <section style="margin-bottom: 20px;">
