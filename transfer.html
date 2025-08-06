@@ -145,7 +145,7 @@
     <p id="transfer-message"></p>
   </main>
 
-  <script>
+ <script>
   const BASE_URL = 'https://backend15-nnmy.onrender.com';
   const token = localStorage.getItem('userToken');
 
@@ -177,8 +177,11 @@
 
       if (res.ok) {
         msg.style.color = 'green';
-        msg.textContent = '✅ Transfer successful!';
-        await refreshBalance(); // Update balance after success
+        msg.textContent = '✅ Transfer successful! Redirecting to dashboard...';
+        await refreshBalance();
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 2000); // 2 seconds delay
       } else {
         msg.style.color = 'red';
         msg.textContent = data.error || '❌ Transfer failed.';
@@ -190,7 +193,7 @@
     }
   });
 
-  // 🔄 Real-time balance fetch
+  // 🔄 Fetch and update balance (if available on page)
   async function refreshBalance() {
     try {
       const res = await fetch(`${BASE_URL}/api/bank/balance`, {
