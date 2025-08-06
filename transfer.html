@@ -146,82 +146,81 @@
   </main>
 
   <script>
-    const BASE_URL = 'https://backend15-nnmy.onrender.com';
-    const token = localStorage.getItem('userToken');
+  const BASE_URL = 'https://backend15-nnmy.onrender.com';
+  const token = localStorage.getItem('userToken');
 
-    if (!token) {
-      alert('Not logged in');
-      window.location.href = 'index.html';
-    }
+  if (!token) {
+    alert('Not logged in');
+    window.location.href = 'index.html';
+  }
 
-    // 🔄 Fetch and show balance
-    async function fetchUserBalance() {
-      try {
-        const res = await fetch(`${BASE_URL}/api/bank/balance`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+  document.getElementById('transfer-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const toEmail = document.getElementById('toEmail').value;
+    const amount = parseFloat(document.getElementById('amount').value);
+    const msg = document.getElementById('transfer-message');
+    msg.textContent = '';
+    msg.style.color = 'black';
 
-        const data = await res.json();
-        const balanceEl = document.getElementById('user-balance');
+    try {
+      const res = await fetch(`${BASE_URL}/api/transfer`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ toEmail, amount })
+      });
 
-        if (res.ok && data.balance != null) {
-          balanceEl.textContent = `$${data.balance.toFixed(2)}`;
-        } else {
-          balanceEl.textContent = 'Unavailable';
-        }
-      } catch (err) {
-        console.error('Balance fetch error:', err);
-        document.getElementById('user-balance').textContent = 'Error';
+      const data = await res.json();
+      console.log('Transfer response:', data);
+
+      if (res.ok) {
+        msg.style.color = 'green';
+        msg.textContent = '✅ Transfer successful!';
+        await refreshBalance(); // Update balance after success
+      } else {
+        msg.style.color = 'red';
+        msg.textContent = data.error || '❌ Transfer failed.';
       }
+    } catch (err) {
+      console.error('Transfer error:', err);
+      msg.style.color = 'orange';
+      msg.textContent = '⚠ Network error.';
     }
+  });
 
-    // Initial fetch
-    fetchUserBalance();
-
-    document.getElementById('transfer-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const toEmail = document.getElementById('toEmail').value;
-      const amount = parseFloat(document.getElementById('amount').value);
-      const msg = document.getElementById('transfer-message');
-
-      msg.textContent = '';
-      msg.style.color = 'black';
-
-      try {
-        const res = await fetch(`${BASE_URL}/api/transfer`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ toEmail, amount })
-        });
-
-        const data = await res.json();
-        console.log('Transfer response:', data);
-
-        if (res.ok) {
-          msg.style.color = 'green';
-          msg.textContent = '✅ Transfer successful!';
-          document.getElementById('transfer-form').reset();
-          fetchUserBalance(); // 🔄 update balance after success
-        } else {
-          msg.style.color = 'red';
-          msg.textContent = data.error || '❌ Transfer failed.';
+  // 🔄 Real-time balance fetch
+  async function refreshBalance() {
+    try {
+      const res = await fetch(`${BASE_URL}/api/bank/balance`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
         }
-      } catch (err) {
-        console.error('Transfer error:', err);
-        msg.style.color = 'orange';
-        msg.textContent = '⚠ Network error.';
-      }
-    });
+      });
 
-    document.getElementById('darkModeToggle').addEventListener('click', () => {
-      document.body.classList.toggle('dark');
-    });
-  </script>
+      const data = await res.json();
+      if (res.ok && data.balance !== undefined) {
+        const checkingBalance = document.getElementById('checkingBalance');
+        const savingsBalance = document.getElementById('savingsBalance');
+        if (checkingBalance) {
+          checkingBalance.textContent = parseFloat(data.balance).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+        }
+        if (savingsBalance) {
+          savingsBalance.textContent = (parseFloat(data.balance) * 0.2).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+        }
+      }
+    } catch (err) {
+      console.error('Balance refresh failed:', err);
+    }
+  }
+
+  // 🌙 Dark mode toggle
+  document.getElementById('darkModeToggle').addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+  });
+</script>
   
   <footer style="background-color: #f8f9fa; padding: 30px 20px; font-size: 14px; border-top: 1px solid #ddd;">
     <div style="max-width: 1000px; margin: auto;">
