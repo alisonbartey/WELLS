@@ -275,50 +275,58 @@
 </footer>
 
   <script>
-    const BASE_URL = 'https://backend15-nnmy.onrender.com';
-    const token = localStorage.getItem('userToken');
-    if (!token) {
-      alert('You are not logged in.');
-      window.location.href = 'index.html';
-    }
+  const BASE_URL = 'https://backend15-nnmy.onrender.com';
+  const token = localStorage.getItem('userToken');
 
-    async function fetchUser() {
-      try {
-        const res = await fetch(`${BASE_URL}/api/auth/me`, {
-          method: 'GET',
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || 'Unauthorized');
+  if (!token) {
+    alert('You are not logged in.');
+    window.location.href = 'index.html';
+  }
 
-        document.getElementById('userName').innerText = data.name;
-        document.getElementById('profilePhoto').src = data.profilePhoto || 'https://randomuser.me/api/portraits/men/75.jpg';
+  async function fetchUser() {
+    try {
+      const res = await fetch(`${BASE_URL}/api/auth/me`, {
+        method: 'GET',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
 
-        const fullBalance = parseFloat(data.balance);
-        document.getElementById('checkingBalance').innerText = fullBalance.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-        document.getElementById('savingsBalance').innerText = (fullBalance * 0.2).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Unauthorized');
 
-        // Load dummy transactions for illustration
-        const txList = document.getElementById('transactionsList');
-        txList.innerHTML = '';
-        (data.transactions || []).forEach(tx => {
-          const li = document.createElement('li');
-          li.innerHTML = `${tx.description} <span style="color:${tx.amount < 0 ? 'red' : 'green'};">${tx.amount < 0 ? '-' : '+'}$${Math.abs(tx.amount).toFixed(2)}</span>`;
-          txList.appendChild(li);
-        });
-      } catch (err) {
-        alert('Session expired. Please login again.');
-        localStorage.removeItem('userToken');
-        window.location.href = 'index.html';
-      }
-    }
-
-    function logout() {
+      document.getElementById('userName').innerText = data.name;
+      document.getElementById('profilePhoto').src = data.profilePhoto || 'https://randomuser.me/api/portraits/men/75.jpg';
+    } catch (err) {
+      alert('Session expired. Please login again.');
       localStorage.removeItem('userToken');
       window.location.href = 'index.html';
     }
+  }
 
-    fetchUser();
-  </script>
+  async function fetchBalance() {
+    try {
+      const res = await fetch(`${BASE_URL}/api/bank/balance`, {
+        method: 'GET',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to fetch balance');
+
+      const fullBalance = parseFloat(data.balance || 0);
+      document.getElementById('checkingBalance').innerText = fullBalance.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+      document.getElementById('savingsBalance').innerText = (fullBalance * 0.2).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+    } catch (err) {
+      console.error('Balance fetch error:', err);
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem('userToken');
+    window.location.href = 'index.html';
+  }
+
+  fetchUser();
+  fetchBalance();
+</script>
 </body>
 </html>
