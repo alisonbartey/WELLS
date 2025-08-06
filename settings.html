@@ -5,56 +5,84 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Wells Fargo | Settings</title>
   <link rel="icon" href="logo.png" type="image/png" />
-  <link rel="stylesheet" href="styles.css" />
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      padding: 0;
       background-color: #f9f9f9;
+      color: #000;
+      transition: background 0.3s, color 0.3s;
     }
 
-    header {
+    body.dark-mode {
+      background-color: #121212;
+      color: #f1f1f1;
+    }
+
+    nav {
       background-color: #b31b1b;
-      color: white;
-      padding: 10px 20px;
+      padding: 15px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-    }
-
-    header img {
-      height: 40px;
-    }
-
-    nav a {
-      margin-left: 20px;
       color: white;
+    }
+
+    nav .nav-left {
+      display: flex;
+      align-items: center;
+    }
+
+    nav img {
+      height: 40px;
+      margin-right: 15px;
+    }
+
+    nav .nav-links a {
+      color: white;
+      margin: 0 10px;
       text-decoration: none;
       font-weight: bold;
     }
 
-    nav a:hover {
+    nav .nav-links a:hover {
       text-decoration: underline;
     }
 
+    .toggle-btn {
+      background: none;
+      border: 1px solid white;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
     .container {
-      padding: 20px;
       max-width: 600px;
-      margin: auto;
+      margin: 40px auto;
       background: white;
-      margin-top: 30px;
+      padding: 30px;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
-    .container h2 {
+    body.dark-mode .container {
+      background: #1e1e1e;
+      color: white;
+    }
+
+    h2 {
       color: #b31b1b;
+      text-align: center;
+      margin-bottom: 30px;
     }
 
     label {
       display: block;
       margin-top: 15px;
+      font-weight: bold;
     }
 
     input {
@@ -74,48 +102,73 @@
       border-radius: 4px;
       cursor: pointer;
       font-weight: bold;
+      width: 100%;
     }
 
     button:hover {
-      background-color: #a11616;
+      background-color: #911010;
     }
 
-    .dark-mode {
-      background-color: #121212;
-      color: white;
+    .profile-section {
+      text-align: center;
+      margin-bottom: 20px;
     }
 
-    .dark-mode .container {
-      background-color: #1e1e1e;
-      color: white;
+    #profilePreview {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #ccc;
     }
 
-    .toggle-btn {
-      background: none;
-      border: 1px solid white;
+    .logout {
+      background-color: #b31b1b;
       color: white;
-      padding: 5px 10px;
-      border-radius: 5px;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 4px;
+      font-weight: bold;
       cursor: pointer;
-      margin-left: 20px;
+      margin-left: 10px;
     }
+
+    .logout:hover {
+      background-color: #911010;
+    }
+
   </style>
 </head>
 <body>
-  <header>
-    <img src="logo.png" alt="Wells Fargo Logo" />
-    <nav>
-      <a href="dashboard.html">🏠 Dashboard</a>
-      <a href="transfer.html">💸 Transfer</a>
-      <a href="transactions.html">📄 Transactions</a>
-      <a href="settings.html">⚙️ Settings</a>
+  <nav>
+    <div class="nav-left">
+      <img src="logo.png" alt="Wells Fargo Logo" />
+      <div class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="transfer.html">Transfer</a>
+        <a href="transactions.html">Transactions</a>
+        <a href="settings.html">Settings</a>
+      </div>
+    </div>
+    <div>
       <button class="toggle-btn" onclick="toggleDarkMode()">🌓</button>
-      <a href="#" onclick="logout()">🚪 Logout</a>
-    </nav>
-  </header>
+      <button class="logout" onclick="logout()">Sign Off</button>
+    </div>
+  </nav>
 
   <div class="container">
     <h2>⚙️ Account Settings</h2>
+
+    <!-- Profile Photo -->
+    <div class="profile-section">
+      <img id="profilePreview" src="default-profile.png" alt="Profile Photo" />
+      <form id="photo-form" enctype="multipart/form-data" style="margin-top: 10px;">
+        <input type="file" id="photo" accept="image/*" />
+        <button type="submit">Upload Photo</button>
+      </form>
+    </div>
+
+    <!-- Settings Form -->
     <form id="settings-form">
       <label for="name">Full Name</label>
       <input type="text" id="name" placeholder="Your full name" required />
@@ -132,27 +185,30 @@
     const token = localStorage.getItem('userToken');
 
     if (!token) {
-      alert('Not logged in.');
+      alert('You are not logged in.');
       window.location.href = 'index.html';
     }
 
     async function fetchUserInfo() {
-      const res = await fetch(`${BASE_URL}/api/auth/me`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
+      try {
+        const res = await fetch(`${BASE_URL}/api/auth/me`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (res.ok) {
+          document.getElementById('name').value = data.name;
+          if (data.photoUrl) {
+            document.getElementById('profilePreview').src = data.photoUrl;
+          }
+        } else {
+          throw new Error();
         }
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        document.getElementById('name').value = data.name;
-      } else {
-        alert('Unauthorized');
+      } catch {
+        alert('Session expired or unauthorized.');
+        localStorage.removeItem('userToken');
         window.location.href = 'index.html';
       }
     }
-
-    fetchUserInfo();
 
     document.getElementById('settings-form').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -168,26 +224,56 @@
           },
           body: JSON.stringify({ name, password })
         });
-
         const data = await res.json();
         if (res.ok) {
-          alert('Profile updated successfully!');
+          alert('✅ Profile updated successfully!');
         } else {
           alert(data.error || 'Update failed.');
         }
-      } catch (err) {
-        alert('⚠ Network error. Please try again.');
+      } catch {
+        alert('⚠ Network error. Try again later.');
       }
     });
+
+    document.getElementById('photo-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const file = document.getElementById('photo').files[0];
+      if (!file) return alert('Please select a photo.');
+
+      const formData = new FormData();
+      formData.append('photo', file);
+
+      try {
+        const res = await fetch(`${BASE_URL}/api/user/photo`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: formData
+        });
+
+        const data = await res.json();
+        if (res.ok && data.photoUrl) {
+          alert('📸 Photo uploaded successfully!');
+          document.getElementById('profilePreview').src = data.photoUrl;
+        } else {
+          alert(data.error || 'Photo upload failed.');
+        }
+      } catch (err) {
+        alert('⚠ Failed to upload photo.');
+      }
+    });
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+    }
 
     function logout() {
       localStorage.removeItem('userToken');
       window.location.href = 'index.html';
     }
 
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark-mode');
-    }
+    fetchUserInfo();
   </script>
 </body>
 </html>
