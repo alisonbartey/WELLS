@@ -3,137 +3,138 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Wells Fargo - Dashboard</title>
+  <title>Wells Fargo | Dashboard</title>
   <link rel="icon" href="logo.png" type="image/png" />
+  <link rel="stylesheet" href="styles.css">
   <style>
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
+      margin: 0;
       background-color: #f8f9fa;
       color: #000;
       transition: background-color 0.3s, color 0.3s;
     }
 
+    body.dark {
+      background-color: #121212;
+      color: #f1f1f1;
+    }
+
     nav {
       background-color: #b31b1b;
-      color: white;
-      padding: 10px 20px;
+      padding: 15px;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
 
-    nav .left {
+    .nav-left {
       display: flex;
       align-items: center;
-      gap: 20px;
     }
 
-    nav img {
+    .nav-left img {
       height: 40px;
+      margin-right: 15px;
     }
 
-    nav a {
+    .nav-links a {
       color: white;
+      margin: 0 10px;
       text-decoration: none;
       font-weight: bold;
     }
 
-    nav .right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .nav-links a:hover {
+      text-decoration: underline;
     }
 
-    .dashboard {
+    .dark-toggle {
+      cursor: pointer;
+      padding: 5px 10px;
+      border: none;
+      background: white;
+      color: #b31b1b;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+
+    .container {
+      padding: 30px;
       max-width: 600px;
       margin: 40px auto;
-      padding: 30px;
-      background: #fff;
+      background: white;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
-    .dashboard h2 {
-      margin-bottom: 20px;
+    body.dark .container {
+      background: #1e1e1e;
+    }
+
+    h2 {
       color: #b31b1b;
+      text-align: center;
     }
 
-    button {
-      padding: 10px 20px;
+    p {
+      font-size: 18px;
+      margin: 15px 0;
+    }
+
+    button.logout {
       background-color: #b31b1b;
+      color: white;
+      padding: 10px 20px;
       border: none;
-      color: white;
       font-weight: bold;
-      border-radius: 4px;
+      border-radius: 5px;
       cursor: pointer;
+      display: block;
+      margin: 30px auto 0;
     }
 
-    button:hover {
-      background-color: #a11616;
-    }
-
-    .dark-mode {
-      background-color: #121212;
-      color: white;
-    }
-
-    .dark-mode .dashboard {
-      background-color: #1e1e1e;
-      color: white;
-    }
-
-    .dark-mode nav {
-      background-color: #000;
-    }
-
-    .dark-mode a {
-      color: #fff;
-    }
-
-    .toggle-btn {
-      cursor: pointer;
-      padding: 5px 10px;
-      border: 1px solid #fff;
-      border-radius: 4px;
-      font-size: 12px;
+    button.logout:hover {
+      background-color: #911010;
     }
   </style>
 </head>
 <body>
   <nav>
-    <div class="left">
+    <div class="nav-left">
       <img src="logo.png" alt="Wells Fargo Logo" />
-      <a href="dashboard.html">🏠 Dashboard</a>
-      <a href="transfer.html">💸 Transfer</a>
-      <a href="transactions.html">📄 Transactions</a>
-      <a href="settings.html">⚙️ Settings</a>
+      <div class="nav-links">
+        <a href="dashboard.html">🏠 Dashboard</a>
+        <a href="transfer.html">💸 Transfer</a>
+        <a href="transactions.html">📄 Transactions</a>
+        <a href="settings.html">⚙️ Settings</a>
+      </div>
     </div>
-    <div class="right">
-      <span class="toggle-btn" onclick="toggleDarkMode()">🌙 Toggle Dark</span>
-      <button onclick="logout()">Logout</button>
-    </div>
+    <button class="dark-toggle" onclick="toggleDarkMode()">🌓 Toggle</button>
   </nav>
 
-  <div class="dashboard">
+  <div class="container">
     <h2>Welcome to Wells Fargo</h2>
     <p><strong>Name:</strong> <span id="name">Loading...</span></p>
     <p><strong>Email:</strong> <span id="email">Loading...</span></p>
     <p><strong>Balance:</strong> ₦<span id="balance">Loading...</span></p>
+
+    <button class="logout" onclick="logout()">Logout</button>
   </div>
 
   <script>
     const BASE_URL = 'https://backend15-nnmy.onrender.com';
-    const token = localStorage.getItem('userToken'); // ✅ make sure it's 'userToken'
+    const token = localStorage.getItem('userToken');
 
     if (!token) {
       alert('Not logged in');
-      window.location.href = 'login.html';
+      window.location.href = 'index.html'; // ✅ Redirect to login page
     }
 
     async function fetchUser() {
       try {
         const res = await fetch(`${BASE_URL}/api/auth/me`, {
+          method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -141,28 +142,27 @@
 
         const data = await res.json();
 
-        if (res.ok) {
-          document.getElementById('name').innerText = data.name;
-          document.getElementById('email').innerText = data.email;
-          document.getElementById('balance').innerText = data.balance.toFixed(2);
-        } else {
-          alert('Session expired or unauthorized. Please log in again.');
-          localStorage.removeItem('userToken');
-          window.location.href = 'login.html';
+        if (!res.ok) {
+          throw new Error(data.message || 'Unauthorized');
         }
+
+        document.getElementById('name').innerText = data.name;
+        document.getElementById('email').innerText = data.email;
+        document.getElementById('balance').innerText = parseFloat(data.balance).toFixed(2);
       } catch (err) {
-        alert('Network error.');
-        console.error(err);
+        alert('Session expired or unauthorized. Please log in again.');
+        localStorage.removeItem('userToken');
+        window.location.href = 'index.html'; // ✅ Redirect to login page
       }
     }
 
     function logout() {
       localStorage.removeItem('userToken');
-      window.location.href = 'login.html';
+      window.location.href = 'index.html'; // ✅ Redirect to login page
     }
 
     function toggleDarkMode() {
-      document.body.classList.toggle('dark-mode');
+      document.body.classList.toggle('dark');
     }
 
     fetchUser();
