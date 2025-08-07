@@ -172,53 +172,50 @@
   </div>
 
   <script>
-    // Dynamic greeting with username
-    const greeting = document.getElementById("greetingText");
-    const hours = new Date().getHours();
-    let greetingText = "Hello";
+  const greetingEl = document.getElementById("greetingText");
+  const balanceEl = document.getElementById("balance");
+  const token = localStorage.getItem("userToken");
 
-    if (hours >= 5 && hours < 12) {
-      greetingText = "Good morning";
-    } else if (hours >= 12 && hours < 17) {
-      greetingText = "Good afternoon";
-    } else {
-      greetingText = "Good evening";
+  if (!token) {
+    alert("Session expired. Please log in again.");
+    window.location.href = "login.html";
+  }
+
+  // Set dynamic greeting
+  const hours = new Date().getHours();
+  let greetingWord = "Hello";
+  if (hours >= 5 && hours < 12) greetingWord = "Good morning";
+  else if (hours >= 12 && hours < 17) greetingWord = "Good afternoon";
+  else greetingWord = "Good evening";
+
+  // Fetch dashboard data from backend
+  fetch("https://backend15-nnmy.onrender.com/bank/dashboard", {
+    headers: {
+      Authorization: `Bearer ${token}`
     }
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("Dashboard fetch failed");
+    return res.json();
+  })
+  .then(data => {
+    // Username
+    const user = data.username || "User";
+    greetingEl.textContent = `${greetingWord}, ${user}`;
 
-    const token = localStorage.getItem("userToken");
-
-    fetch("https://backend15-nnmy.onrender.com/bank/me", {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-    .then(res => res.json())
-    .then(data => {
-      greeting.textContent = `${greetingText}, ${data.username || "User"}`;
-    })
-    .catch(err => {
-      console.error("Greeting fetch error", err);
-      greeting.textContent = `${greetingText}, User`;
+    // Balance
+    const balance = parseFloat(data.balance || 0).toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD"
     });
-
-    // Fetch real-time balance
-    fetch("https://backend15-nnmy.onrender.com/bank/balance", {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-    .then(res => res.json())
-    .then(data => {
-      const balance = parseFloat(data.balance).toLocaleString("en-US", {
-        style: "currency",
-        currency: "USD"
-      });
-      document.getElementById("balance").textContent = balance;
-    })
-    .catch(err => {
-      console.error("Balance fetch error", err);
-    });
-  </script>
+    balanceEl.textContent = balance;
+  })
+  .catch(err => {
+    console.error("Failed to load dashboard:", err);
+    alert("Failed to load dashboard. Please check your internet or try logging in again.");
+    window.location.href = "login.html";
+  });
+</script>
 
 </body>
 </html>
