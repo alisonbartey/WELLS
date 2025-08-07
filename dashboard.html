@@ -3,176 +3,221 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Wells Fargo Dashboard</title>
-  <link rel="icon" href="logo.png" type="image/png" />
+  <title>Wells Fargo - Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
     body {
-      font-family: Arial, sans-serif;
       margin: 0;
-      background-color: #f5f5f5;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #e3ecff, #ffffff);
+      color: #000;
     }
-    header {
-      background-color: #b31b1b;
+
+    .top-bar {
+      background-color: #d90000;
+      padding: 15px;
       color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .top-bar .logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .top-bar img {
+      height: 24px;
+      margin-right: 8px;
+    }
+
+    .container {
       padding: 20px;
-      text-align: center;
     }
-    header img {
-      height: 40px;
-      vertical-align: middle;
-      margin-right: 10px;
-    }
+
     .greeting {
-      font-size: 18px;
-      margin: 10px 0;
-    }
-    .alert {
-      background-color: #fff3cd;
-      color: #856404;
-      padding: 10px 15px;
-      margin: 15px;
-      border-left: 4px solid #ffc107;
-      border-radius: 5px;
-      font-size: 14px;
-    }
-    .accounts {
-      margin: 20px;
-    }
-    .card {
-      background-color: white;
-      padding: 20px;
+      font-size: 22px;
       margin-bottom: 15px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      padding: 15px;
+      margin-bottom: 20px;
       cursor: pointer;
+      transition: box-shadow 0.2s ease;
     }
+
     .card:hover {
-      background-color: #f0f0f0;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
     }
-    .card-title {
+
+    .account-title {
       font-weight: bold;
-      color: #333;
-    }
-    .balance {
-      font-size: 24px;
-      margin-top: 8px;
-      color: #2e7d32;
-    }
-    .closed {
-      color: gray;
       font-size: 14px;
+      margin-bottom: 10px;
     }
-    nav {
+
+    .balance {
+      font-size: 28px;
+      font-weight: bold;
+      color: #2b2b2b;
+    }
+
+    .label {
+      font-size: 13px;
+      color: #555;
+    }
+
+    .info-box {
+      background: #f0f0f0;
+      border-left: 4px solid #a3a3a3;
+      padding: 10px;
+      font-size: 13px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .section-title {
+      font-weight: bold;
+      margin: 20px 0 10px;
+    }
+
+    .bottom-nav {
       position: fixed;
       bottom: 0;
       width: 100%;
-      background: white;
-      border-top: 1px solid #ccc;
+      background-color: #ffffff;
+      border-top: 1px solid #ddd;
       display: flex;
       justify-content: space-around;
       padding: 10px 0;
     }
-    nav div {
+
+    .bottom-nav a {
       text-align: center;
-      color: #b31b1b;
+      color: #555;
+      text-decoration: none;
       font-size: 12px;
     }
-    nav svg {
-      height: 20px;
-      margin-bottom: 4px;
+
+    .bottom-nav a i {
+      font-size: 18px;
+      display: block;
+      margin-bottom: 5px;
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <img src="logo.png" alt="Wells Fargo Logo" />
-    <div class="greeting" id="greeting"></div>
-  </header>
-
-  <div class="alert">
-    ⚠️ For your security, sign off when you're done and close your browser.
+  <div class="top-bar">
+    <div class="logo">
+      <img src="logo.png" alt="Logo">
+      <span>WELLS FARGO</span>
+    </div>
+    <a href="logout.html" style="color: white; text-decoration: none;">Sign off</a>
   </div>
 
-  <div class="accounts">
-    <div class="card" onclick="window.location.href='transactions.html'">
-      <div class="card-title">Everyday Checking</div>
-      <div class="balance" id="checking-balance">$0.00</div>
+  <div class="container">
+    <div class="greeting" id="greetingText">Good morning, User</div>
+
+    <div class="card" onclick="location.href='transactions.html'">
+      <div class="account-title">Everyday Checking …7550</div>
+      <div class="balance" id="balance">$0.00</div>
+      <div class="label">Available balance</div>
     </div>
+
     <div class="card">
-      <div class="card-title">Way2Save Savings</div>
+      <div class="account-title">Way2Save Savings …6813</div>
       <div class="balance">$0.00</div>
-      <div class="closed">Account Closed</div>
+      <div class="label">Available balance</div>
+      <div class="info-box">
+        This account is closed. You can view your account information for approximately 90 days after the date of closure.
+      </div>
+    </div>
+
+    <div class="section-title">Open an account</div>
+    <div class="card" style="display: flex; justify-content: space-around;">
+      <div><i class="fas fa-university"></i><br/>Checking</div>
+      <div><i class="fas fa-piggy-bank"></i><br/>Savings</div>
+      <div><i class="fas fa-credit-card"></i><br/>Credit</div>
+      <div><i class="fas fa-home"></i><br/>Loans</div>
     </div>
   </div>
 
-  <nav>
-    <div onclick="location.href='settings.html'">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-      </svg>
-      <div>Menu</div>
-    </div>
-    <div onclick="location.href='transfer.html'">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-      </svg>
-      <div>Pay & Transfer</div>
-    </div>
-    <div>
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-width="2" d="M12 4v16m8-8H4"/>
-      </svg>
-      <div>Deposit</div>
-    </div>
-    <div>
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-width="2" d="M8 16l4-4-4-4m8 8l-4-4 4-4"/>
-      </svg>
-      <div>Explore</div>
-    </div>
-  </nav>
+  <div class="bottom-nav">
+    <a href="dashboard.html">
+      <i class="fas fa-home"></i>
+      Accounts
+    </a>
+    <a href="#">
+      <i class="fas fa-camera"></i>
+      Deposit
+    </a>
+    <a href="transfer.html">
+      <i class="fas fa-dollar-sign"></i>
+      Pay & Transfer
+    </a>
+    <a href="#">
+      <i class="fas fa-compass"></i>
+      Explore
+    </a>
+    <a href="settings.html">
+      <i class="fas fa-bars"></i>
+      Menu
+    </a>
+  </div>
 
   <script>
-    const BASE_URL = 'https://backend15-nnmy.onrender.com';
-    const token = localStorage.getItem('userToken');
+    // Dynamic greeting with username
+    const greeting = document.getElementById("greetingText");
+    const hours = new Date().getHours();
+    let greetingText = "Hello";
 
-    async function fetchBalance() {
-      try {
-        const res = await fetch(`${BASE_URL}/api/bank/balance`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
+    if (hours >= 5 && hours < 12) {
+      greetingText = "Good morning";
+    } else if (hours >= 12 && hours < 17) {
+      greetingText = "Good afternoon";
+    } else {
+      greetingText = "Good evening";
+    }
 
-        const data = await res.json();
+    const token = localStorage.getItem("userToken");
 
-        if (res.ok) {
-          document.getElementById('checking-balance').textContent = 
-            new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(data.balance);
-        } else {
-          document.getElementById('checking-balance').textContent = 'Session expired';
-        }
-      } catch (error) {
-        document.getElementById('checking-balance').textContent = 'Network error';
-        console.error(error);
+    fetch("https://backend15-nnmy.onrender.com/bank/me", {
+      headers: {
+        Authorization: `Bearer ${token}`
       }
-    }
+    })
+    .then(res => res.json())
+    .then(data => {
+      greeting.textContent = `${greetingText}, ${data.username || "User"}`;
+    })
+    .catch(err => {
+      console.error("Greeting fetch error", err);
+      greeting.textContent = `${greetingText}, User`;
+    });
 
-    function setGreeting() {
-      const hour = new Date().getHours();
-      let greeting = "Welcome back";
-      if (hour < 12) greeting = "Good morning";
-      else if (hour < 17) greeting = "Good afternoon";
-      else greeting = "Good evening";
-
-      const userName = localStorage.getItem('userName') || '';
-      document.getElementById('greeting').textContent = `${greeting}, ${userName}`;
-    }
-
-    setGreeting();
-    fetchBalance();
+    // Fetch real-time balance
+    fetch("https://backend15-nnmy.onrender.com/bank/balance", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      const balance = parseFloat(data.balance).toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD"
+      });
+      document.getElementById("balance").textContent = balance;
+    })
+    .catch(err => {
+      console.error("Balance fetch error", err);
+    });
   </script>
 
 </body>
