@@ -194,77 +194,73 @@
   </div>
 
   <script>
-    const token = localStorage.getItem("userToken");
-    const backendUrl = "https://backend15-nnmy.onrender.com";
+  const backendUrl = "https://backend15-nnmy.onrender.com";
+  const token = localStorage.getItem("userToken");
 
-    // Greeting
-    const hours = new Date().getHours();
-    let greeting = "Hello";
+  // Dynamic greeting
+  const greeting = document.getElementById("greetingText");
+  const hours = new Date().getHours();
+  let timeGreeting = "Hello";
 
-    if (hours >= 5 && hours < 12) greeting = "Good morning";
-    else if (hours >= 12 && hours < 17) greeting = "Good afternoon";
-    else greeting = "Good evening";
+  if (hours >= 5 && hours < 12) {
+    timeGreeting = "Good morning";
+  } else if (hours >= 12 && hours < 17) {
+    timeGreeting = "Good afternoon";
+  } else {
+    timeGreeting = "Good evening";
+  }
 
-    // Get user info
-    fetch(`${backendUrl}/bank/user`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    .then(res => res.json())
-    .then(data => {
-      document.getElementById("greetingText").textContent = `${greeting}, ${data.name}`;
-    })
-    .catch(() => {
-      document.getElementById("greetingText").textContent = `${greeting}, User`;
+  // Fetch user name
+  fetch(`${backendUrl}/bank/user`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data && data.name) {
+      greeting.textContent = `${timeGreeting}, ${data.name}`;
+    } else {
+      greeting.textContent = `${timeGreeting}, User`;
+    }
+  })
+  .catch(err => {
+    console.error("User fetch error:", err);
+    greeting.textContent = `${timeGreeting}, User`;
+  });
+
+  // Fetch balance
+  fetch(`${backendUrl}/bank/balance`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  .then(res => res.json())
+  .then(data => {
+    const balance = parseFloat(data.balance).toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD"
     });
+    document.getElementById("balance").textContent = balance;
+  })
+  .catch(err => {
+    console.error("Balance fetch error:", err);
+  });
 
-    // Get balance
-    fetch(`${backendUrl}/bank/balance`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    .then(res => res.json())
-    .then(data => {
-      const balance = parseFloat(data.balance).toLocaleString("en-US", {
-        style: "currency",
-        currency: "USD"
-      });
-      document.getElementById("balance").textContent = balance;
-    })
-    .catch(err => {
-      console.error("Balance fetch error", err);
-      document.getElementById("balance").textContent = "$0.00";
-    });
-
-    // Get transactions
-    fetch(`${backendUrl}/bank/transactions`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    .then(res => res.json())
-    .then(data => {
-      const list = document.getElementById("activityList");
-      list.innerHTML = "";
-
-      if (data.length === 0) {
-        list.innerHTML = "<div>No recent activity.</div>";
-        return;
-      }
-
-      data.slice(0, 5).forEach(tx => {
-        const div = document.createElement("div");
-        div.className = "activity-item";
-        div.innerHTML = `
-          <span class="activity-type">${tx.type === "credit" ? "Received from" : "Sent to"} ${tx.to || tx.from}</span>
-          <span class="activity-amount">${parseFloat(tx.amount).toLocaleString("en-US", {
-            style: "currency",
-            currency: "USD"
-          })}</span>
-        `;
-        list.appendChild(div);
-      });
-    })
-    .catch(err => {
-      console.error("Transaction fetch error", err);
-      document.getElementById("activityList").innerHTML = "<div>Error loading activity.</div>";
-    });
-  </script>
+  // Optional: Preview recent transactions
+  fetch(`${backendUrl}/transactions`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log("Recent transactions:", data);
+    // Add rendering here if you want recent previews
+  })
+  .catch(err => {
+    console.error("Transactions fetch error:", err);
+  });
+</script>
 </body>
 </html>
