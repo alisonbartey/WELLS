@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard - Wells Fargo</title>
   <style>
@@ -10,6 +10,9 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #f0f2f5;
       color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
     header {
       background: #d62828;
@@ -22,7 +25,6 @@
     header h1 {
       margin: 0;
       font-size: 1.4rem;
-      letter-spacing: 1px;
     }
     header button {
       background: #fff;
@@ -34,6 +36,7 @@
       border-radius: 4px;
     }
     .container {
+      flex: 1;
       max-width: 900px;
       margin: 2rem auto;
       padding: 0 1rem;
@@ -58,6 +61,7 @@
     }
     .card:hover {
       transform: translateY(-3px);
+      cursor: pointer;
     }
     .card h2 {
       margin-top: 0;
@@ -76,18 +80,26 @@
       color: #0077b6;
     }
     footer {
-      text-align: center;
-      margin-top: 3rem;
+      background: #fff;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-around;
+      padding: 0.7rem 0;
       font-size: 0.9rem;
-      color: #777;
     }
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 1.1rem;
-      }
-      .greeting {
-        font-size: 1.2rem;
-      }
+    footer div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #555;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    footer div:hover {
+      color: #d62828;
+    }
+    footer span {
+      font-size: 1.3rem;
     }
   </style>
 </head>
@@ -99,7 +111,7 @@
   <div class="container">
     <div class="greeting">Hello, <span id="userName">User</span></div>
     <div class="cards">
-      <div class="card">
+      <div class="card" id="checkingCard">
         <h2>Everyday Checking</h2>
         <div class="balance checking" id="checkingBalance">$0.00</div>
       </div>
@@ -110,7 +122,22 @@
     </div>
   </div>
   <footer>
-    &copy; 2025 Wells Fargo. All rights reserved.
+    <div onclick="window.location.href='dashboard.html'">
+      <span>🏠</span>
+      Home
+    </div>
+    <div onclick="window.location.href='transactions.html'">
+      <span>📄</span>
+      Transactions
+    </div>
+    <div onclick="window.location.href='transfer.html'">
+      <span>💸</span>
+      Transfer
+    </div>
+    <div onclick="window.location.href='settings.html'">
+      <span>⚙️</span>
+      Settings
+    </div>
   </footer>
 
   <script>
@@ -169,6 +196,11 @@
       localStorage.removeItem('userToken');
       window.location.href = 'index.html';
     }
+
+    // Make the balance card clickable
+    document.getElementById('checkingCard').addEventListener('click', () => {
+      window.location.href = 'transactions.html';
+    });
 
     fetchUser();
     fetchBalance();
