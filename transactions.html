@@ -2,147 +2,116 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Transactions | Wells Fargo</title>
   <link rel="icon" href="logo.png" type="image/png" />
   <style>
     :root {
-      --bg: #fff;
-      --text: #000;
-      --card-bg: #f3f3f3;
-      --primary: #b31b1b;
+      --bg-color: #ffffff;
+      --text-color: #000000;
+      --card-bg: #f5f5f5;
     }
 
     body.dark-mode {
-      --bg: #121212;
-      --text: #fff;
+      --bg-color: #121212;
+      --text-color: #ffffff;
       --card-bg: #1e1e1e;
     }
 
     body {
       margin: 0;
-      font-family: system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      padding-bottom: 80px; /* For bottom nav */
+      font-family: Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
     }
 
     header {
-      background: var(--primary);
-      color: #fff;
-      padding: 15px 20px;
+      background-color: #b31b1b;
+      padding: 10px 20px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      color: white;
     }
 
     header img {
-      height: 35px;
-    }
-
-    .toggle-btn {
-      background: transparent;
-      border: 1px solid #fff;
-      color: #fff;
-      padding: 6px 10px;
-      border-radius: 4px;
-      cursor: pointer;
+      height: 40px;
     }
 
     main {
-      max-width: 700px;
-      margin: auto;
       padding: 20px;
+      padding-bottom: 100px;
+      max-width: 900px;
+      margin: auto;
     }
 
     h2 {
-      margin-bottom: 10px;
+      color: #b31b1b;
     }
 
     .section-title {
+      margin-top: 30px;
       font-size: 1.2em;
-      margin: 30px 0 10px;
-      color: var(--primary);
-      border-bottom: 2px solid var(--primary);
-      padding-bottom: 4px;
+      border-bottom: 2px solid #b31b1b;
+      padding-bottom: 5px;
     }
 
     .transaction {
-      background: var(--card-bg);
-      border-radius: 6px;
+      background-color: var(--card-bg);
       padding: 15px;
+      border-radius: 6px;
       margin: 10px 0;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
 
     .transaction p {
-      margin: 6px 0;
+      margin: 5px 0;
     }
 
-    .sent {
-      color: red;
-      font-weight: bold;
-    }
-
-    .received {
-      color: green;
-      font-weight: bold;
-    }
-
-    .logout {
-      display: none;
-    }
-
-    /* Bottom nav */
     .bottom-nav {
       position: fixed;
       bottom: 0;
+      left: 0;
       width: 100%;
       background: #fff;
       border-top: 1px solid #ccc;
       display: flex;
       justify-content: space-around;
-      align-items: center;
-      height: 60px;
-      z-index: 99;
+      padding: 10px 0;
+      background-color: var(--card-bg);
+      z-index: 10;
     }
 
     .bottom-nav a {
+      text-align: center;
+      color: var(--text-color);
       text-decoration: none;
-      color: #555;
-      font-size: 12px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      font-size: 14px;
     }
 
-    .bottom-nav a.active {
-      color: var(--primary);
-      font-weight: bold;
+    .bottom-nav a:hover {
+      color: #b31b1b;
     }
 
-    .bottom-nav a img {
-      width: 22px;
-      height: 22px;
-      margin-bottom: 3px;
+    .bottom-nav img {
+      height: 24px;
+      margin-bottom: 4px;
     }
 
-    body.dark-mode .bottom-nav {
-      background: #1e1e1e;
-      border-top: 1px solid #333;
-    }
-
-    body.dark-mode .bottom-nav a {
-      color: #ccc;
-    }
-
-    body.dark-mode .bottom-nav a.active {
-      color: #e74c3c;
+    .toggle-btn {
+      background: transparent;
+      border: 1px solid white;
+      color: white;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+      margin-left: 10px;
     }
   </style>
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="Wells Fargo" />
+    <img src="logo.png" alt="Wells Fargo Logo" />
     <button class="toggle-btn" onclick="toggleDarkMode()">🌓</button>
   </header>
 
@@ -150,47 +119,46 @@
     <h2>📄 Transaction History</h2>
 
     <div>
-      <h3 class="section-title">Sent</h3>
+      <h3 class="section-title">Sent Transactions</h3>
       <div id="sent-transactions">Loading...</div>
     </div>
 
     <div>
-      <h3 class="section-title">Received</h3>
+      <h3 class="section-title">Received Transactions</h3>
       <div id="received-transactions">Loading...</div>
     </div>
   </main>
 
-  <!-- Bottom Navigation -->
-  <div class="bottom-nav">
-    <a href="settings.html">
-      <img src="https://img.icons8.com/ios-filled/50/settings.png" alt="Menu" />
-      Menu
+  <nav class="bottom-nav">
+    <a href="dashboard.html">
+      <img src="icons/home.svg" alt="Dashboard" />
+      <div>Menu</div>
     </a>
     <a href="transfer.html">
-      <img src="https://img.icons8.com/ios-filled/50/money-transfer.png" alt="Transfer" />
-      Pay & Transfer
-    </a>
-    <a href="transactions.html" class="active">
-      <img src="https://img.icons8.com/ios-filled/50/activity-history.png" alt="Transactions" />
-      Transactions
+      <img src="icons/transfer.svg" alt="Transfer" />
+      <div>Pay & Transfer</div>
     </a>
     <a href="#">
-      <img src="https://img.icons8.com/ios-filled/50/money-box.png" alt="Deposit" />
-      Deposit
+      <img src="icons/deposit.svg" alt="Deposit" />
+      <div>Deposit</div>
     </a>
     <a href="#">
-      <img src="https://img.icons8.com/ios-filled/50/compass.png" alt="Explore" />
-      Explore
+      <img src="icons/explore.svg" alt="Explore" />
+      <div>Explore</div>
     </a>
-  </div>
+  </nav>
 
   <script>
     const BASE_URL = 'https://backend15-nnmy.onrender.com';
     const token = localStorage.getItem('userToken');
 
     if (!token) {
-      alert('Session expired. Please log in again.');
-      window.location.href = 'index.html';
+      alert('Session expired. Please login again.');
+      window.location.href = 'login.html';
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
     }
 
     async function fetchTransactions() {
@@ -200,52 +168,70 @@
         });
 
         const data = await res.json();
+
         const sentDiv = document.getElementById('sent-transactions');
         const receivedDiv = document.getElementById('received-transactions');
 
-        if (!res.ok) {
+        if (res.ok) {
           sentDiv.innerHTML = '';
           receivedDiv.innerHTML = '';
-          return alert(data.error || 'Unable to fetch transactions.');
+
+          const sent = data.sent || [];
+          const received = data.received || [];
+
+          if (sent.length === 0) {
+            sentDiv.innerHTML = '<p>No sent transactions.</p>';
+          } else {
+            for (const tx of sent) {
+              const recipientName = tx.toUser?.name || await fetchUserName(tx.to);
+              const el = document.createElement('div');
+              el.className = 'transaction';
+              el.innerHTML = `
+                <p><strong>To:</strong> ${recipientName}</p>
+                <p><strong>Amount:</strong> $${tx.amount.toFixed(2)}</p>
+                <p><strong>Date:</strong> ${new Date(tx.timestamp).toLocaleString()}</p>
+              `;
+              sentDiv.appendChild(el);
+            }
+          }
+
+          if (received.length === 0) {
+            receivedDiv.innerHTML = '<p>No received transactions.</p>';
+          } else {
+            for (const tx of received) {
+              const senderName = tx.fromUser?.name || await fetchUserName(tx.from);
+              const el = document.createElement('div');
+              el.className = 'transaction';
+              el.innerHTML = `
+                <p><strong>From:</strong> ${senderName}</p>
+                <p><strong>Amount:</strong> $${tx.amount.toFixed(2)}</p>
+                <p><strong>Date:</strong> ${new Date(tx.timestamp).toLocaleString()}</p>
+              `;
+              receivedDiv.appendChild(el);
+            }
+          }
+        } else {
+          alert(data.error || 'Failed to load transactions');
         }
-
-        sentDiv.innerHTML = '';
-        receivedDiv.innerHTML = '';
-
-        (data.sent || []).slice(0, 5).forEach(tx => {
-          const div = document.createElement('div');
-          div.className = 'transaction';
-          div.innerHTML = `
-            <p class="sent">🔺 Sent</p>
-            <p><strong>To:</strong> ${tx.toUser?.name || tx.to}</p>
-            <p><strong>Amount:</strong> $${tx.amount.toFixed(2)}</p>
-            <p><strong>Date:</strong> ${new Date(tx.timestamp).toLocaleString()}</p>
-          `;
-          sentDiv.appendChild(div);
-        });
-
-        (data.received || []).slice(0, 5).forEach(tx => {
-          const div = document.createElement('div');
-          div.className = 'transaction';
-          div.innerHTML = `
-            <p class="received">🔻 Received</p>
-            <p><strong>From:</strong> ${tx.fromUser?.name || tx.from}</p>
-            <p><strong>Amount:</strong> $${tx.amount.toFixed(2)}</p>
-            <p><strong>Date:</strong> ${new Date(tx.timestamp).toLocaleString()}</p>
-          `;
-          receivedDiv.appendChild(div);
-        });
-
-        if (data.sent.length === 0) sentDiv.innerHTML = '<p>No sent transactions found.</p>';
-        if (data.received.length === 0) receivedDiv.innerHTML = '<p>No received transactions found.</p>';
-      } catch (err) {
-        alert('Error loading transactions.');
-        console.error(err);
+      } catch (error) {
+        console.error('Fetch error:', error);
+        alert('Failed to load transactions due to network issue.');
       }
     }
 
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark-mode');
+    async function fetchUserName(userId) {
+      try {
+        const res = await fetch(`${BASE_URL}/api/auth/user/${userId}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          return data.name || userId;
+        }
+      } catch (e) {
+        console.warn('Could not fetch user name for ID:', userId);
+      }
+      return userId;
     }
 
     fetchTransactions();
