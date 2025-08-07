@@ -19,49 +19,9 @@
       color: #f1f1f1;
     }
 
-    nav {
-      background-color: #b31b1b;
-      padding: 15px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: white;
-    }
-
-    nav .nav-left {
-      display: flex;
-      align-items: center;
-    }
-
-    nav img {
-      height: 40px;
-      margin-right: 15px;
-    }
-
-    nav .nav-links a {
-      color: white;
-      margin: 0 10px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    nav .nav-links a:hover {
-      text-decoration: underline;
-    }
-
-    .toggle-btn {
-      background: none;
-      border: 1px solid white;
-      color: white;
-      padding: 6px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
     .container {
       max-width: 600px;
-      margin: 40px auto;
+      margin: 80px auto 100px;
       background: white;
       padding: 30px;
       border-radius: 8px;
@@ -122,44 +82,71 @@
       border: 2px solid #ccc;
     }
 
-    .logout {
-      background-color: #b31b1b;
+    .topbar {
+      background: #c40404;
       color: white;
-      border: none;
-      padding: 10px 16px;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .topbar img {
+      height: 28px;
+    }
+
+    .signoff-btn {
+      background: none;
+      border: 1px solid white;
+      color: white;
+      padding: 6px 12px;
       border-radius: 4px;
-      font-weight: bold;
+      font-size: 14px;
       cursor: pointer;
-      margin-left: 10px;
     }
 
-    .logout:hover {
-      background-color: #911010;
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 1px solid #d1d5db;
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0;
+      z-index: 999;
     }
 
+    footer div {
+      text-align: center;
+      font-size: 12px;
+      color: #374151;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    footer div:hover {
+      color: #c40404;
+      cursor: pointer;
+    }
+
+    footer img {
+      height: 22px;
+      margin-bottom: 2px;
+    }
   </style>
 </head>
 <body>
-  <nav>
-    <div class="nav-left">
-      <img src="logo.png" alt="Wells Fargo Logo" />
-      <div class="nav-links">
-        <a href="dashboard.html">Dashboard</a>
-        <a href="transfer.html">Transfer</a>
-        <a href="transactions.html">Transactions</a>
-        <a href="settings.html">Settings</a>
-      </div>
-    </div>
-    <div>
-      <button class="toggle-btn" onclick="toggleDarkMode()">🌓</button>
-      <button class="logout" onclick="logout()">Sign Off</button>
-    </div>
-  </nav>
+  <div class="topbar">
+    <img src="logo.png" alt="Wells Fargo Logo">
+    <button class="signoff-btn" onclick="logout()">Sign off</button>
+  </div>
 
   <div class="container">
     <h2>⚙️ Account Settings</h2>
 
-    <!-- Profile Photo -->
     <div class="profile-section">
       <img id="profilePreview" src="default-profile.png" alt="Profile Photo" />
       <form id="photo-form" enctype="multipart/form-data" style="margin-top: 10px;">
@@ -168,7 +155,6 @@
       </form>
     </div>
 
-    <!-- Settings Form -->
     <form id="settings-form">
       <label for="name">Full Name</label>
       <input type="text" id="name" placeholder="Your full name" required />
@@ -179,6 +165,29 @@
       <button type="submit">Update Profile</button>
     </form>
   </div>
+
+  <footer>
+    <div onclick="location.href='dashboard.html'">
+      <img src="icons/home.svg" alt="Accounts"/>
+      Accounts
+    </div>
+    <div onclick="location.href='deposit.html'">
+      <img src="icons/deposit.svg" alt="Deposit"/>
+      Deposit
+    </div>
+    <div onclick="location.href='transfer.html'">
+      <img src="icons/transfer.svg" alt="Transfer"/>
+      Pay & Transfer
+    </div>
+    <div onclick="location.href='explore.html'">
+      <img src="icons/explore.svg" alt="Explore"/>
+      Explore
+    </div>
+    <div onclick="location.href='settings.html'">
+      <img src="icons/menu.svg" alt="Menu"/>
+      Menu
+    </div>
+  </footer>
 
   <script>
     const BASE_URL = 'https://backend15-nnmy.onrender.com';
@@ -264,10 +273,6 @@
       }
     });
 
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark-mode');
-    }
-
     function logout() {
       localStorage.removeItem('userToken');
       window.location.href = 'index.html';
@@ -275,60 +280,5 @@
 
     fetchUserInfo();
   </script>
-  <footer style="background-color: #f8f9fa; padding: 30px 20px; font-size: 14px; border-top: 1px solid #ddd;">
-  <div style="max-width: 1000px; margin: auto;">
-    <section style="margin-bottom: 20px;">
-      <h3 style="color: #003366; font-size: 16px;">Security Center</h3>
-      <ul style="list-style: disc; padding-left: 20px; margin: 10px 0;">
-        <li>Never share your password, account, or personal information</li>
-        <li>We will never ask for your account information via email</li>
-        <li>Report suspicious activity immediately</li>
-        <li>Always access your account through wellsfargo.com</li>
-      </ul>
-      <a href="#" style="color: #003366; text-decoration: underline;">Learn more about online security</a>
-    </section>
-
-    <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
-      <div style="flex: 1; min-width: 180px; margin-bottom: 20px;">
-        <h4 style="color: #003366;">Products & Services</h4>
-        <ul style="list-style: none; padding: 0; margin: 0;">
-          <li>Checking Accounts</li>
-          <li>Credit Cards</li>
-          <li>Home Loans</li>
-          <li>Personal Loans</li>
-          <li>Retirement</li>
-        </ul>
-      </div>
-      <div style="flex: 1; min-width: 180px; margin-bottom: 20px;">
-        <h4 style="color: #003366;">Online Security</h4>
-        <ul style="list-style: none; padding: 0; margin: 0;">
-          <li>Security Center</li>
-          <li>Fraud Information</li>
-          <li>Report Fraud</li>
-          <li>Privacy & Cookies</li>
-        </ul>
-      </div>
-      <div style="flex: 1; min-width: 180px; margin-bottom: 20px;">
-        <h4 style="color: #003366;">Customer Service</h4>
-        <ul style="list-style: none; padding: 0; margin: 0;">
-          <li>Contact Us</li>
-          <li>FAQs</li>
-          <li>Find ATMs/Branches</li>
-          <li>Accessibility</li>
-        </ul>
-      </div>
-    </div>
-
-    <p style="margin-top: 20px; color: #555;">
-      © 2024 Wells Fargo Bank, N.A. All rights reserved. Member FDIC. Equal Housing Lender
-    </p>
-    <p style="margin-top: 5px; color: #555;">
-      <a href="#" style="color: #003366; text-decoration: underline;">Privacy</a> |
-      <a href="#" style="color: #003366; text-decoration: underline;">Security</a> |
-      <a href="#" style="color: #003366; text-decoration: underline;">Terms & Conditions</a> |
-      <a href="#" style="color: #003366; text-decoration: underline;">Ad Choices</a>
-    </p>
-  </div>
-</footer>
 </body>
 </html>
