@@ -4,57 +4,61 @@
   <meta charset="UTF-8" />
   <title>Wells Fargo | Transfer</title>
   <link rel="icon" href="logo.png" type="image/png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
+    :root {
+      --red: #b31b1b;
+      --dark-bg: #121212;
+      --light-bg: #f8f9fa;
+      --text-color: #333;
+      --light-text: #e0e0e0;
+    }
+
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      padding: 0;
-      background-color: #f8f9fa;
-      color: #333;
+      background: var(--light-bg);
+      color: var(--text-color);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.dark {
+      background: var(--dark-bg);
+      color: var(--light-text);
     }
 
     header {
+      background-color: var(--red);
+      color: white;
+      padding: 10px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 20px;
-      background-color: #b31b1b;
-      color: white;
     }
 
     .logo {
       height: 40px;
     }
 
-    nav a {
+    .nav-icons a, .nav-icons button {
       color: white;
-      margin: 0 10px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    nav a.active {
-      text-decoration: underline;
-    }
-
-    nav button {
       background: none;
       border: none;
-      color: white;
+      margin-left: 10px;
       font-size: 18px;
+      text-decoration: none;
       cursor: pointer;
     }
 
     main {
-      padding: 40px 20px;
+      padding: 20px;
       max-width: 500px;
       margin: auto;
     }
 
-    main h2 {
-      color: #b31b1b;
+    h2 {
       margin-bottom: 20px;
+      color: var(--red);
     }
 
     form {
@@ -65,13 +69,13 @@
     input {
       padding: 12px;
       margin-bottom: 15px;
-      border: 1px solid #ccc;
       border-radius: 4px;
+      border: 1px solid #ccc;
     }
 
     button[type="submit"] {
       padding: 12px;
-      background-color: #b31b1b;
+      background-color: var(--red);
       color: white;
       border: none;
       border-radius: 4px;
@@ -80,7 +84,7 @@
     }
 
     button[type="submit"]:hover {
-      background-color: #a11616;
+      background-color: #911010;
     }
 
     #transfer-message {
@@ -88,22 +92,40 @@
       font-weight: bold;
     }
 
-    #balance-box {
+    .balance-box {
+      font-size: 16px;
       margin-bottom: 20px;
     }
 
-    /* Dark Mode */
-    body.dark {
-      background-color: #121212;
-      color: #e0e0e0;
+    /* Bottom nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: white;
+      border-top: 1px solid #ccc;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
     }
 
-    body.dark header {
-      background-color: #222;
+    .bottom-nav a {
+      text-decoration: none;
+      color: var(--red);
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    body.dark nav a {
-      color: #e0e0e0;
+    .bottom-nav img {
+      height: 24px;
+      margin-bottom: 3px;
+    }
+
+    body.dark .bottom-nav {
+      background: #1e1e1e;
+      border-top: 1px solid #444;
     }
 
     body.dark input,
@@ -112,29 +134,22 @@
       color: white;
       border: 1px solid #555;
     }
-
-    body.dark button[type="submit"]:hover {
-      background-color: #444;
-    }
   </style>
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="Wells Fargo Logo" class="logo" />
-    <nav>
-      <a href="dashboard.html">🏠 Dashboard</a>
-      <a href="transfer.html" class="active">💸 Transfer</a>
-      <a href="transactions.html">📄 Transactions</a>
-      <a href="settings.html">⚙️ Settings</a>
+    <img src="logo.png" alt="Wells Fargo" class="logo" />
+    <div class="nav-icons">
       <button id="darkModeToggle">🌓</button>
-    </nav>
+      <a href="index.html">🚪 Sign Off</a>
+    </div>
   </header>
 
   <main>
     <h2>💸 Transfer Funds</h2>
 
-    <div id="balance-box">
-      <strong>Current Balance:</strong> <span id="user-balance">Loading...</span>
+    <div class="balance-box">
+      <strong>Available Balance:</strong> <span id="user-balance">Loading...</span>
     </div>
 
     <form id="transfer-form">
@@ -145,7 +160,26 @@
     <p id="transfer-message"></p>
   </main>
 
- <script>
+  <nav class="bottom-nav">
+    <a href="settings.html">
+      <img src="https://img.icons8.com/ios-glyphs/30/settings.png" alt="Menu" />
+      Menu
+    </a>
+    <a href="transfer.html">
+      <img src="https://img.icons8.com/ios-filled/50/money-transfer.png" alt="Transfer" />
+      Transfer
+    </a>
+    <a href="#">
+      <img src="https://img.icons8.com/ios/50/money-box.png" alt="Deposit" />
+      Deposit
+    </a>
+    <a href="#">
+      <img src="https://img.icons8.com/ios/50/compass--v1.png" alt="Explore" />
+      Explore
+    </a>
+  </nav>
+
+<script>
   const BASE_URL = 'https://backend15-nnmy.onrender.com';
   const token = localStorage.getItem('userToken');
 
@@ -154,13 +188,91 @@
     window.location.href = 'index.html';
   }
 
+  // 🌗 Dark mode
+  document.getElementById('darkModeToggle').addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+  });
+
+  const balanceEl = document.getElementById('user-balance');
+
+  // 🧮 Animate balance change
+  function animateBalance(start, end) {
+    const duration = 1000;
+    const startTime = performance.now();
+
+    function update(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const current = start + (end - start) * progress;
+      balanceEl.textContent = current.toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      });
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      }
+    }
+
+    requestAnimationFrame(update);
+  }
+
+  // 🔁 Fetch balance
+  async function refreshBalance() {
+    try {
+      const res = await fetch(`${BASE_URL}/api/bank/balance`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const data = await res.json();
+      if (res.ok && data.balance !== undefined) {
+        const newBalance = parseFloat(data.balance);
+        const current = parseFloat(
+          balanceEl.textContent.replace(/[^0-9.-]+/g, '')
+        ) || 0;
+        animateBalance(current, newBalance);
+      }
+    } catch (err) {
+      console.error('Failed to fetch balance', err);
+      balanceEl.textContent = 'Error';
+    }
+  }
+
+  refreshBalance();
+
+  // 👤 Fetch recipient preview
+  const toEmailInput = document.getElementById('toEmail');
+  const transferMessage = document.getElementById('transfer-message');
+
+  toEmailInput.addEventListener('blur', async () => {
+    const email = toEmailInput.value.trim();
+    if (!email) return;
+    try {
+      const res = await fetch(`${BASE_URL}/api/auth/user?email=${email}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (res.ok && data.name) {
+        transferMessage.style.color = 'black';
+        transferMessage.textContent = `Recipient: ${data.name}`;
+      } else {
+        transferMessage.style.color = 'orange';
+        transferMessage.textContent = `⚠️ Could not find user with email.`;
+      }
+    } catch (err) {
+      console.error('Recipient fetch failed:', err);
+    }
+  });
+
+  // 🔁 Transfer logic
   document.getElementById('transfer-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const toEmail = document.getElementById('toEmail').value;
+    const toEmail = toEmailInput.value;
     const amount = parseFloat(document.getElementById('amount').value);
-    const msg = document.getElementById('transfer-message');
-    msg.textContent = '';
-    msg.style.color = 'black';
+    transferMessage.textContent = '';
+    transferMessage.style.color = 'black';
 
     try {
       const res = await fetch(`${BASE_URL}/api/transfer`, {
@@ -173,112 +285,23 @@
       });
 
       const data = await res.json();
-      console.log('Transfer response:', data);
-
       if (res.ok) {
-        msg.style.color = 'green';
-        msg.textContent = '✅ Transfer successful! Redirecting to dashboard...';
+        transferMessage.style.color = 'green';
+        transferMessage.textContent = '✅ Transfer successful! Redirecting...';
         await refreshBalance();
         setTimeout(() => {
           window.location.href = 'dashboard.html';
-        }, 2000); // 2 seconds delay
+        }, 2000);
       } else {
-        msg.style.color = 'red';
-        msg.textContent = data.error || '❌ Transfer failed.';
+        transferMessage.style.color = 'red';
+        transferMessage.textContent = data.error || '❌ Transfer failed.';
       }
     } catch (err) {
-      console.error('Transfer error:', err);
-      msg.style.color = 'orange';
-      msg.textContent = '⚠ Network error.';
+      console.error('Transfer failed:', err);
+      transferMessage.style.color = 'orange';
+      transferMessage.textContent = '⚠️ Network error.';
     }
-  });
-
-  // 🔄 Fetch and update balance (if available on page)
-  async function refreshBalance() {
-    try {
-      const res = await fetch(`${BASE_URL}/api/bank/balance`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      const data = await res.json();
-      if (res.ok && data.balance !== undefined) {
-        const checkingBalance = document.getElementById('checkingBalance');
-        const savingsBalance = document.getElementById('savingsBalance');
-        if (checkingBalance) {
-          checkingBalance.textContent = parseFloat(data.balance).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-        }
-        if (savingsBalance) {
-          savingsBalance.textContent = (parseFloat(data.balance) * 0.2).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-        }
-      }
-    } catch (err) {
-      console.error('Balance refresh failed:', err);
-    }
-  }
-
-  // 🌙 Dark mode toggle
-  document.getElementById('darkModeToggle').addEventListener('click', () => {
-    document.body.classList.toggle('dark');
   });
 </script>
-  
-  <footer style="background-color: #f8f9fa; padding: 30px 20px; font-size: 14px; border-top: 1px solid #ddd;">
-    <div style="max-width: 1000px; margin: auto;">
-      <section style="margin-bottom: 20px;">
-        <h3 style="color: #003366; font-size: 16px;">Security Center</h3>
-        <ul style="list-style: disc; padding-left: 20px; margin: 10px 0;">
-          <li>Never share your password, account, or personal information</li>
-          <li>We will never ask for your account information via email</li>
-          <li>Report suspicious activity immediately</li>
-          <li>Always access your account through wellsfargo.com</li>
-        </ul>
-        <a href="#" style="color: #003366; text-decoration: underline;">Learn more about online security</a>
-      </section>
-
-      <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
-        <div style="flex: 1; min-width: 180px; margin-bottom: 20px;">
-          <h4 style="color: #003366;">Products & Services</h4>
-          <ul style="list-style: none; padding: 0; margin: 0;">
-            <li>Checking Accounts</li>
-            <li>Credit Cards</li>
-            <li>Home Loans</li>
-            <li>Personal Loans</li>
-            <li>Retirement</li>
-          </ul>
-        </div>
-        <div style="flex: 1; min-width: 180px; margin-bottom: 20px;">
-          <h4 style="color: #003366;">Online Security</h4>
-          <ul style="list-style: none; padding: 0; margin: 0;">
-            <li>Security Center</li>
-            <li>Fraud Information</li>
-            <li>Report Fraud</li>
-            <li>Privacy & Cookies</li>
-          </ul>
-        </div>
-        <div style="flex: 1; min-width: 180px; margin-bottom: 20px;">
-          <h4 style="color: #003366;">Customer Service</h4>
-          <ul style="list-style: none; padding: 0; margin: 0;">
-            <li>Contact Us</li>
-            <li>FAQs</li>
-            <li>Find ATMs/Branches</li>
-            <li>Accessibility</li>
-          </ul>
-        </div>
-      </div>
-
-      <p style="margin-top: 20px; color: #555;">
-        © 2024 Wells Fargo Bank, N.A. All rights reserved. Member FDIC. Equal Housing Lender
-      </p>
-      <p style="margin-top: 5px; color: #555;">
-        <a href="#" style="color: #003366; text-decoration: underline;">Privacy</a> |
-        <a href="#" style="color: #003366; text-decoration: underline;">Security</a> |
-        <a href="#" style="color: #003366; text-decoration: underline;">Terms & Conditions</a> |
-        <a href="#" style="color: #003366; text-decoration: underline;">Ad Choices</a>
-      </p>
-    </div>
-  </footer>
 </body>
 </html>
