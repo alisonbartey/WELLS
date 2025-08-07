@@ -23,13 +23,8 @@
     }
 
     .top-bar .logo {
-      display: flex;
-      align-items: center;
-    }
-
-    .top-bar img {
-      height: 24px;
-      margin-right: 8px;
+      font-weight: bold;
+      font-size: 20px;
     }
 
     .container {
@@ -38,7 +33,7 @@
 
     .greeting {
       font-size: 22px;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
     }
 
     .card {
@@ -72,20 +67,6 @@
       color: #555;
     }
 
-    .info-box {
-      background: #f0f0f0;
-      border-left: 4px solid #a3a3a3;
-      padding: 10px;
-      font-size: 13px;
-      border-radius: 8px;
-      margin-top: 10px;
-    }
-
-    .section-title {
-      font-weight: bold;
-      margin: 20px 0 10px;
-    }
-
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -109,14 +90,50 @@
       display: block;
       margin-bottom: 5px;
     }
+
+    .info-box {
+      background: #f0f0f0;
+      border-left: 4px solid #a3a3a3;
+      padding: 10px;
+      font-size: 13px;
+      border-radius: 8px;
+    }
+
+    .section-title {
+      font-weight: bold;
+      margin: 20px 0 10px;
+    }
+
+    .recent-activity {
+      background: #f9f9f9;
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .activity-item {
+      padding: 8px 0;
+      border-bottom: 1px solid #ddd;
+      font-size: 14px;
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-type {
+      font-weight: bold;
+    }
+
+    .activity-amount {
+      float: right;
+    }
   </style>
 </head>
 <body>
 
   <div class="top-bar">
     <div class="logo">
-      <img src="logo.png" alt="Logo">
-      <span>WELLS FARGO</span>
+      <img src="logo.png" alt="Logo" style="height: 25px; vertical-align: middle;">
     </div>
     <a href="logout.html" style="color: white; text-decoration: none;">Sign off</a>
   </div>
@@ -125,18 +142,23 @@
     <div class="greeting" id="greetingText">Good morning, User</div>
 
     <div class="card" onclick="location.href='transactions.html'">
-      <div class="account-title">Everyday Checking …7550</div>
+      <div class="account-title">WELLS FARGO CLEAR ACCESS BANKING …7550</div>
       <div class="balance" id="balance">$0.00</div>
       <div class="label">Available balance</div>
     </div>
 
     <div class="card">
-      <div class="account-title">Way2Save Savings …6813</div>
+      <div class="account-title">WELLS FARGO CLEAR ACCESS BANKING …6813</div>
       <div class="balance">$0.00</div>
       <div class="label">Available balance</div>
       <div class="info-box">
         This account is closed. You can view your account information for approximately 90 days after the date of closure.
       </div>
+    </div>
+
+    <div class="section-title">Recent Activity</div>
+    <div class="recent-activity" id="activityList">
+      <div>Loading...</div>
     </div>
 
     <div class="section-title">Open an account</div>
@@ -172,50 +194,77 @@
   </div>
 
   <script>
-  const greetingEl = document.getElementById("greetingText");
-  const balanceEl = document.getElementById("balance");
-  const token = localStorage.getItem("userToken");
+    const token = localStorage.getItem("userToken");
+    const backendUrl = "https://backend15-nnmy.onrender.com";
 
-  if (!token) {
-    alert("Session expired. Please log in again.");
-    window.location.href = "login.html";
-  }
+    // Greeting
+    const hours = new Date().getHours();
+    let greeting = "Hello";
 
-  // Set dynamic greeting
-  const hours = new Date().getHours();
-  let greetingWord = "Hello";
-  if (hours >= 5 && hours < 12) greetingWord = "Good morning";
-  else if (hours >= 12 && hours < 17) greetingWord = "Good afternoon";
-  else greetingWord = "Good evening";
+    if (hours >= 5 && hours < 12) greeting = "Good morning";
+    else if (hours >= 12 && hours < 17) greeting = "Good afternoon";
+    else greeting = "Good evening";
 
-  // Fetch dashboard data from backend
-  fetch("https://backend15-nnmy.onrender.com/bank/dashboard", {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
-  .then(res => {
-    if (!res.ok) throw new Error("Dashboard fetch failed");
-    return res.json();
-  })
-  .then(data => {
-    // Username
-    const user = data.username || "User";
-    greetingEl.textContent = `${greetingWord}, ${user}`;
-
-    // Balance
-    const balance = parseFloat(data.balance || 0).toLocaleString("en-US", {
-      style: "currency",
-      currency: "USD"
+    // Get user info
+    fetch(`${backendUrl}/bank/user`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("greetingText").textContent = `${greeting}, ${data.name}`;
+    })
+    .catch(() => {
+      document.getElementById("greetingText").textContent = `${greeting}, User`;
     });
-    balanceEl.textContent = balance;
-  })
-  .catch(err => {
-    console.error("Failed to load dashboard:", err);
-    alert("Failed to load dashboard. Please check your internet or try logging in again.");
-    window.location.href = "login.html";
-  });
-</script>
 
+    // Get balance
+    fetch(`${backendUrl}/bank/balance`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    .then(res => res.json())
+    .then(data => {
+      const balance = parseFloat(data.balance).toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD"
+      });
+      document.getElementById("balance").textContent = balance;
+    })
+    .catch(err => {
+      console.error("Balance fetch error", err);
+      document.getElementById("balance").textContent = "$0.00";
+    });
+
+    // Get transactions
+    fetch(`${backendUrl}/bank/transactions`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    .then(res => res.json())
+    .then(data => {
+      const list = document.getElementById("activityList");
+      list.innerHTML = "";
+
+      if (data.length === 0) {
+        list.innerHTML = "<div>No recent activity.</div>";
+        return;
+      }
+
+      data.slice(0, 5).forEach(tx => {
+        const div = document.createElement("div");
+        div.className = "activity-item";
+        div.innerHTML = `
+          <span class="activity-type">${tx.type === "credit" ? "Received from" : "Sent to"} ${tx.to || tx.from}</span>
+          <span class="activity-amount">${parseFloat(tx.amount).toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD"
+          })}</span>
+        `;
+        list.appendChild(div);
+      });
+    })
+    .catch(err => {
+      console.error("Transaction fetch error", err);
+      document.getElementById("activityList").innerHTML = "<div>Error loading activity.</div>";
+    });
+  </script>
 </body>
 </html>
