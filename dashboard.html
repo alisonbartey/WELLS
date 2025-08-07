@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard</title>
   <link rel="icon" href="logo.png" type="image/png"/>
@@ -13,56 +13,99 @@
       color: #111827;
     }
     header {
-      background: #c40404;
-      color: white;
-      padding: 12px 20px;
+      background: linear-gradient(to right, #d1d5db, #e5e7eb);
+      padding: 20px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
     }
-    header img {
-      height: 28px;
+    .search-bar {
+      flex: 1;
+      margin-left: 10px;
+      position: relative;
+    }
+    .search-bar input {
+      width: 100%;
+      padding: 8px 30px 8px 12px;
+      border: none;
+      border-radius: 20px;
+      background-color: white;
+    }
+    .search-bar img {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
     }
     .signoff-btn {
       background: none;
-      border: 1px solid white;
-      color: white;
-      padding: 6px 12px;
-      border-radius: 4px;
-      font-size: 14px;
+      border: none;
+      color: #374151;
       cursor: pointer;
+      font-size: 14px;
+      margin-left: 15px;
     }
     .container {
       max-width: 600px;
-      margin: 0 auto;
-      padding: 15px;
+      margin: 20px auto;
+      padding: 0 15px;
     }
     .greeting {
-      font-size: 22px;
-      margin-bottom: 20px;
+      font-size: 20px;
+      margin-bottom: 15px;
     }
     .account-card {
       background: white;
       border-radius: 12px;
       padding: 16px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      margin-bottom: 16px;
-      cursor: pointer;
+      margin-bottom: 12px;
     }
     .account-title {
       font-weight: 600;
-      font-size: 16px;
+      font-size: 15px;
       color: #374151;
     }
     .balance {
-      font-size: 24px;
-      margin-top: 8px;
+      font-size: 22px;
+      margin-top: 6px;
       color: #111827;
     }
     .notice {
-      margin-top: 8px;
+      background-color: #f9fafb;
+      border: 1px solid #d1d5db;
+      padding: 10px;
+      border-radius: 6px;
       font-size: 13px;
       color: #6b7280;
+      margin-top: 10px;
+    }
+    .open-account {
+      background: white;
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-top: 16px;
+    }
+    .open-account h3 {
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+    .quick-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .quick-links div {
+      flex: 1 1 40%;
+      text-align: center;
+      padding: 10px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 14px;
+      background: #f9fafb;
+      cursor: pointer;
     }
     footer {
       position: fixed;
@@ -73,69 +116,66 @@
       border-top: 1px solid #d1d5db;
       display: flex;
       justify-content: space-around;
-      padding: 8px 0;
+      padding: 10px 0;
     }
     footer div {
       text-align: center;
       font-size: 12px;
       color: #374151;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
     footer div:hover {
-      color: #c40404;
+      color: #111827;
       cursor: pointer;
-    }
-    footer img {
-      height: 22px;
-      margin-bottom: 2px;
     }
   </style>
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="Logo">
+    <div class="search-bar">
+      <input type="text" placeholder="Need help?"/>
+      <img src="search-icon.png" alt="Search"/>
+    </div>
     <button class="signoff-btn" onclick="logout()">Sign off</button>
   </header>
 
   <div class="container">
-    <div class="greeting" id="greetingText">Welcome back, <span id="userName">...</span></div>
+    <div class="greeting">Good afternoon, <span id="userName">...</span></div>
 
-    <div class="account-card" onclick="goToTransactions()">
-      <div class="account-title">Everyday Checking ...7550</div>
+    <div class="account-card">
+      <div class="account-title">WELLS FARGO CLEAR ACCESS BANKING ...7550</div>
       <div class="balance" id="checkingBalance">$0.00</div>
       <div class="notice">Available balance</div>
     </div>
 
     <div class="account-card">
-      <div class="account-title">Way2Save Savings ...6813</div>
+      <div class="account-title">WELLS FARGO CLEAR ACCESS BANKING ...6813</div>
       <div class="balance" id="savingsBalance">$0.00</div>
       <div class="notice">This account is closed. You can view your account information for approximately 90 days after the date of closure.</div>
+    </div>
+
+    <!-- ✅ Real-Time Transaction Preview -->
+    <div id="recentActivity" class="open-account">
+      <h3>Recent Activity</h3>
+      <ul id="activityList" style="list-style: none; padding-left: 0;"></ul>
+    </div>
+
+    <div class="open-account">
+      <h3>Open an account</h3>
+      <div class="quick-links">
+        <div>Checking</div>
+        <div>Savings & CDs</div>
+        <div>Credit Cards</div>
+        <div>Loans</div>
+      </div>
     </div>
   </div>
 
   <footer>
-    <div onclick="location.href='dashboard.html'">
-      <img src="icons/home.svg" alt="Accounts"/>
-      Accounts
-    </div>
-    <div onclick="location.href='deposit.html'">
-      <img src="icons/deposit.svg" alt="Deposit"/>
-      Deposit
-    </div>
-    <div onclick="location.href='transfer.html'">
-      <img src="icons/transfer.svg" alt="Transfer"/>
-      Pay & Transfer
-    </div>
-    <div onclick="location.href='explore.html'">
-      <img src="icons/explore.svg" alt="Explore"/>
-      Explore
-    </div>
-    <div onclick="location.href='settings.html'">
-      <img src="icons/menu.svg" alt="Menu"/>
-      Menu
-    </div>
+    <div onclick="location.href='dashboard.html'">Accounts</div>
+    <div onclick="alert('Coming soon')">Deposit</div>
+    <div onclick="location.href='transfer.html'">Pay & Transfer</div>
+    <div onclick="alert('Coming soon')">Explore</div>
+    <div onclick="location.href='settings.html'">Menu</div>
   </footer>
 
   <script>
@@ -149,17 +189,13 @@
     async function fetchUser() {
       try {
         const res = await fetch(`${BASE_URL}/api/auth/me`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+          headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.message || 'Unauthorized');
 
         document.getElementById('userName').innerText = data.name;
-        updateGreeting(data.name);
-      } catch (err) {
-        console.error('User fetch error:', err);
+      } catch {
         alert('Session expired. Please login again.');
         localStorage.removeItem('userToken');
         window.location.href = 'index.html';
@@ -169,36 +205,49 @@
     async function fetchBalance() {
       try {
         const res = await fetch(`${BASE_URL}/api/bank/balance`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+          headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Failed to fetch balance');
 
         const fullBalance = parseFloat(data.balance || 0);
-        document.getElementById('checkingBalance').innerText = fullBalance.toLocaleString('en-US', {
-          style: 'currency',
-          currency: 'USD'
-        });
-        document.getElementById('savingsBalance').innerText = "$0.00";
+        document.getElementById('checkingBalance').innerText = fullBalance.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+        document.getElementById('savingsBalance').innerText = (fullBalance * 0.2).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
       } catch (err) {
         console.error('Balance fetch error:', err);
       }
     }
 
-    function updateGreeting(name) {
-      const now = new Date();
-      const hour = now.getHours();
-      let greeting = "Good evening";
+    async function fetchTransactions() {
+      try {
+        const res = await fetch(`${BASE_URL}/api/transactions/history`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Failed to load transactions');
 
-      if (hour < 12) {
-        greeting = "Good morning";
-      } else if (hour < 17) {
-        greeting = "Good afternoon";
+        const list = document.getElementById('activityList');
+        list.innerHTML = '';
+
+        data.slice(0, 5).forEach(tx => {
+          const li = document.createElement('li');
+          const isSent = tx.type === 'sent';
+          const name = isSent ? tx.to : tx.from;
+          const amount = parseFloat(tx.amount).toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD'
+          });
+          li.innerHTML = isSent
+            ? `📤 Sent <strong>${amount}</strong> to <em>${name}</em>`
+            : `📥 Received <strong>${amount}</strong> from <em>${name}</em>`;
+          li.style.padding = '6px 0';
+          li.style.borderBottom = '1px solid #eee';
+          list.appendChild(li);
+        });
+      } catch (err) {
+        console.error('Transaction fetch error:', err);
+        document.getElementById('recentActivity').style.display = 'none';
       }
-
-      document.getElementById('greetingText').innerText = `${greeting}, ${name}`;
     }
 
     function logout() {
@@ -206,12 +255,9 @@
       window.location.href = 'index.html';
     }
 
-    function goToTransactions() {
-      location.href = 'transactions.html';
-    }
-
     fetchUser();
     fetchBalance();
+    fetchTransactions();
   </script>
 </body>
 </html>
