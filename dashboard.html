@@ -3,26 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard - Wells Fargo</title>
-  <link rel="icon" href="logo.png" />
+  <title>Wells Fargo - Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f9f9f9;
       margin: 0;
-      padding: 0;
-      color: #333;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #e3ecff, #ffffff);
+      color: #000;
     }
 
-    header {
-      background-color: #b31b1b;
-      padding: 15px 20px;
+    .top-bar {
+      background-color: #d90000;
+      padding: 15px;
+      color: white;
       display: flex;
+      justify-content: space-between;
       align-items: center;
     }
 
-    header img {
-      height: 40px;
+    .top-bar .logo {
+      font-weight: bold;
+      font-size: 20px;
     }
 
     .container {
@@ -30,226 +32,171 @@
     }
 
     .greeting {
-      font-size: 24px;
-      margin-bottom: 15px;
-      color: #b31b1b;
-    }
-
-    .accounts {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
+      font-size: 22px;
+      margin-bottom: 10px;
     }
 
     .card {
-      background-color: white;
-      border-radius: 10px;
-      padding: 15px 20px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      padding: 15px;
+      margin-bottom: 20px;
       cursor: pointer;
+      transition: box-shadow 0.2s ease;
     }
 
-    .card h3 {
-      margin: 0;
-      color: #003366;
+    .card:hover {
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
     }
 
-    .card p {
-      margin: 5px 0 0;
-      font-size: 18px;
+    .account-title {
       font-weight: bold;
-    }
-
-    .transactions {
-      margin-top: 30px;
-    }
-
-    .transactions h3 {
+      font-size: 14px;
       margin-bottom: 10px;
-      color: #003366;
     }
 
-    .transaction-item {
-      background-color: white;
-      border-left: 4px solid #ccc;
-      padding: 10px 15px;
-      margin-bottom: 10px;
-      border-radius: 6px;
+    .balance {
+      font-size: 28px;
+      font-weight: bold;
+      color: #2b2b2b;
     }
 
-    .transaction-item.sent {
-      border-left-color: #b31b1b;
+    .label {
+      font-size: 13px;
+      color: #555;
     }
 
-    .transaction-item.received {
-      border-left-color: green;
-    }
-
-    .transaction-item p {
-      margin: 2px 0;
-    }
-
-    .nav {
+    .bottom-nav {
       position: fixed;
       bottom: 0;
       width: 100%;
-      background-color: #fff;
+      background-color: #ffffff;
+      border-top: 1px solid #ddd;
       display: flex;
       justify-content: space-around;
       padding: 10px 0;
-      box-shadow: 0 -1px 5px rgba(0,0,0,0.1);
     }
 
-    .nav a {
-      text-decoration: none;
-      color: #333;
+    .bottom-nav a {
       text-align: center;
+      color: #555;
+      text-decoration: none;
       font-size: 12px;
     }
 
-    .nav a svg {
+    .bottom-nav a i {
+      font-size: 18px;
       display: block;
-      margin: 0 auto 5px;
+      margin-bottom: 5px;
+    }
+
+    .info-box {
+      background: #f0f0f0;
+      border-left: 4px solid #a3a3a3;
+      padding: 10px;
+      font-size: 13px;
+      border-radius: 8px;
+    }
+
+    .section-title {
+      font-weight: bold;
+      margin: 20px 0 10px;
     }
   </style>
 </head>
 <body>
-  <header>
-    <img src="logo.png" alt="Wells Fargo Logo">
-  </header>
+
+  <div class="top-bar">
+    <div class="logo">WELLS FARGO</div>
+    <a href="logout.html" style="color: white; text-decoration: none;">Sign off</a>
+  </div>
 
   <div class="container">
-    <div class="greeting" id="greeting"></div>
+    <div class="greeting" id="greetingText">Good morning, User</div>
 
-    <div class="accounts">
-      <div class="card" onclick="window.location.href='transactions.html'">
-        <h3>Everyday Checking</h3>
-        <p id="checking-balance">$0.00</p>
-      </div>
+    <div class="card" onclick="location.href='transactions.html'">
+      <div class="account-title">WELLS FARGO CLEAR ACCESS BANKING …7550</div>
+      <div class="balance" id="balance">$0.00</div>
+      <div class="label">Available balance</div>
+    </div>
 
-      <div class="card">
-        <h3>Way2Save Savings</h3>
-        <p>$0.00</p> <!-- Closed account -->
-      </div>
-
-      <div class="card">
-        <h3>Active Cash Visa Platinum</h3>
-        <p>$0.00</p> <!-- Not funded -->
+    <div class="card">
+      <div class="account-title">WELLS FARGO CLEAR ACCESS BANKING …6813</div>
+      <div class="balance">$0.00</div>
+      <div class="label">Available balance</div>
+      <div class="info-box">
+        This account is closed. You can view your account information for approximately 90 days after the date of closure.
       </div>
     </div>
 
-    <div class="transactions">
-      <h3>Recent Activity</h3>
-      <div id="transaction-list">Loading...</div>
+    <div class="section-title">Open an account</div>
+    <div class="card" style="display: flex; justify-content: space-around;">
+      <div><i class="fas fa-university"></i><br/>Checking</div>
+      <div><i class="fas fa-piggy-bank"></i><br/>Savings</div>
+      <div><i class="fas fa-credit-card"></i><br/>Credit</div>
+      <div><i class="fas fa-home"></i><br/>Loans</div>
     </div>
   </div>
 
-  <div class="nav">
-    <a href="settings.html">
-      <svg width="24" height="24" fill="currentColor"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-      Menu
+  <div class="bottom-nav">
+    <a href="dashboard.html">
+      <i class="fas fa-home"></i>
+      Accounts
+    </a>
+    <a href="#">
+      <i class="fas fa-camera"></i>
+      Deposit
     </a>
     <a href="transfer.html">
-      <svg width="24" height="24" fill="currentColor"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      <i class="fas fa-dollar-sign"></i>
       Pay & Transfer
     </a>
     <a href="#">
-      <svg width="24" height="24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
-      Deposit
-    </a>
-    <a href="#">
-      <svg width="24" height="24" fill="currentColor"><path d="M12 2l4 20-4-4-4 4z"/></svg>
+      <i class="fas fa-compass"></i>
       Explore
+    </a>
+    <a href="settings.html">
+      <i class="fas fa-bars"></i>
+      Menu
     </a>
   </div>
 
   <script>
-    const BASE_URL = 'https://backend15-nnmy.onrender.com';
+    // Dynamic greeting
+    const greeting = document.getElementById("greetingText");
+    const hours = new Date().getHours();
+    let timeGreeting = "Hello";
 
-    function formatUSD(value) {
-      return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD'
-      }).format(value);
+    if (hours >= 5 && hours < 12) {
+      timeGreeting = "Good morning";
+    } else if (hours >= 12 && hours < 17) {
+      timeGreeting = "Good afternoon";
+    } else {
+      timeGreeting = "Good evening";
     }
 
-    function setGreeting() {
-      const hour = new Date().getHours();
-      const name = localStorage.getItem('userName') || 'User';
-      let greeting = 'Hello';
+    greeting.textContent = `${timeGreeting}, Mary`;
 
-      if (hour < 12) greeting = 'Good morning';
-      else if (hour < 18) greeting = 'Good afternoon';
-      else greeting = 'Good evening';
+    // Fetch balance
+    const token = localStorage.getItem("userToken");
 
-      document.getElementById('greeting').textContent = `${greeting}, ${name}`;
-    }
-
-    async function loadDashboard() {
-      const token = localStorage.getItem('userToken');
-      const email = localStorage.getItem('userEmail');
-
-      console.log("Token:", token);
-      console.log("Email:", email);
-
-      if (!token || !email) {
-        alert('Unauthorized. Please log in again.');
-        window.location.href = 'index.html';
-        return;
+    fetch("https://your-backend-url.com/bank/balance", {
+      headers: {
+        Authorization: `Bearer ${token}`
       }
-
-      try {
-        // Load recent transactions
-        const res = await fetch(`${BASE_URL}/api/bank/transactions/${email}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-
-        const data = await res.json();
-        const transactionList = document.getElementById('transaction-list');
-        transactionList.innerHTML = '';
-
-        if (res.ok && Array.isArray(data)) {
-          if (data.length === 0) {
-            transactionList.textContent = 'No recent activity.';
-          } else {
-            data.slice(-5).reverse().forEach(tx => {
-              const isSent = tx.sender === email;
-              const type = isSent ? 'sent' : 'received';
-              const otherParty = isSent ? tx.receiver : tx.sender;
-              const amount = formatUSD(tx.amount);
-
-              const div = document.createElement('div');
-              div.className = `transaction-item ${type}`;
-              div.innerHTML = `
-                <p><strong>${type.charAt(0).toUpperCase() + type.slice(1)}:</strong> ${amount}</p>
-                <p><strong>With:</strong> ${otherParty}</p>
-                <p><strong>Date:</strong> ${new Date(tx.created_at).toLocaleString()}</p>
-              `;
-              transactionList.appendChild(div);
-            });
-          }
-        } else {
-          transactionList.textContent = 'Failed to load activity.';
-        }
-
-        // Load real balance from backend
-        const balRes = await fetch(`${BASE_URL}/api/bank/balance`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-
-        const balData = await balRes.json();
-        if (balRes.ok && balData.balance !== undefined) {
-          document.getElementById('checking-balance').textContent = formatUSD(balData.balance);
-        }
-
-      } catch (err) {
-        console.error("Dashboard Fetch Error:", err);
-        alert('Failed to load dashboard. Check console for details.');
-      }
-    }
-
-    setGreeting();
-    loadDashboard();
+    })
+    .then(res => res.json())
+    .then(data => {
+      const balance = parseFloat(data.balance).toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD"
+      });
+      document.getElementById("balance").textContent = balance;
+    })
+    .catch(err => {
+      console.error("Balance fetch error", err);
+    });
   </script>
 </body>
 </html>
