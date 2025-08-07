@@ -7,210 +7,240 @@
   <link rel="icon" href="logo.png" type="image/png" />
   <style>
     :root {
-      --bg-color: #ffffff;
-      --text-color: #000000;
-      --card-bg: #f5f5f5;
+      --bg: #fff;
+      --text: #000;
+      --card-bg: #f3f3f3;
+      --primary: #b31b1b;
     }
 
     body.dark-mode {
-      --bg-color: #121212;
-      --text-color: #ffffff;
+      --bg: #121212;
+      --text: #fff;
       --card-bg: #1e1e1e;
     }
 
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      font-family: system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding-bottom: 80px; /* For bottom nav */
     }
 
     header {
-      background-color: #b31b1b;
-      padding: 10px 20px;
+      background: var(--primary);
+      color: #fff;
+      padding: 15px 20px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      color: white;
+      align-items: center;
     }
 
     header img {
-      height: 40px;
-    }
-
-    nav a {
-      margin-left: 20px;
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    nav a:hover {
-      text-decoration: underline;
+      height: 35px;
     }
 
     .toggle-btn {
       background: transparent;
-      border: 1px solid white;
-      color: white;
-      padding: 5px 10px;
-      cursor: pointer;
+      border: 1px solid #fff;
+      color: #fff;
+      padding: 6px 10px;
       border-radius: 4px;
-      margin-left: 20px;
+      cursor: pointer;
     }
 
     main {
-      padding: 20px;
-      max-width: 900px;
+      max-width: 700px;
       margin: auto;
+      padding: 20px;
     }
 
     h2 {
-      color: #b31b1b;
+      margin-bottom: 10px;
     }
 
     .section-title {
-      margin-top: 40px;
-      font-size: 1.4em;
-      border-bottom: 2px solid #b31b1b;
-      padding-bottom: 5px;
+      font-size: 1.2em;
+      margin: 30px 0 10px;
+      color: var(--primary);
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 4px;
     }
 
     .transaction {
-      background-color: var(--card-bg);
-      padding: 15px;
+      background: var(--card-bg);
       border-radius: 6px;
+      padding: 15px;
       margin: 10px 0;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
 
     .transaction p {
-      margin: 5px 0;
+      margin: 6px 0;
     }
 
-    .direction {
+    .sent {
+      color: red;
       font-weight: bold;
     }
 
-    .direction.sent {
-      color: red;
-    }
-
-    .direction.received {
+    .received {
       color: green;
+      font-weight: bold;
     }
 
     .logout {
-      background-color: #b31b1b;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-top: 30px;
+      display: none;
     }
 
-    .logout:hover {
-      background-color: #a11616;
+    /* Bottom nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #fff;
+      border-top: 1px solid #ccc;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      height: 60px;
+      z-index: 99;
+    }
+
+    .bottom-nav a {
+      text-decoration: none;
+      color: #555;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .bottom-nav a.active {
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    .bottom-nav a img {
+      width: 22px;
+      height: 22px;
+      margin-bottom: 3px;
+    }
+
+    body.dark-mode .bottom-nav {
+      background: #1e1e1e;
+      border-top: 1px solid #333;
+    }
+
+    body.dark-mode .bottom-nav a {
+      color: #ccc;
+    }
+
+    body.dark-mode .bottom-nav a.active {
+      color: #e74c3c;
     }
   </style>
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="Wells Fargo Logo" />
-    <nav>
-      <a href="dashboard.html">🏠 Dashboard</a>
-      <a href="transfer.html">💸 Transfer</a>
-      <a href="transactions.html">📄 Transactions</a>
-      <a href="settings.html">⚙️ Settings</a>
-      <button class="toggle-btn" onclick="toggleDarkMode()">🌓</button>
-    </nav>
+    <img src="logo.png" alt="Wells Fargo" />
+    <button class="toggle-btn" onclick="toggleDarkMode()">🌓</button>
   </header>
 
   <main>
     <h2>📄 Transaction History</h2>
 
     <div>
-      <h3 class="section-title">Sent Transactions</h3>
+      <h3 class="section-title">Sent</h3>
       <div id="sent-transactions">Loading...</div>
     </div>
 
     <div>
-      <h3 class="section-title">Received Transactions</h3>
+      <h3 class="section-title">Received</h3>
       <div id="received-transactions">Loading...</div>
     </div>
-
-    <button class="logout" onclick="logout()">Logout</button>
   </main>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <a href="settings.html">
+      <img src="https://img.icons8.com/ios-filled/50/settings.png" alt="Menu" />
+      Menu
+    </a>
+    <a href="transfer.html">
+      <img src="https://img.icons8.com/ios-filled/50/money-transfer.png" alt="Transfer" />
+      Pay & Transfer
+    </a>
+    <a href="transactions.html" class="active">
+      <img src="https://img.icons8.com/ios-filled/50/activity-history.png" alt="Transactions" />
+      Transactions
+    </a>
+    <a href="#">
+      <img src="https://img.icons8.com/ios-filled/50/money-box.png" alt="Deposit" />
+      Deposit
+    </a>
+    <a href="#">
+      <img src="https://img.icons8.com/ios-filled/50/compass.png" alt="Explore" />
+      Explore
+    </a>
+  </div>
 
   <script>
     const BASE_URL = 'https://backend15-nnmy.onrender.com';
     const token = localStorage.getItem('userToken');
 
     if (!token) {
-      alert('Not logged in');
+      alert('Session expired. Please log in again.');
       window.location.href = 'index.html';
     }
 
     async function fetchTransactions() {
       try {
         const res = await fetch(`${BASE_URL}/api/transactions`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+          headers: { Authorization: `Bearer ${token}` }
         });
 
         const data = await res.json();
-
         const sentDiv = document.getElementById('sent-transactions');
         const receivedDiv = document.getElementById('received-transactions');
 
-        if (res.ok) {
+        if (!res.ok) {
           sentDiv.innerHTML = '';
           receivedDiv.innerHTML = '';
-
-          const sent = (data.sent || []).slice(0, 5);
-          const received = (data.received || []).slice(0, 5);
-
-          if (sent.length === 0) {
-            sentDiv.innerHTML = '<p>No sent transactions.</p>';
-          } else {
-            sent.forEach(tx => {
-              const el = document.createElement('div');
-              el.className = 'transaction';
-              el.innerHTML = `
-                <p class="direction sent">🔻 Sent</p>
-                <p><strong>To:</strong> ${tx.toUser?.name || tx.to}</p>
-                <p><strong>Amount:</strong> $${tx.amount.toFixed(2)}</p>
-                <p><strong>Date:</strong> ${new Date(tx.timestamp).toLocaleString()}</p>
-              `;
-              sentDiv.appendChild(el);
-            });
-          }
-
-          if (received.length === 0) {
-            receivedDiv.innerHTML = '<p>No received transactions.</p>';
-          } else {
-            received.forEach(tx => {
-              const el = document.createElement('div');
-              el.className = 'transaction';
-              el.innerHTML = `
-                <p class="direction received">🔺 Received</p>
-                <p><strong>From:</strong> ${tx.fromUser?.name || tx.from}</p>
-                <p><strong>Amount:</strong> $${tx.amount.toFixed(2)}</p>
-                <p><strong>Date:</strong> ${new Date(tx.timestamp).toLocaleString()}</p>
-              `;
-              receivedDiv.appendChild(el);
-            });
-          }
-
-        } else {
-          alert(data.error || 'Failed to load transactions');
+          return alert(data.error || 'Unable to fetch transactions.');
         }
 
-      } catch (error) {
-        console.error(error);
-        alert('Network error.');
+        sentDiv.innerHTML = '';
+        receivedDiv.innerHTML = '';
+
+        (data.sent || []).slice(0, 5).forEach(tx => {
+          const div = document.createElement('div');
+          div.className = 'transaction';
+          div.innerHTML = `
+            <p class="sent">🔺 Sent</p>
+            <p><strong>To:</strong> ${tx.toUser?.name || tx.to}</p>
+            <p><strong>Amount:</strong> $${tx.amount.toFixed(2)}</p>
+            <p><strong>Date:</strong> ${new Date(tx.timestamp).toLocaleString()}</p>
+          `;
+          sentDiv.appendChild(div);
+        });
+
+        (data.received || []).slice(0, 5).forEach(tx => {
+          const div = document.createElement('div');
+          div.className = 'transaction';
+          div.innerHTML = `
+            <p class="received">🔻 Received</p>
+            <p><strong>From:</strong> ${tx.fromUser?.name || tx.from}</p>
+            <p><strong>Amount:</strong> $${tx.amount.toFixed(2)}</p>
+            <p><strong>Date:</strong> ${new Date(tx.timestamp).toLocaleString()}</p>
+          `;
+          receivedDiv.appendChild(div);
+        });
+
+        if (data.sent.length === 0) sentDiv.innerHTML = '<p>No sent transactions found.</p>';
+        if (data.received.length === 0) receivedDiv.innerHTML = '<p>No received transactions found.</p>';
+      } catch (err) {
+        alert('Error loading transactions.');
+        console.error(err);
       }
     }
 
@@ -218,68 +248,7 @@
       document.body.classList.toggle('dark-mode');
     }
 
-    function logout() {
-      localStorage.removeItem('userToken');
-      window.location.href = 'login.html';
-    }
-
     fetchTransactions();
   </script>
-
-  <footer style="background-color: #f8f9fa; padding: 30px 20px; font-size: 14px; border-top: 1px solid #ddd;">
-    <div style="max-width: 1000px; margin: auto;">
-      <section style="margin-bottom: 20px;">
-        <h3 style="color: #003366; font-size: 16px;">Security Center</h3>
-        <ul style="list-style: disc; padding-left: 20px; margin: 10px 0;">
-          <li>Never share your password, account, or personal information</li>
-          <li>We will never ask for your account information via email</li>
-          <li>Report suspicious activity immediately</li>
-          <li>Always access your account through wellsfargo.com</li>
-        </ul>
-        <a href="#" style="color: #003366; text-decoration: underline;">Learn more about online security</a>
-      </section>
-
-      <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
-        <div style="flex: 1; min-width: 180px; margin-bottom: 20px;">
-          <h4 style="color: #003366;">Products & Services</h4>
-          <ul style="list-style: none; padding: 0; margin: 0;">
-            <li>Checking Accounts</li>
-            <li>Credit Cards</li>
-            <li>Home Loans</li>
-            <li>Personal Loans</li>
-            <li>Retirement</li>
-          </ul>
-        </div>
-        <div style="flex: 1; min-width: 180px; margin-bottom: 20px;">
-          <h4 style="color: #003366;">Online Security</h4>
-          <ul style="list-style: none; padding: 0; margin: 0;">
-            <li>Security Center</li>
-            <li>Fraud Information</li>
-            <li>Report Fraud</li>
-            <li>Privacy & Cookies</li>
-          </ul>
-        </div>
-        <div style="flex: 1; min-width: 180px; margin-bottom: 20px;">
-          <h4 style="color: #003366;">Customer Service</h4>
-          <ul style="list-style: none; padding: 0; margin: 0;">
-            <li>Contact Us</li>
-            <li>FAQs</li>
-            <li>Find ATMs/Branches</li>
-            <li>Accessibility</li>
-          </ul>
-        </div>
-      </div>
-
-      <p style="margin-top: 20px; color: #555;">
-        © 2024 Wells Fargo Bank, N.A. All rights reserved. Member FDIC. Equal Housing Lender
-      </p>
-      <p style="margin-top: 5px; color: #555;">
-        <a href="#" style="color: #003366; text-decoration: underline;">Privacy</a> |
-        <a href="#" style="color: #003366; text-decoration: underline;">Security</a> |
-        <a href="#" style="color: #003366; text-decoration: underline;">Terms & Conditions</a> |
-        <a href="#" style="color: #003366; text-decoration: underline;">Ad Choices</a>
-      </p>
-    </div>
-  </footer>
 </body>
 </html>
