@@ -4,61 +4,72 @@
   <meta charset="UTF-8" />
   <title>Wells Fargo | Transfer</title>
   <link rel="icon" href="logo.png" type="image/png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <style>
     :root {
-      --red: #b31b1b;
-      --dark-bg: #121212;
-      --light-bg: #f8f9fa;
-      --text-color: #333;
-      --light-text: #e0e0e0;
+      --primary: #b31b1b;
+      --background: #f8f9fa;
+      --text: #333;
+      --card-bg: #ffffff;
+    }
+
+    body.dark-mode {
+      --background: #121212;
+      --text: #e0e0e0;
+      --card-bg: #1e1e1e;
     }
 
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      background: var(--light-bg);
-      color: var(--text-color);
+      background: var(--background);
+      color: var(--text);
+      padding-bottom: 100px;
       transition: background 0.3s, color 0.3s;
     }
 
-    body.dark {
-      background: var(--dark-bg);
-      color: var(--light-text);
-    }
-
-    header {
-      background-color: var(--red);
+    .topbar {
+      background: var(--primary);
       color: white;
-      padding: 10px 20px;
+      padding: 12px 20px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
     }
 
-    .logo {
-      height: 40px;
+    .topbar img {
+      height: 30px;
     }
 
-    .nav-icons a, .nav-icons button {
-      color: white;
+    .topbar button {
       background: none;
-      border: none;
-      margin-left: 10px;
-      font-size: 18px;
-      text-decoration: none;
+      border: 1px solid white;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 4px;
       cursor: pointer;
+      margin-left: 10px;
     }
 
-    main {
-      padding: 20px;
+    .container {
       max-width: 500px;
-      margin: auto;
+      margin: 30px auto;
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
     }
 
     h2 {
+      text-align: center;
+      color: var(--primary);
       margin-bottom: 20px;
-      color: var(--red);
+    }
+
+    .balance-box {
+      font-size: 16px;
+      margin-bottom: 15px;
+      text-align: center;
     }
 
     form {
@@ -66,43 +77,40 @@
       flex-direction: column;
     }
 
-    input {
+    input, select {
       padding: 12px;
       margin-bottom: 15px;
       border-radius: 4px;
       border: 1px solid #ccc;
+      font-size: 16px;
     }
 
     button[type="submit"] {
       padding: 12px;
-      background-color: var(--red);
+      background: var(--primary);
       color: white;
       border: none;
       border-radius: 4px;
+      font-size: 16px;
       font-weight: bold;
       cursor: pointer;
     }
 
     button[type="submit"]:hover {
-      background-color: #911010;
+      background: #911010;
     }
 
     #transfer-message {
       margin-top: 10px;
       font-weight: bold;
+      text-align: center;
     }
 
-    .balance-box {
-      font-size: 16px;
-      margin-bottom: 20px;
-    }
-
-    /* Bottom nav */
     .bottom-nav {
       position: fixed;
       bottom: 0;
       width: 100%;
-      background: white;
+      background: var(--card-bg);
       border-top: 1px solid #ccc;
       display: flex;
       justify-content: space-around;
@@ -110,198 +118,167 @@
     }
 
     .bottom-nav a {
+      text-align: center;
+      color: var(--text);
+      font-size: 12px;
       text-decoration: none;
-      color: var(--red);
-      font-size: 14px;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
+    .bottom-nav a.active {
+      color: var(--primary);
+      font-weight: bold;
+    }
+
     .bottom-nav img {
       height: 24px;
-      margin-bottom: 3px;
-    }
-
-    body.dark .bottom-nav {
-      background: #1e1e1e;
-      border-top: 1px solid #444;
-    }
-
-    body.dark input,
-    body.dark button[type="submit"] {
-      background-color: #333;
-      color: white;
-      border: 1px solid #555;
+      margin-bottom: 4px;
     }
   </style>
 </head>
 <body>
-  <header>
-    <img src="logo.png" alt="Wells Fargo" class="logo" />
-    <div class="nav-icons">
+  <div class="topbar">
+    <img src="logo.png" alt="Wells Fargo" />
+    <div>
       <button id="darkModeToggle">🌓</button>
-      <a href="index.html">🚪 Sign Off</a>
+      <button onclick="logout()">Sign Off</button>
     </div>
-  </header>
+  </div>
 
-  <main>
+  <div class="container">
     <h2>💸 Transfer Funds</h2>
 
     <div class="balance-box">
-      <strong>Available Balance:</strong> <span id="user-balance">Loading...</span>
+      Available Balance: <span id="user-balance">$0.00</span>
     </div>
 
     <form id="transfer-form">
-      <input type="email" id="toEmail" placeholder="Recipient's Email" required />
+      <input type="email" id="toEmail" placeholder="Recipient’s Email" required />
       <input type="number" id="amount" placeholder="Amount (USD)" min="1" required />
       <button type="submit">Send Money</button>
     </form>
-    <p id="transfer-message"></p>
-  </main>
+    <div id="transfer-message"></div>
+  </div>
 
   <nav class="bottom-nav">
-    <a href="settings.html">
-      <img src="https://img.icons8.com/ios-glyphs/30/settings.png" alt="Menu" />
-      Menu
+    <a href="dashboard.html">
+      <img src="icons/home.svg" alt="Dashboard"/>
+      Accounts
     </a>
-    <a href="transfer.html">
-      <img src="https://img.icons8.com/ios-filled/50/money-transfer.png" alt="Transfer" />
+    <a href="transfer.html" class="active">
+      <img src="icons/transfer.svg" alt="Transfer"/>
       Transfer
     </a>
     <a href="#">
-      <img src="https://img.icons8.com/ios/50/money-box.png" alt="Deposit" />
+      <img src="icons/deposit.svg" alt="Deposit"/>
       Deposit
     </a>
     <a href="#">
-      <img src="https://img.icons8.com/ios/50/compass--v1.png" alt="Explore" />
+      <img src="icons/explore.svg" alt="Explore"/>
       Explore
+    </a>
+    <a href="settings.html">
+      <img src="icons/menu.svg" alt="Settings"/>
+      Menu
     </a>
   </nav>
 
-<script>
-  const BASE_URL = 'https://backend15-nnmy.onrender.com';
-  const token = localStorage.getItem('userToken');
-
-  if (!token) {
-    alert('Not logged in');
-    window.location.href = 'index.html';
-  }
-
-  // 🌗 Dark mode
-  document.getElementById('darkModeToggle').addEventListener('click', () => {
-    document.body.classList.toggle('dark');
-  });
-
-  const balanceEl = document.getElementById('user-balance');
-
-  // 🧮 Animate balance change
-  function animateBalance(start, end) {
-    const duration = 1000;
-    const startTime = performance.now();
-
-    function update(currentTime) {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const current = start + (end - start) * progress;
-      balanceEl.textContent = current.toLocaleString('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      });
-      if (progress < 1) {
-        requestAnimationFrame(update);
-      }
+  <script>
+    const BASE_URL = 'https://backend15-nnmy.onrender.com';
+    const token = localStorage.getItem('userToken');
+    if (!token) {
+      alert('Not logged in');
+      location.href = 'index.html';
     }
 
-    requestAnimationFrame(update);
-  }
+    document.getElementById('darkModeToggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+    });
 
-  // 🔁 Fetch balance
-  async function refreshBalance() {
-    try {
-      const res = await fetch(`${BASE_URL}/api/bank/balance`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`
+    const balanceEl = document.getElementById('user-balance');
+    async function animateBalance(newVal) {
+      const start = parseFloat(balanceEl.textContent.replace(/[^0-9.-]+/g, '')) || 0;
+      const duration = 800;
+      const step = (newVal - start) / (duration / 16);
+      let current = start;
+      function update() {
+        current += step;
+        if ((step > 0 && current < newVal) || (step < 0 && current > newVal)) {
+          balanceEl.textContent = current.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+          requestAnimationFrame(update);
+        } else {
+          balanceEl.textContent = newVal.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
         }
-      });
-
-      const data = await res.json();
-      if (res.ok && data.balance !== undefined) {
-        const newBalance = parseFloat(data.balance);
-        const current = parseFloat(
-          balanceEl.textContent.replace(/[^0-9.-]+/g, '')
-        ) || 0;
-        animateBalance(current, newBalance);
       }
-    } catch (err) {
-      console.error('Failed to fetch balance', err);
-      balanceEl.textContent = 'Error';
+      update();
     }
-  }
 
-  refreshBalance();
-
-  // 👤 Fetch recipient preview
-  const toEmailInput = document.getElementById('toEmail');
-  const transferMessage = document.getElementById('transfer-message');
-
-  toEmailInput.addEventListener('blur', async () => {
-    const email = toEmailInput.value.trim();
-    if (!email) return;
-    try {
-      const res = await fetch(`${BASE_URL}/api/auth/user?email=${email}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const data = await res.json();
-      if (res.ok && data.name) {
-        transferMessage.style.color = 'black';
-        transferMessage.textContent = `Recipient: ${data.name}`;
-      } else {
-        transferMessage.style.color = 'orange';
-        transferMessage.textContent = `⚠️ Could not find user with email.`;
+    async function refreshBalance() {
+      try {
+        const resp = await fetch(`${BASE_URL}/api/bank/balance`, { headers: { Authorization: `Bearer ${token}` } });
+        const data = await resp.json();
+        if (resp.ok) {
+          animateBalance(parseFloat(data.balance || 0));
+        }
+      } catch (err) {
+        console.error('Balance fetch failed', err);
       }
-    } catch (err) {
-      console.error('Recipient fetch failed:', err);
     }
-  });
+    refreshBalance();
 
-  // 🔁 Transfer logic
-  document.getElementById('transfer-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const toEmail = toEmailInput.value;
-    const amount = parseFloat(document.getElementById('amount').value);
-    transferMessage.textContent = '';
-    transferMessage.style.color = 'black';
-
-    try {
-      const res = await fetch(`${BASE_URL}/api/transfer`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ toEmail, amount })
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        transferMessage.style.color = 'green';
-        transferMessage.textContent = '✅ Transfer successful! Redirecting...';
-        await refreshBalance();
-        setTimeout(() => {
-          window.location.href = 'dashboard.html';
-        }, 2000);
-      } else {
-        transferMessage.style.color = 'red';
-        transferMessage.textContent = data.error || '❌ Transfer failed.';
+    const msgEl = document.getElementById('transfer-message');
+    document.getElementById('toEmail').addEventListener('blur', async () => {
+      const email = this.value.trim();
+      if (!email) return;
+      try {
+        const resp = await fetch(`${BASE_URL}/api/auth/user?email=${email}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = await resp.json();
+        msgEl.style.color = resp.ok ? 'black' : 'orange';
+        msgEl.textContent = resp.ok ? `Recipient: ${data.name}` : 'Recipient not found';
+      } catch (err) {
+        console.error(err);
       }
-    } catch (err) {
-      console.error('Transfer failed:', err);
-      transferMessage.style.color = 'orange';
-      transferMessage.textContent = '⚠️ Network error.';
+    });
+
+    document.getElementById('transfer-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      msgEl.textContent = '';
+      msgEl.style.color = 'black';
+      const toEmail = document.getElementById('toEmail').value;
+      const amount = parseFloat(document.getElementById('amount').value);
+      try {
+        const res = await fetch(`${BASE_URL}/api/transfer`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({ toEmail, amount })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          msgEl.style.color = 'green';
+          msgEl.textContent = 'Transfer successful!';
+          await refreshBalance();
+          setTimeout(() => location.href = 'dashboard.html', 1500);
+        } else {
+          msgEl.style.color = 'red';
+          msgEl.textContent = data.error || 'Transfer failed.';
+        }
+      } catch {
+        msgEl.style.color = 'orange';
+        msgEl.textContent = 'Network error.';
+      }
+    });
+
+    function logout() {
+      localStorage.removeItem('userToken');
+      location.href = 'index.html';
     }
-  });
-</script>
+  </script>
 </body>
 </html>
