@@ -3,244 +3,244 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Wells Fargo - Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
+  <title>Dashboard - Wells Fargo</title>
+  <link rel="icon" href="logo.png" />
   <style>
     body {
-      font-family: 'Roboto', sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f9f9;
       margin: 0;
-      background: #f2f2f2;
+      padding: 0;
       color: #333;
     }
 
     header {
-      background: #b31b1b;
-      color: #fff;
-      padding: 16px;
+      background-color: #b31b1b;
+      padding: 15px 20px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
     }
 
     header img {
-      height: 30px;
+      height: 40px;
+    }
+
+    .container {
+      padding: 20px;
     }
 
     .greeting {
-      padding: 16px;
-      font-size: 1.1em;
-      background-color: #fff3e0;
+      font-size: 24px;
+      margin-bottom: 15px;
       color: #b31b1b;
-    }
-
-    .alert {
-      background: #ffe0e0;
-      color: #a60000;
-      padding: 12px 16px;
-      font-size: 0.95em;
     }
 
     .accounts {
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      padding: 16px;
+      gap: 20px;
     }
 
     .card {
-      background: white;
-      padding: 16px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      background-color: white;
+      border-radius: 10px;
+      padding: 15px 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
       cursor: pointer;
     }
 
     .card h3 {
-      margin: 0 0 8px;
-      font-weight: 700;
+      margin: 0;
+      color: #003366;
     }
 
-    .balance {
-      font-size: 1.5em;
-      color: #2e7d32;
+    .card p {
+      margin: 5px 0 0;
+      font-size: 18px;
+      font-weight: bold;
     }
 
-    .closed {
-      color: #b0b0b0;
+    .transactions {
+      margin-top: 30px;
     }
 
-    .transactions-preview {
-      background: #fff;
-      margin: 16px;
-      padding: 16px;
-      border-radius: 8px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    .transactions h3 {
+      margin-bottom: 10px;
+      color: #003366;
     }
 
-    .transactions-preview h4 {
-      margin-top: 0;
+    .transaction-item {
+      background-color: white;
+      border-left: 4px solid #ccc;
+      padding: 10px 15px;
+      margin-bottom: 10px;
+      border-radius: 6px;
     }
 
-    .transaction {
-      border-bottom: 1px solid #eee;
-      padding: 8px 0;
-      font-size: 0.95em;
+    .transaction-item.sent {
+      border-left-color: #b31b1b;
     }
 
-    .transaction:last-child {
-      border-bottom: none;
+    .transaction-item.received {
+      border-left-color: green;
     }
 
-    .bottom-nav {
+    .transaction-item p {
+      margin: 2px 0;
+    }
+
+    .nav {
       position: fixed;
       bottom: 0;
-      left: 0;
-      right: 0;
-      background: #fff;
-      border-top: 1px solid #ccc;
+      width: 100%;
+      background-color: #fff;
       display: flex;
       justify-content: space-around;
-      padding: 8px 0;
+      padding: 10px 0;
+      box-shadow: 0 -1px 5px rgba(0,0,0,0.1);
     }
 
-    .bottom-nav a {
+    .nav a {
       text-decoration: none;
-      color: #b31b1b;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-size: 0.75em;
+      color: #333;
+      text-align: center;
+      font-size: 12px;
     }
 
-    .bottom-nav svg {
-      width: 20px;
-      height: 20px;
-      margin-bottom: 4px;
+    .nav a svg {
+      display: block;
+      margin: 0 auto 5px;
     }
   </style>
 </head>
 <body>
   <header>
-    <img src="https://www.wellsfargo.com/assets/images/css/logos/wf_logo_80.png" alt="Wells Fargo">
-    <button onclick="logout()" style="background:none;border:none;color:white;font-weight:bold;">Sign Off</button>
+    <img src="logo.png" alt="Wells Fargo Logo">
   </header>
 
-  <div class="greeting" id="greeting">Welcome</div>
+  <div class="container">
+    <div class="greeting" id="greeting"></div>
 
-  <div class="alert">Security alert: Never share your password or PIN.</div>
+    <div class="accounts">
+      <div class="card" onclick="window.location.href='transactions.html'">
+        <h3>Everyday Checking</h3>
+        <p id="checking-balance">$0.00</p>
+      </div>
 
-  <div class="accounts">
-    <div class="card" onclick="location.href='transactions.html'">
-      <h3>Everyday Checking</h3>
-      <div class="balance" id="checkingBalance">$0.00</div>
+      <div class="card">
+        <h3>Way2Save Savings</h3>
+        <p>$0.00</p> <!-- Closed account -->
+      </div>
+
+      <div class="card">
+        <h3>Active Cash Visa Platinum</h3>
+        <p>$0.00</p> <!-- Not funded -->
+      </div>
     </div>
-    <div class="card closed">
-      <h3>Way2Save Savings</h3>
-      <div class="balance">$0.00</div>
-    </div>
-    <div class="card closed">
-      <h3>Active Cash Visa Platinum</h3>
-      <div class="balance">$0.00</div>
+
+    <div class="transactions">
+      <h3>Recent Activity</h3>
+      <div id="transaction-list">Loading...</div>
     </div>
   </div>
 
-  <div class="transactions-preview" id="transactionsPreview">
-    <h4>Recent Activity</h4>
-    <div id="transactionsContainer">
-      <div>Loading transactions...</div>
-    </div>
-  </div>
-
-  <div class="bottom-nav">
+  <div class="nav">
     <a href="settings.html">
-      <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 16a4 4 0 100-8 4 4 0 000 8zm8-4a8 8 0 11-16 0 8 8 0 0116 0z"/></svg>
+      <svg width="24" height="24" fill="currentColor"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
       Menu
     </a>
     <a href="transfer.html">
-      <svg fill="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+      <svg width="24" height="24" fill="currentColor"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       Pay & Transfer
     </a>
     <a href="#">
-      <svg fill="currentColor" viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/></svg>
+      <svg width="24" height="24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
       Deposit
     </a>
     <a href="#">
-      <svg fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+      <svg width="24" height="24" fill="currentColor"><path d="M12 2l4 20-4-4-4 4z"/></svg>
       Explore
     </a>
   </div>
 
   <script>
-    const token = localStorage.getItem('userToken');
-    if (!token) {
-      alert('Session expired. Please log in again.');
-      location.href = 'login.html';
+    const BASE_URL = 'https://backend15-nnmy.onrender.com';
+
+    function formatUSD(value) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+      }).format(value);
     }
 
-    function logout() {
-      localStorage.removeItem('userToken');
-      location.href = 'login.html';
-    }
-
-    function updateGreeting() {
-      const greetingEl = document.getElementById('greeting');
+    function setGreeting() {
       const hour = new Date().getHours();
-      let greeting = 'Welcome';
+      const name = localStorage.getItem('userName') || 'User';
+      let greeting = 'Hello';
 
       if (hour < 12) greeting = 'Good morning';
       else if (hour < 18) greeting = 'Good afternoon';
       else greeting = 'Good evening';
 
-      greetingEl.textContent = `${greeting}`;
+      document.getElementById('greeting').textContent = `${greeting}, ${name}`;
     }
 
-    async function loadBalance() {
-      try {
-        const res = await fetch('https://backend15-nnmy.onrender.com/api/bank/balance', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        const data = await res.json();
-        document.getElementById('checkingBalance').textContent = `$${parseFloat(data.balance).toFixed(2)}`;
-      } catch (err) {
-        console.error('Error loading balance:', err);
+    async function loadDashboard() {
+      const token = localStorage.getItem('userToken');
+      const email = localStorage.getItem('userEmail');
+
+      if (!token || !email) {
+        alert('Unauthorized. Please log in again.');
+        window.location.href = 'index.html';
+        return;
       }
-    }
 
-    async function loadRecentTransactions() {
       try {
-        const res = await fetch('https://backend15-nnmy.onrender.com/api/transactions', {
+        const res = await fetch(`${BASE_URL}/api/bank/transactions/${email}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
+
         const data = await res.json();
-        const container = document.getElementById('transactionsContainer');
-        container.innerHTML = '';
 
-        const recent = [...data.sent, ...data.received]
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-          .slice(0, 5);
+        if (res.ok && Array.isArray(data)) {
+          const transactionList = document.getElementById('transaction-list');
+          transactionList.innerHTML = '';
 
-        if (recent.length === 0) {
-          container.innerHTML = '<div>No recent transactions.</div>';
+          if (data.length === 0) {
+            transactionList.textContent = 'No recent activity.';
+          } else {
+            data.slice(-5).reverse().forEach(tx => {
+              const isSent = tx.sender === email;
+              const type = isSent ? 'sent' : 'received';
+              const otherParty = isSent ? tx.receiver : tx.sender;
+              const amount = formatUSD(tx.amount);
+
+              const div = document.createElement('div');
+              div.className = `transaction-item ${type}`;
+              div.innerHTML = `
+                <p><strong>${type.charAt(0).toUpperCase() + type.slice(1)}:</strong> ${amount}</p>
+                <p><strong>With:</strong> ${otherParty}</p>
+                <p><strong>Date:</strong> ${new Date(tx.created_at).toLocaleString()}</p>
+              `;
+              transactionList.appendChild(div);
+            });
+          }
         } else {
-          recent.forEach(tx => {
-            const amount = parseFloat(tx.amount).toFixed(2);
-            const type = tx.fromId === tx.toId ? 'Internal' : (tx.fromId === data.userId ? 'Sent' : 'Received');
-            container.innerHTML += `
-              <div class="transaction">
-                ${type}: $${amount}
-              </div>
-            `;
-          });
+          document.getElementById('transaction-list').textContent = 'Failed to load activity.';
         }
+
+        // Load and display balance
+        const balance = parseFloat(localStorage.getItem('userBalance')) || 0;
+        document.getElementById('checking-balance').textContent = formatUSD(balance);
+
       } catch (err) {
-        console.error('Error fetching transactions:', err);
-        document.getElementById('transactionsContainer').innerHTML = '<div>Error loading transactions.</div>';
+        console.error(err);
+        alert('Network error.');
       }
     }
 
-    updateGreeting();
-    loadBalance();
-    loadRecentTransactions();
+    setGreeting();
+    loadDashboard();
   </script>
 </body>
 </html>
