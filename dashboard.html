@@ -189,6 +189,9 @@
       const token = localStorage.getItem('userToken');
       const email = localStorage.getItem('userEmail');
 
+      console.log("Token:", token);
+      console.log("Email:", email);
+
       if (!token || !email) {
         alert('Unauthorized. Please log in again.');
         window.location.href = 'index.html';
@@ -196,16 +199,16 @@
       }
 
       try {
+        // Load recent transactions
         const res = await fetch(`${BASE_URL}/api/bank/transactions/${email}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
         const data = await res.json();
+        const transactionList = document.getElementById('transaction-list');
+        transactionList.innerHTML = '';
 
         if (res.ok && Array.isArray(data)) {
-          const transactionList = document.getElementById('transaction-list');
-          transactionList.innerHTML = '';
-
           if (data.length === 0) {
             transactionList.textContent = 'No recent activity.';
           } else {
@@ -226,16 +229,22 @@
             });
           }
         } else {
-          document.getElementById('transaction-list').textContent = 'Failed to load activity.';
+          transactionList.textContent = 'Failed to load activity.';
         }
 
-        // Load and display balance
-        const balance = parseFloat(localStorage.getItem('userBalance')) || 0;
-        document.getElementById('checking-balance').textContent = formatUSD(balance);
+        // Load real balance from backend
+        const balRes = await fetch(`${BASE_URL}/api/bank/balance`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        const balData = await balRes.json();
+        if (balRes.ok && balData.balance !== undefined) {
+          document.getElementById('checking-balance').textContent = formatUSD(balData.balance);
+        }
 
       } catch (err) {
-        console.error(err);
-        alert('Network error.');
+        console.error("Dashboard Fetch Error:", err);
+        alert('Failed to load dashboard. Check console for details.');
       }
     }
 
