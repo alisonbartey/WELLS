@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Deposit | Wells Fargo</title>
+  <link rel="icon" href="logo.png" type="image/png" />
+  <style>
+    :root {
+      --primary: #b31b1b;
+      --primary-light: #dc2626;
+      --primary-dark: #8f1515;
+      --bg-color: #f3f4f6;
+      --card-bg: #ffffff;
+      --text-color: #111827;
+      --text-secondary: #6b7280;
+      --border-color: #e5e7eb;
+      --success: #15803d;
+      --warning: #d97706;
+      --info: #2563eb;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    body.dark-mode {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --text-color: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --border-color: #334155;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      padding-bottom: 100px;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(179, 27, 27, 0.3);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .back-btn {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.3s;
+    }
+
+    .back-btn:hover {
+      background: rgba(255,255,255,0.3);
+      transform: translateX(-2px);
+    }
+
+    header img {
+      height: 32px;
+      filter: brightness(0) invert(1);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .icon-btn {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.3s;
+      backdrop-filter: blur(10px);
+    }
+
+    .icon-btn:hover {
+      background: rgba(255,255,255,0.25);
+      transform: scale(1.1);
+    }
+
+    /* Main Content */
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 24px 20px;
+    }
+
+    .page-header {
+      margin-bottom: 24px;
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* Balance Card */
+    .balance-card {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .balance-card::after {
+      content: '💵';
+      position: absolute;
+      right: -20px;
+      top: -20px;
+      font-size: 100px;
+      opacity: 0.1;
+    }
+
+    .balance-label {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-bottom: 8px;
+    }
+
+    .balance-amount {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .balance-pending {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.2);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      backdrop-filter: blur(10px);
+    }
+
+    /* Deposit Methods */
+    .methods-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .method-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 3px solid transparent;
+      text-align: center;
+      position: relative;
+    }
+
+    .method-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .method-card.active {
+      border-color: var(--primary);
+      background: rgba(179, 27, 27, 0.03);
+    }
+
+    .method-card.active::before {
+      content: '✓';
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 24px;
+      height: 24px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .method-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 16px;
+      transition: transform 0.3s;
+    }
+
+    .method-card:hover .method-icon {
+      transform: scale(1.1);
+    }
+
+    .method-icon.check { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); }
+    .method-icon.cash { background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); }
+    .method-icon.transfer { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); }
+    .method-icon.direct { background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); }
+
+    .method-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .method-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    /* Deposit Form Container */
+    .deposit-container {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+      display: none;
+    }
+
+    .deposit-container.active {
+      display: block;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .container-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .container-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      background: rgba(179, 27, 27, 0.1);
+    }
+
+    .container-title-group h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .container-title-group p {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* Check Scanner Simulation */
+    .scanner-area {
+      background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scanner-frame {
+      border: 3px dashed #4b5563;
+      border-radius: 12px;
+      padding: 40px 20px;
+      position: relative;
+    }
+
+    .scanner-laser {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #ef4444;
+      box-shadow: 0 0 10px #ef4444;
+      animation: scan 2s infinite;
+      opacity: 0;
+    }
+
+    .scanner-area.scanning .scanner-laser {
+      opacity: 1;
+    }
+
+    @keyframes scan {
+      0%, 100% { transform: translateY(-50px); }
+      50% { transform: translateY(50px); }
+    }
+
+    .scanner-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .scanner-text {
+      color: #9ca3af;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    .scanner-btn {
+      background: white;
+      color: #1f2937;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .scanner-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
+
+    .check-preview {
+      display: none;
+      background: #f3f4f6;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .check-preview.active {
+      display: block;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .check-image {
+      width: 100%;
+      max-width: 400px;
+      height: 160px;
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border-radius: 8px;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      border: 2px solid #d97706;
+    }
+
+    .check-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .check-field {
+      background: white;
+      padding: 12px;
+      border-radius: 8px;
+    }
+
+    .check-field label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .check-field value {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-color);
+    }
+
+    /* Form Elements */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-color);
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      font-size: 16px;
+      background: var(--bg-color);
+      color: var(--text-color);
+      transition: all 0.3s;
+    }
+
+    .form-input:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(179, 27, 27, 0.1);
+    }
+
+    .amount-input-wrapper {
+      position: relative;
+    }
+
+    .currency-symbol {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .amount-input {
+      padding-left: 36px;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .quick-amounts {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .quick-amount {
+      padding: 8px 16px;
+      background: var(--bg-color);
+      border: 2px solid var(--border-color);
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .quick-amount:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Account Selection */
+    .account-select {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .account-option {
+      flex: 1;
+      padding: 16px;
+      background: var(--bg-color);
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .account-option:hover, .account-option.active {
+      border-color: var(--primary);
+      background: rgba(179, 27, 27, 0.03);
+    }
+
+    .account-option.active {
+      position: relative;
+    }
+
+    .account-option.active::after {
+      content: '✓';
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    .account-name {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .account-number {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* Submit Button */
+    .submit-btn {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      border: none;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .submit-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(179, 27, 27, 0.3);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .submit-btn.processing {
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    /* Recent Deposits */
+    .recent-section {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .section-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .view-all {
+      font-size: 14px;
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .deposit-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .deposit-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: var(--bg-color);
+      border-radius: 12px;
+      transition: all 0.3s;
+    }
+
+    .deposit-item:hover {
+      transform: translateX(4px);
+    }
+
+    .deposit-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .deposit-icon.pending {
+      background: #fef3c7;
+      color: var(--warning);
+    }
+
+    .deposit-icon.completed {
+      background: #dcfce7;
+      color: var(--success);
+    }
+
+    .deposit-info {
+      flex: 1;
+    }
+
+    .deposit-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .deposit-meta {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .deposit-amount {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--success);
+    }
+
+    .deposit-status {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .status-pending {
+      background: #fef3c7;
+      color: var(--warning);
+    }
+
+    .status-completed {
+      background: #dcfce7;
+      color: var(--success);
+    }
+
+    /* Success Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .success-modal {
+      background: var(--card-bg);
+      border-radius: 24px;
+      max-width: 400px;
+      width: 100%;
+      padding: 40px;
+      text-align: center;
+      animation: modalPop 0.3s ease-out;
+    }
+
+    @keyframes modalPop {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .success-icon {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 50px;
+      margin: 0 auto 24px;
+      animation: checkmark 0.5s ease-out;
+    }
+
+    @keyframes checkmark {
+      0% { transform: scale(0) rotate(-45deg); }
+      50% { transform: scale(1.2) rotate(10deg); }
+      100% { transform: scale(1) rotate(0); }
+    }
+
+    .success-title {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .success-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .success-amount {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--success);
+      margin-bottom: 24px;
+    }
+
+    .success-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.3s;
+    }
+
+    .success-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: var(--card-bg);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0 16px;
+      z-index: 100;
+    }
+
+    .nav-item {
+      text-align: center;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 12px;
+      border-radius: 12px;
+      transition: all 0.3s;
+      font-weight: 600;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-item.active {
+      background: rgba(179, 27, 27, 0.1);
+    }
+
+    .nav-icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: #1f2937;
+      color: white;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 1001;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .methods-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .check-details {
+        grid-template-columns: 1fr;
+      }
+      
+      .account-select {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <button class="back-btn" onclick="history.back()">←</button>
+      <img src="logo.png" alt="Wells Fargo" />
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" onclick="showHelp()">❓</button>
+      <button class="icon-btn" onclick="toggleDarkMode()">🌓</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <h1 class="page-title">Deposit</h1>
+      <p class="page-subtitle">Add money to your account securely</p>
+    </div>
+
+    <!-- Balance Card -->
+    <div class="balance-card">
+      <div class="balance-label">Available Balance</div>
+      <div class="balance-amount" id="currentBalance">$0.00</div>
+      <div class="balance-pending">
+        ⏳ $<span id="pendingAmount">0.00</span> pending
+      </div>
+    </div>
+
+    <!-- Deposit Methods -->
+    <div class="methods-grid">
+      <div class="method-card active" onclick="selectMethod('check')" id="method-check">
+        <div class="method-icon check">📸</div>
+        <div class="method-title">Check Deposit</div>
+        <div class="method-desc">Snap a photo of your check</div>
+      </div>
+      
+      <div class="method-card" onclick="selectMethod('transfer')" id="method-transfer">
+        <div class="method-icon transfer">🏦</div>
+        <div class="method-title">Bank Transfer</div>
+        <div class="method-desc">From another bank account</div>
+      </div>
+      
+      <div class="method-card" onclick="selectMethod('cash')" id="method-cash">
+        <div class="method-icon cash">💵</div>
+        <div class="method-title">Cash Deposit</div>
+        <div class="method-desc">Find a nearby ATM or branch</div>
+      </div>
+      
+      <div class="method-card" onclick="selectMethod('direct')" id="method-direct">
+        <div class="method-icon direct">📥</div>
+        <div class="method-title">Direct Deposit</div>
+        <div class="method-desc">Setup recurring deposits</div>
+      </div>
+    </div>
+
+    <!-- Check Deposit Form -->
+    <div class="deposit-container active" id="container-check">
+      <div class="container-header">
+        <div class="container-icon">📸</div>
+        <div class="container-title-group">
+          <h3>Mobile Check Deposit</h3>
+          <p>Take clear photos of front and back</p>
+        </div>
+      </div>
+
+      <div class="scanner-area" id="scannerArea">
+        <div class="scanner-frame">
+          <div class="scanner-laser"></div>
+          <div class="scanner-icon">📄</div>
+          <div class="scanner-text">Position check within frame</div>
+          <button class="scanner-btn" onclick="startScan()">📷 Capture Check</button>
+        </div>
+      </div>
+
+      <div class="check-preview" id="checkPreview">
+        <div class="check-image">🏦</div>
+        <div class="check-details">
+          <div class="check-field">
+            <label>Amount</label>
+            <value id="checkAmount">$0.00</value>
+          </div>
+          <div class="check-field">
+            <label>Check Number</label>
+            <value id="checkNumber">####</value>
+          </div>
+          <div class="check-field">
+            <label>Date</label>
+            <value id="checkDate">--/--/----</value>
+          </div>
+          <div class="check-field">
+            <label>Status</label>
+            <value style="color: var(--warning);">Pending Review</value>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top: 20px;">
+        <label class="form-label">Or enter amount manually</label>
+        <div class="amount-input-wrapper">
+          <span class="currency-symbol">$</span>
+          <input type="number" class="form-input amount-input" id="manualAmount" placeholder="0.00" step="0.01" min="0.01">
+        </div>
+        <div class="quick-amounts">
+          <span class="quick-amount" onclick="setAmount(100)">$100</span>
+          <span class="quick-amount" onclick="setAmount(250)">$250</span>
+          <span class="quick-amount" onclick="setAmount(500)">$500</span>
+          <span class="quick-amount" onclick="setAmount(1000)">$1,000</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Memo (Optional)</label>
+        <input type="text" class="form-input" id="checkMemo" placeholder="What's this for?">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Deposit To</label>
+        <div class="account-select">
+          <div class="account-option active" onclick="selectAccount(this, 'checking')">
+            <div class="account-name">Everyday Checking</div>
+            <div class="account-number">...7550</div>
+          </div>
+          <div class="account-option" onclick="selectAccount(this, 'savings')">
+            <div class="account-name">Way2Save Savings</div>
+            <div class="account-number">...6813</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="submit-btn" onclick="submitDeposit('check')" id="submitCheck">
+        💰 Deposit Check
+      </button>
+    </div>
+
+    <!-- Bank Transfer Form -->
+    <div class="deposit-container" id="container-transfer">
+      <div class="container-header">
+        <div class="container-icon">🏦</div>
+        <div class="container-title-group">
+          <h3>Transfer from Bank</h3>
+          <p>Link an external account</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">From Account</label>
+        <select class="form-select" id="fromAccount">
+          <option value="">Select linked account...</option>
+          <option value="chase">Chase ...4532</option>
+          <option value="bofa">Bank of America ...7891</option>
+          <option value="link">+ Link new account</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Amount</label>
+        <div class="amount-input-wrapper">
+          <span class="currency-symbol">$</span>
+          <input type="number" class="form-input amount-input" id="transferAmount" placeholder="0.00" step="0.01" min="0.01">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Transfer Speed</label>
+        <div class="account-select">
+          <div class="account-option active" onclick="selectTransferSpeed(this, 'standard')">
+            <div class="account-name">Standard (Free)</div>
+            <div class="account-number">1-3 business days</div>
+          </div>
+          <div class="account-option" onclick="selectTransferSpeed(this, 'instant')">
+            <div class="account-name">Instant</div>
+            <div class="account-number">Small fee may apply</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="submit-btn" onclick="submitDeposit('transfer')">
+        🔄 Transfer Funds
+      </button>
+    </div>
+
+    <!-- Cash Deposit Info -->
+    <div class="deposit-container" id="container-cash">
+      <div class="container-header">
+        <div class="container-icon">💵</div>
+        <div class="container-title-group">
+          <h3>Cash Deposit Locations</h3>
+          <p>Find nearby ATMs and branches</p>
+        </div>
+      </div>
+
+      <div style="background: var(--bg-color); padding: 24px; border-radius: 12px; text-align: center;">
+        <div style="font-size: 64px; margin-bottom: 16px;">📍</div>
+        <h4 style="margin-bottom: 12px;">Find a Location</h4>
+        <p style="color: var(--text-secondary); margin-bottom: 20px;">Deposit cash at any Wells Fargo ATM or branch location</p>
+        <button class="submit-btn" onclick="findLocations()">
+          🔍 Find Near Me
+        </button>
+      </div>
+
+      <div style="margin-top: 20px; padding: 20px; background: #fef3c7; border-radius: 12px; border-left: 4px solid var(--warning);">
+        <h4 style="font-size: 14px; margin-bottom: 8px; color: var(--warning);">⚠️ Important</h4>
+        <p style="font-size: 13px; color: var(--text-color); line-height: 1.6;">
+          Cash deposits made before 9 PM PT on business days are available the same day. Deposits made after 9 PM or on weekends/holidays will be processed the next business day.
+        </p>
+      </div>
+    </div>
+
+    <!-- Direct Deposit Setup -->
+    <div class="deposit-container" id="container-direct">
+      <div class="container-header">
+        <div class="container-icon">📥</div>
+        <div class="container-title-group">
+          <h3>Setup Direct Deposit</h3>
+          <p>Get paid faster with automatic deposits</p>
+        </div>
+      </div>
+
+      <div style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); padding: 24px; border-radius: 16px; margin-bottom: 20px;">
+        <h4 style="font-size: 16px; margin-bottom: 12px;">Your Deposit Information</h4>
+        <div style="display: grid; gap: 12px;">
+          <div style="display: flex; justify-content: space-between; padding: 12px; background: white; border-radius: 8px;">
+            <span style="font-size: 13px; color: var(--text-secondary);">Bank Name</span>
+            <span style="font-weight: 700;">Wells Fargo</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 12px; background: white; border-radius: 8px;">
+            <span style="font-size: 13px; color: var(--text-secondary);">Routing Number</span>
+            <span style="font-weight: 700; font-family: monospace;">121000248</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 12px; background: white; border-radius: 8px;">
+            <span style="font-size: 13px; color: var(--text-secondary);">Account Number</span>
+            <span style="font-weight: 700; font-family: monospace;">...7550</span>
+          </div>
+        </div>
+        <button class="submit-btn" style="margin-top: 16px; background: var(--info);" onclick="copyInfo()">
+          📋 Copy Information
+        </button>
+      </div>
+
+      <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+        <p style="margin-bottom: 12px;"><strong>How to setup:</strong></p>
+        <ol style="padding-left: 20px; display: grid; gap: 8px;">
+          <li>Provide this information to your employer's payroll department</li>
+          <li>Or use it for government benefits, tax refunds, etc.</li>
+          <li>Your deposits will arrive up to 2 days early*</li>
+        </ol>
+        <p style="margin-top: 12px; font-size: 11px;">*Early access depends on payer's payment instructions</p>
+      </div>
+    </div>
+
+    <!-- Recent Deposits -->
+    <div class="recent-section">
+      <div class="section-header-row">
+        <h3 style="font-size: 18px; font-weight: 700;">Recent Deposits</h3>
+        <a href="transactions.html" class="view-all">View All →</a>
+      </div>
+      
+      <div class="deposit-list" id="recentDeposits">
+        <div class="deposit-item">
+          <div class="deposit-icon pending">⏳</div>
+          <div class="deposit-info">
+            <div class="deposit-title">Mobile Check Deposit</div>
+            <div class="deposit-meta">Today, 2:30 PM • ...7550</div>
+          </div>
+          <div style="text-align: right;">
+            <div class="deposit-amount">+$250.00</div>
+            <span class="deposit-status status-pending">Pending</span>
+          </div>
+        </div>
+        
+        <div class="deposit-item">
+          <div class="deposit-icon completed">✓</div>
+          <div class="deposit-info">
+            <div class="deposit-title">Direct Deposit - Employer</div>
+            <div class="deposit-meta">Yesterday • ...7550</div>
+          </div>
+          <div style="text-align: right;">
+            <div class="deposit-amount">+$1,250.00</div>
+            <span class="deposit-status status-completed">Completed</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Success Modal -->
+  <div class="modal-overlay" id="successModal" onclick="closeModal(event)">
+    <div class="success-modal" onclick="event.stopPropagation()">
+      <div class="success-icon">✓</div>
+      <h3 class="success-title">Deposit Submitted!</h3>
+      <p class="success-text">Your funds will be available according to the deposit schedule</p>
+      <div class="success-amount" id="successAmount">+$0.00</div>
+      <button class="success-btn" onclick="closeModal(null)">Done</button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="dashboard.html" class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+      Home
+    </a>
+    <a href="transfer.html" class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+        <polyline points="17 6 23 6 23 12"></polyline>
+      </svg>
+      Transfer
+    </a>
+    <a href="deposit.html" class="nav-item active">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 2v20M2 12h20"></path>
+      </svg>
+      Deposit
+    </a>
+    <a href="explore.html" class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 16v-4M12 8h.01"></path>
+      </svg>
+      Explore
+    </a>
+    <a href="settings.html" class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M12 1v6m0 6v6m4.22-10.22l4.24-4.24M6.34 6.34L2.1 2.1m17.9 17.9l-4.24-4.24M6.34 17.66l-4.24 4.24"></path>
+      </svg>
+      Menu
+    </a>
+  </nav>
+
+  <script>
+    const BASE_URL = 'https://backend15-nnmy.onrender.com';
+    const token = localStorage.getItem('userToken');
+    
+    if (!token) {
+      showToast('Session expired. Please login again.');
+      setTimeout(() => window.location.href = 'index.html', 2000);
+    }
+
+    let selectedMethod = 'check';
+    let selectedAccount = 'checking';
+    let transferSpeed = 'standard';
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchBalance();
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+
+    async function fetchBalance() {
+      try {
+        const res = await fetch(`${BASE_URL}/api/bank/balance`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (res.ok) {
+          document.getElementById('currentBalance').textContent = 
+            parseFloat(data.balance || 0).toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD'
+            });
+        }
+      } catch (err) {
+        console.error('Balance fetch error:', err);
+      }
+    }
+
+    // Method Selection
+    function selectMethod(method) {
+      selectedMethod = method;
+      
+      // Update cards
+      document.querySelectorAll('.method-card').forEach(card => {
+        card.classList.remove('active');
+      });
+      document.getElementById(`method-${method}`).classList.add('active');
+      
+      // Show container
+      document.querySelectorAll('.deposit-container').forEach(container => {
+        container.classList.remove('active');
+      });
+      document.getElementById(`container-${method}`).classList.add('active');
+    }
+
+    // Check Scanner Simulation
+    function startScan() {
+      const scanner = document.getElementById('scannerArea');
+      const preview = document.getElementById('checkPreview');
+      
+      scanner.classList.add('scanning');
+      showToast('📸 Scanning check...');
+      
+      setTimeout(() => {
+        scanner.classList.remove('scanning');
+        preview.classList.add('active');
+        
+        // Simulate check data
+        const amount = (Math.random() * 900 + 100).toFixed(2);
+        document.getElementById('checkAmount').textContent = '$' + amount;
+        document.getElementById('checkNumber').textContent = Math.floor(Math.random() * 9000 + 1000);
+        document.getElementById('checkDate').textContent = new Date().toLocaleDateString();
+        document.getElementById('manualAmount').value = amount;
+        
+        showToast('✅ Check scanned successfully!');
+      }, 2000);
+    }
+
+    // Quick Amounts
+    function setAmount(amount) {
+      document.getElementById('manualAmount').value = amount;
+    }
+
+    // Account Selection
+    function selectAccount(element, account) {
+      selectedAccount = account;
+      document.querySelectorAll('.account-option').forEach(opt => opt.classList.remove('active'));
+      element.classList.add('active');
+    }
+
+    // Transfer Speed Selection
+    function selectTransferSpeed(element, speed) {
+      transferSpeed = speed;
+      document.querySelectorAll('#container-transfer .account-option').forEach(opt => opt.classList.remove('active'));
+      element.classList.add('active');
+    }
+
+    // Submit Deposit
+    async function submitDeposit(type) {
+      const btn = event.target;
+      btn.disabled = true;
+      btn.classList.add('processing');
+      
+      let amount = 0;
+      
+      if (type === 'check') {
+        amount = parseFloat(document.getElementById('manualAmount').value) || 0;
+      } else if (type === 'transfer') {
+        amount = parseFloat(document.getElementById('transferAmount').value) || 0;
+      }
+      
+      if (amount <= 0) {
+        showToast('Please enter a valid amount');
+        btn.disabled = false;
+        btn.classList.remove('processing');
+        return;
+      }
+      
+      // Simulate API call
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.classList.remove('processing');
+        
+        document.getElementById('successAmount').textContent = '+$' + amount.toFixed(2);
+        document.getElementById('successModal').classList.add('active');
+        
+        // Update pending amount
+        const currentPending = parseFloat(document.getElementById('pendingAmount').textContent);
+        document.getElementById('pendingAmount').textContent = (currentPending + amount).toFixed(2);
+        
+        // Add to recent deposits
+        addRecentDeposit(type, amount);
+      }, 1500);
+    }
+
+    function addRecentDeposit(type, amount) {
+      const list = document.getElementById('recentDeposits');
+      const item = document.createElement('div');
+      item.className = 'deposit-item';
+      item.style.animation = 'slideUp 0.3s ease-out';
+      
+      const titles = {
+        check: 'Mobile Check Deposit',
+        transfer: 'Bank Transfer',
+        cash: 'Cash Deposit',
+        direct: 'Direct Deposit Setup'
+      };
+      
+      item.innerHTML = `
+        <div class="deposit-icon pending">⏳</div>
+        <div class="deposit-info">
+          <div class="deposit-title">${titles[type]}</div>
+          <div class="deposit-meta">Just now • ...${selectedAccount === 'checking' ? '7550' : '6813'}</div>
+        </div>
+        <div style="text-align: right;">
+          <div class="deposit-amount">+$${amount.toFixed(2)}</div>
+          <span class="deposit-status status-pending">Pending</span>
+        </div>
+      `;
+      
+      list.insertBefore(item, list.firstChild);
+    }
+
+    // Direct Deposit
+    function copyInfo() {
+      const info = `Bank: Wells Fargo\nRouting: 121000248\nAccount: ...7550`;
+      navigator.clipboard.writeText(info).then(() => {
+        showToast('📋 Account info copied to clipboard!');
+      });
+    }
+
+    // Cash Deposit
+    function findLocations() {
+      showToast('📍 Opening location finder...');
+      setTimeout(() => {
+        window.open('https://www.wellsfargo.com/locator/', '_blank');
+      }, 1000);
+    }
+
+    // Utilities
+    function showHelp() {
+      showToast('💬 Support chat coming soon!');
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+      showToast(document.body.classList.contains('dark-mode') ? '🌙 Dark mode on' : '☀️ Light mode on');
+    }
+
+    function closeModal(event) {
+      if (!event || event.target.classList.contains('modal-overlay')) {
+        document.getElementById('successModal').classList.remove('active');
+      }
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // Close modal on escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+      }
+    });
+  </script>
+</body>
+</html>
