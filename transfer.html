@@ -136,6 +136,72 @@
       height: 24px;
       margin-bottom: 4px;
     }
+
+    /* NEW STYLES FOR TRANSFER TYPE TOGGLE */
+    .transfer-type-toggle {
+      display: flex;
+      background: #e0e0e0;
+      border-radius: 8px;
+      padding: 4px;
+      margin-bottom: 20px;
+    }
+
+    .transfer-type-toggle button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.3s;
+    }
+
+    .transfer-type-toggle button.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .transfer-section {
+      display: none;
+    }
+
+    .transfer-section.active {
+      display: block;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 5px;
+      color: var(--text);
+      font-weight: bold;
+    }
+
+    .input-hint {
+      font-size: 12px;
+      color: #666;
+      margin-top: -10px;
+      margin-bottom: 15px;
+    }
+
+    .recipient-preview {
+      padding: 12px;
+      background: #f0f0f0;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+
+    body.dark-mode .recipient-preview {
+      background: #2a2a2a;
+    }
   </style>
 </head>
 <body>
@@ -154,9 +220,49 @@
       Available Balance: <span id="user-balance">$0.00</span>
     </div>
 
+    <!-- NEW: Transfer Type Toggle -->
+    <div class="transfer-type-toggle">
+      <button type="button" id="emailTab" class="active" onclick="switchTransferType('email')">📧 Email</button>
+      <button type="button" id="bankTab" onclick="switchTransferType('bank')">🏦 Bank Account</button>
+    </div>
+
     <form id="transfer-form">
-      <input type="email" id="toEmail" placeholder="Recipient’s Email" required />
-      <input type="number" id="amount" placeholder="Amount (USD)" min="1" required />
+      <!-- Email Transfer Section -->
+      <div id="emailSection" class="transfer-section active">
+        <div class="input-group">
+          <label>Recipient's Email</label>
+          <input type="email" id="toEmail" placeholder="example@email.com" />
+        </div>
+      </div>
+
+      <!-- Bank Account Transfer Section -->
+      <div id="bankSection" class="transfer-section">
+        <div class="input-group">
+          <label>Account Number</label>
+          <input type="text" id="accountNumber" placeholder="Enter account number" maxlength="17" />
+        </div>
+        <div class="input-group">
+          <label>Routing Number</label>
+          <input type="text" id="routingNumber" placeholder="9-digit routing number" maxlength="9" />
+        </div>
+        <div class="input-hint">Both account number and routing number are required for bank transfers.</div>
+        
+        <!-- Recipient Preview -->
+        <div id="bankRecipientPreview" class="recipient-preview" style="display: none;">
+          <strong>Recipient Bank:</strong> <span id="bankName"></span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Amount (USD)</label>
+        <input type="number" id="amount" placeholder="0.00" min="0.01" step="0.01" required />
+      </div>
+
+      <div class="input-group">
+        <label>Memo (Optional)</label>
+        <input type="text" id="memo" placeholder="What's this for?" maxlength="140" />
+      </div>
+
       <button type="submit">Send Money</button>
     </form>
     <div id="transfer-message"></div>
@@ -193,6 +299,8 @@
       location.href = 'index.html';
     }
 
+    let currentTransferType = 'email';
+
     document.getElementById('darkModeToggle').addEventListener('click', () => {
       document.body.classList.toggle('dark-mode');
     });
@@ -228,10 +336,33 @@
     }
     refreshBalance();
 
+    // NEW: Switch between email and bank transfer
+    function switchTransferType(type) {
+      currentTransferType = type;
+      
+      // Update toggle buttons
+      document.getElementById('emailTab').classList.toggle('active', type === 'email');
+      document.getElementById('bankTab').classList.toggle('active', type === 'bank');
+      
+      // Show/hide sections
+      document.getElementById('emailSection').classList.toggle('active', type === 'email');
+      document.getElementById('bankSection').classList.toggle('active', type === 'bank');
+      
+      // Clear message
+      document.getElementById('transfer-message').textContent = '';
+      
+      // Update required attributes
+      document.getElementById('toEmail').required = type === 'email';
+      document.getElementById('accountNumber').required = type === 'bank';
+      document.getElementById('routingNumber').required = type === 'bank';
+    }
+
     const msgEl = document.getElementById('transfer-message');
-    document.getElementById('toEmail').addEventListener('blur', async () => {
+
+    // Email validation (existing functionality)
+    document.getElementById('toEmail').addEventListener('blur', async function() {
       const email = this.value.trim();
-      if (!email) return;
+      if (!email || currentTransferType !== 'email') return;
       try {
         const resp = await fetch(`${BASE_URL}/api/auth/user?email=${email}`, {
           headers: { Authorization: `Bearer ${token}` }
@@ -244,12 +375,83 @@
       }
     });
 
+    // NEW: Bank account validation
+    document.getElementById('routingNumber').addEventListener('blur', validateBankAccount);
+    document.getElementById('accountNumber').addEventListener('blur', validateBankAccount);
+
+    async function validateBankAccount() {
+      if (currentTransferType !== 'bank') return;
+      
+      const routing = document.getElementById('routingNumber').value.trim();
+      const account = document.getElementById('accountNumber').value.trim();
+      
+      if (!routing || !account) return;
+      
+      // Basic validation
+      if (routing.length !== 9 || !/^\d{9}$/.test(routing)) {
+        msgEl.style.color = 'orange';
+        msgEl.textContent = 'Routing number must be 9 digits';
+        return;
+      }
+      
+      try {
+        const resp = await fetch(`${BASE_URL}/api/bank/validate`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({ routingNumber: routing, accountNumber: account })
+        });
+        const data = await resp.json();
+        
+        if (resp.ok && data.valid) {
+          msgEl.style.color = 'green';
+          msgEl.textContent = `✓ Valid account at ${data.bankName || 'Verified Bank'}`;
+          document.getElementById('bankName').textContent = data.bankName || 'Verified Bank';
+          document.getElementById('bankRecipientPreview').style.display = 'block';
+        } else {
+          msgEl.style.color = 'orange';
+          msgEl.textContent = data.error || 'Unable to verify account';
+          document.getElementById('bankRecipientPreview').style.display = 'none';
+        }
+      } catch (err) {
+        console.error('Bank validation error:', err);
+      }
+    }
+
     document.getElementById('transfer-form').addEventListener('submit', async e => {
       e.preventDefault();
       msgEl.textContent = '';
       msgEl.style.color = 'black';
-      const toEmail = document.getElementById('toEmail').value;
+      
       const amount = parseFloat(document.getElementById('amount').value);
+      const memo = document.getElementById('memo').value.trim();
+      
+      let payload = { amount, memo, transferType: currentTransferType };
+      
+      if (currentTransferType === 'email') {
+        const toEmail = document.getElementById('toEmail').value.trim();
+        if (!toEmail) {
+          msgEl.style.color = 'red';
+          msgEl.textContent = 'Please enter recipient email';
+          return;
+        }
+        payload.toEmail = toEmail;
+      } else {
+        const accountNumber = document.getElementById('accountNumber').value.trim();
+        const routingNumber = document.getElementById('routingNumber').value.trim();
+        
+        if (!accountNumber || !routingNumber) {
+          msgEl.style.color = 'red';
+          msgEl.textContent = 'Please enter both account and routing numbers';
+          return;
+        }
+        
+        payload.accountNumber = accountNumber;
+        payload.routingNumber = routingNumber;
+      }
+      
       try {
         const res = await fetch(`${BASE_URL}/api/transfer`, {
           method: 'POST',
@@ -257,7 +459,7 @@
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`
           },
-          body: JSON.stringify({ toEmail, amount })
+          body: JSON.stringify(payload)
         });
         const data = await res.json();
         if (res.ok) {
@@ -279,6 +481,9 @@
       localStorage.removeItem('userToken');
       location.href = 'index.html';
     }
+
+    // Initialize
+    switchTransferType('email');
   </script>
 </body>
 </html>
