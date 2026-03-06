@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Explore | Wells Fargo</title>
+  <link rel="icon" href="logo.png" type="image/png" />
+  <style>
+    :root {
+      --primary: #b31b1b;
+      --primary-light: #dc2626;
+      --primary-dark: #8f1515;
+      --bg-color: #f3f4f6;
+      --card-bg: #ffffff;
+      --text-color: #111827;
+      --text-secondary: #6b7280;
+      --border-color: #e5e7eb;
+      --success: #15803d;
+      --warning: #d97706;
+      --info: #2563eb;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    body.dark-mode {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --text-color: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --border-color: #334155;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      padding-bottom: 100px;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(179, 27, 27, 0.3);
+    }
+
+    header img {
+      height: 32px;
+      filter: brightness(0) invert(1);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .icon-btn {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.3s;
+      backdrop-filter: blur(10px);
+    }
+
+    .icon-btn:hover {
+      background: rgba(255,255,255,0.25);
+      transform: scale(1.1);
+    }
+
+    /* Main Content */
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 24px 20px;
+    }
+
+    .page-header {
+      margin-bottom: 28px;
+    }
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    /* Search Bar */
+    .search-container {
+      position: relative;
+      margin-bottom: 28px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 16px 20px 16px 56px;
+      border: 2px solid var(--border-color);
+      border-radius: 16px;
+      font-size: 16px;
+      background: var(--card-bg);
+      color: var(--text-color);
+      transition: all 0.3s;
+      box-shadow: var(--shadow);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(179, 27, 27, 0.1);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 24px;
+      color: var(--text-secondary);
+    }
+
+    /* Quick Tools Grid */
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .tool-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tool-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+      transform: scaleX(0);
+      transition: transform 0.3s;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary);
+    }
+
+    .tool-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .tool-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-bottom: 16px;
+      transition: transform 0.3s;
+    }
+
+    .tool-card:hover .tool-icon {
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    .tool-icon.calculator { background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); }
+    .tool-icon.insights { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); }
+    .tool-icon.goals { background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); }
+    .tool-icon.education { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); }
+    .tool-icon.offers { background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); }
+    .tool-icon.support { background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); }
+
+    .tool-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .tool-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Featured Section */
+    .featured-card {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      border-radius: 24px;
+      padding: 28px;
+      margin-bottom: 32px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .featured-card::after {
+      content: '💳';
+      position: absolute;
+      right: -20px;
+      top: -20px;
+      font-size: 120px;
+      opacity: 0.1;
+    }
+
+    .featured-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.9;
+      margin-bottom: 8px;
+    }
+
+    .featured-title {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .featured-desc {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .featured-btn {
+      background: white;
+      color: var(--primary);
+      border: none;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .featured-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    /* Financial Insights */
+    .insights-container {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      padding-bottom: 16px;
+      margin-bottom: 32px;
+      scroll-snap-type: x mandatory;
+    }
+
+    .insight-card {
+      flex: 0 0 280px;
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      scroll-snap-align: start;
+      border-left: 4px solid var(--primary);
+    }
+
+    .insight-card.warning { border-left-color: var(--warning); }
+    .insight-card.success { border-left-color: var(--success); }
+    .insight-card.info { border-left-color: var(--info); }
+
+    .insight-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .insight-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .insight-icon.trending { background: #fee2e2; }
+    .insight-icon.savings { background: #dcfce7; }
+    .insight-icon.alert { background: #fef3c7; }
+    .insight-icon.tip { background: #dbeafe; }
+
+    .insight-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .insight-value {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .insight-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Calculator Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      border-radius: 24px;
+      max-width: 500px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: modalSlide 0.3s ease-out;
+    }
+
+    @keyframes modalSlide {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-header {
+      padding: 24px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+
+    .modal-close:hover {
+      background: var(--bg-color);
+    }
+
+    .modal-body {
+      padding: 24px;
+    }
+
+    .calc-input-group {
+      margin-bottom: 20px;
+    }
+
+    .calc-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+    }
+
+    .calc-input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      font-size: 16px;
+      background: var(--bg-color);
+      color: var(--text-color);
+      transition: all 0.3s;
+    }
+
+    .calc-input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .calc-result {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      padding: 24px;
+      border-radius: 16px;
+      text-align: center;
+      margin-top: 24px;
+    }
+
+    .calc-result-label {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-bottom: 8px;
+    }
+
+    .calc-result-value {
+      font-size: 36px;
+      font-weight: 800;
+    }
+
+    /* Educational Content */
+    .edu-grid {
+      display: grid;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .edu-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      gap: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: var(--shadow);
+      align-items: center;
+    }
+
+    .edu-card:hover {
+      transform: translateX(8px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .edu-thumb {
+      width: 80px;
+      height: 80px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      flex-shrink: 0;
+    }
+
+    .edu-content {
+      flex: 1;
+    }
+
+    .edu-tag {
+      display: inline-block;
+      padding: 4px 12px;
+      background: rgba(179, 27, 27, 0.1);
+      color: var(--primary);
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .edu-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+
+    .edu-meta {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: var(--card-bg);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0 16px;
+      z-index: 100;
+    }
+
+    .nav-item {
+      text-align: center;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 12px;
+      border-radius: 12px;
+      transition: all 0.3s;
+      font-weight: 600;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-item.active {
+      background: rgba(179, 27, 27, 0.1);
+    }
+
+    .nav-icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1f2937;
+      color: white;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 1001;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Responsive */
+    @media (min-width: 600px) {
+      .tools-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .tools-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .page-title {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="Wells Fargo" />
+    <div class="header-actions">
+      <button class="icon-btn" onclick="showNotifications()">🔔</button>
+      <button class="icon-btn" onclick="toggleDarkMode()">🌓</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">Explore</h1>
+      <p class="page-subtitle">Tools, insights, and resources to help you grow</p>
+    </div>
+
+    <!-- Search -->
+    <div class="search-container">
+      <span class="search-icon">🔍</span>
+      <input type="text" class="search-input" placeholder="Search tools, articles, or features..." id="searchInput" oninput="handleSearch()">
+    </div>
+
+    <!-- Featured Card -->
+    <div class="featured-card">
+      <div class="featured-label">Featured</div>
+      <h2 class="featured-title">New! Credit Score Tracker</h2>
+      <p class="featured-desc">Monitor your credit score, get personalized tips, and receive alerts when your score changes. All for free.</p>
+      <button class="featured-btn" onclick="openCreditScore()">
+        Check My Score →
+      </button>
+    </div>
+
+    <!-- Quick Tools -->
+    <h2 class="section-title">🛠️ Financial Tools</h2>
+    <div class="tools-grid" id="toolsGrid">
+      <div class="tool-card" onclick="openCalculator('loan')">
+        <div class="tool-icon calculator">🧮</div>
+        <div class="tool-title">Loan Calculator</div>
+        <div class="tool-desc">Calculate payments and interest for auto, home, or personal loans</div>
+      </div>
+      
+      <div class="tool-card" onclick="openCalculator('savings')">
+        <div class="tool-icon goals">🎯</div>
+        <div class="tool-title">Savings Goal</div>
+        <div class="tool-desc">Set targets and track progress toward your financial goals</div>
+      </div>
+      
+      <div class="tool-card" onclick="showInsights()">
+        <div class="tool-icon insights">📊</div>
+        <div class="tool-title">Spending Insights</div>
+        <div class="tool-desc">Visualize where your money goes with smart categorization</div>
+      </div>
+      
+      <div class="tool-card" onclick="showEducation()">
+        <div class="tool-icon education">📚</div>
+        <div class="tool-title">Financial Education</div>
+        <div class="tool-desc">Learn about budgeting, investing, and building credit</div>
+      </div>
+      
+      <div class="tool-card" onclick="showOffers()">
+        <div class="tool-icon offers">🎁</div>
+        <div class="tool-title">Special Offers</div>
+        <div class="tool-desc">Exclusive deals and rewards for Wells Fargo customers</div>
+      </div>
+      
+      <div class="tool-card" onclick="showSupport()">
+        <div class="tool-icon support">💬</div>
+        <div class="tool-title">Help & Support</div>
+        <div class="tool-desc">FAQs, chat support, and financial guidance</div>
+      </div>
+    </div>
+
+    <!-- Financial Insights -->
+    <h2 class="section-title">💡 Your Insights</h2>
+    <div class="insights-container">
+      <div class="insight-card">
+        <div class="insight-header">
+          <div class="insight-icon trending">📈</div>
+          <div class="insight-title">Monthly Trend</div>
+        </div>
+        <div class="insight-value" id="monthlyTrend">+12%</div>
+        <div class="insight-desc">Your savings grew 12% compared to last month. Keep it up!</div>
+      </div>
+      
+      <div class="insight-card warning">
+        <div class="insight-header">
+          <div class="insight-icon alert">⚠️</div>
+          <div class="insight-title">Spending Alert</div>
+        </div>
+        <div class="insight-value" id="spendingAlert">$340</div>
+        <div class="insight-desc">Dining out spending is 40% higher than your usual average</div>
+      </div>
+      
+      <div class="insight-card success">
+        <div class="insight-header">
+          <div class="insight-icon savings">💰</div>
+          <div class="insight-title">Saved This Year</div>
+        </div>
+        <div class="insight-value" id="savedYear">$2,450</div>
+        <div class="insight-desc">You're on track to meet your annual savings goal of $5,000</div>
+      </div>
+      
+      <div class="insight-card info">
+        <div class="insight-header">
+          <div class="insight-icon tip">💡</div>
+          <div class="insight-title">Smart Tip</div>
+        </div>
+        <div class="insight-value" style="font-size: 18px;">Auto-Save</div>
+        <div class="insight-desc">Enable round-up transfers to save $50+ monthly on average</div>
+      </div>
+    </div>
+
+    <!-- Educational Content -->
+    <h2 class="section-title">📖 Learn & Grow</h2>
+    <div class="edu-grid" id="eduGrid">
+      <div class="edu-card" onclick="openArticle('budget')">
+        <div class="edu-thumb">📋</div>
+        <div class="edu-content">
+          <span class="edu-tag">Budgeting</span>
+          <div class="edu-title">The 50/30/20 Rule Explained</div>
+          <div class="edu-meta">5 min read • Beginner</div>
+        </div>
+      </div>
+      
+      <div class="edu-card" onclick="openArticle('invest')">
+        <div class="edu-thumb">📈</div>
+        <div class="edu-content">
+          <span class="edu-tag">Investing</span>
+          <div class="edu-title">Getting Started with Index Funds</div>
+          <div class="edu-meta">8 min read • Intermediate</div>
+        </div>
+      </div>
+      
+      <div class="edu-card" onclick="openArticle('credit')">
+        <div class="edu-thumb">💳</div>
+        <div class="edu-content">
+          <span class="edu-tag">Credit</span>
+          <div class="edu-title">How to Build Credit from Zero</div>
+          <div class="edu-meta">6 min read • Beginner</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Calculator Modal -->
+  <div class="modal-overlay" id="calculatorModal" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 class="modal-title" id="calcTitle">Loan Calculator</h3>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="calc-input-group">
+          <label class="calc-label">Loan Amount ($)</label>
+          <input type="number" class="calc-input" id="loanAmount" placeholder="25000" oninput="calculateLoan()">
+        </div>
+        <div class="calc-input-group">
+          <label class="calc-label">Interest Rate (%)</label>
+          <input type="number" class="calc-input" id="interestRate" placeholder="5.5" step="0.1" oninput="calculateLoan()">
+        </div>
+        <div class="calc-input-group">
+          <label class="calc-label">Loan Term (years)</label>
+          <input type="number" class="calc-input" id="loanTerm" placeholder="5" oninput="calculateLoan()">
+        </div>
+        <div class="calc-result" id="calcResult" style="display: none;">
+          <div class="calc-result-label">Monthly Payment</div>
+          <div class="calc-result-value" id="monthlyPayment">$0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="dashboard.html" class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+      Home
+    </a>
+    <a href="transfer.html" class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+        <polyline points="17 6 23 6 23 12"></polyline>
+      </svg>
+      Transfer
+    </a>
+    <a href="deposit.html" class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 2v20M2 12h20"></path>
+      </svg>
+      Deposit
+    </a>
+    <a href="explore.html" class="nav-item active">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 16v-4M12 8h.01"></path>
+      </svg>
+      Explore
+    </a>
+    <a href="settings.html" class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M12 1v6m0 6v6m4.22-10.22l4.24-4.24M6.34 6.34L2.1 2.1m17.9 17.9l-4.24-4.24M6.34 17.66l-4.24 4.24"></path>
+      </svg>
+      Menu
+    </a>
+  </nav>
+
+  <script>
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      loadInsights();
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+
+    // Search functionality
+    function handleSearch() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const tools = document.querySelectorAll('.tool-card');
+      const articles = document.querySelectorAll('.edu-card');
+      
+      tools.forEach(tool => {
+        const text = tool.textContent.toLowerCase();
+        tool.style.display = text.includes(query) ? 'block' : 'none';
+      });
+      
+      articles.forEach(article => {
+        const text = article.textContent.toLowerCase();
+        article.style.display = text.includes(query) ? 'flex' : 'none';
+      });
+    }
+
+    // Calculator functions
+    function openCalculator(type) {
+      const modal = document.getElementById('calculatorModal');
+      const title = document.getElementById('calcTitle');
+      
+      if (type === 'loan') {
+        title.textContent = 'Loan Calculator';
+      } else if (type === 'savings') {
+        title.textContent = 'Savings Goal Calculator';
+      }
+      
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function calculateLoan() {
+      const amount = parseFloat(document.getElementById('loanAmount').value) || 0;
+      const rate = parseFloat(document.getElementById('interestRate').value) || 0;
+      const years = parseInt(document.getElementById('loanTerm').value) || 0;
+      
+      if (amount && rate && years) {
+        const monthlyRate = rate / 100 / 12;
+        const numPayments = years * 12;
+        const payment = (amount * monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / 
+                       (Math.pow(1 + monthlyRate, numPayments) - 1);
+        
+        document.getElementById('monthlyPayment').textContent = '$' + payment.toFixed(2);
+        document.getElementById('calcResult').style.display = 'block';
+      }
+    }
+
+    function closeModal(event) {
+      if (!event || event.target.id === 'calculatorModal' || event.target.classList.contains('modal-close')) {
+        document.getElementById('calculatorModal').classList.remove('active');
+        document.body.style.overflow = '';
+        // Reset calculator
+        document.getElementById('calcResult').style.display = 'none';
+        document.querySelectorAll('.calc-input').forEach(input => input.value = '');
+      }
+    }
+
+    // Feature functions
+    function openCreditScore() {
+      showToast('Credit score feature coming soon! 🎉');
+    }
+
+    function showInsights() {
+      showToast('Detailed spending insights available in your monthly statement');
+    }
+
+    function showEducation() {
+      document.getElementById('eduGrid').scrollIntoView({ behavior: 'smooth' });
+      showToast('Browse our financial education library');
+    }
+
+    function showOffers() {
+      showToast('No current offers. Check back soon! 🎁');
+    }
+
+    function showSupport() {
+      showToast('Support chat available 24/7. Coming soon!');
+    }
+
+    function openArticle(type) {
+      const titles = {
+        budget: 'The 50/30/20 Rule Explained',
+        invest: 'Getting Started with Index Funds',
+        credit: 'How to Build Credit from Zero'
+      };
+      showToast(`Opening: ${titles[type]}`);
+    }
+
+    function showNotifications() {
+      showToast('No new notifications');
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+      showToast(document.body.classList.contains('dark-mode') ? 'Dark mode enabled' : 'Light mode enabled');
+    }
+
+    function loadInsights() {
+      // Simulate loading personalized insights
+      setTimeout(() => {
+        document.getElementById('monthlyTrend').textContent = '+8%';
+        document.getElementById('spendingAlert').textContent = '$280';
+        document.getElementById('savedYear').textContent = '$3,120';
+      }, 1000);
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // Close modal on escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+</body>
+</html>
