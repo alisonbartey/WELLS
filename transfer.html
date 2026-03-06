@@ -2,291 +2,1460 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Wells Fargo | Transfer</title>
-  <link rel="icon" href="logo.png" type="image/png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Transfer | Wells Fargo</title>
+  <link rel="icon" href="logo.png" type="image/png" />
   <style>
     :root {
       --primary: #b31b1b;
-      --background: #f8f9fa;
-      --text: #333;
+      --primary-light: #dc2626;
+      --primary-dark: #8f1515;
+      --bg-color: #f3f4f6;
       --card-bg: #ffffff;
+      --text-color: #111827;
+      --text-secondary: #6b7280;
+      --border-color: #e5e7eb;
+      --success: #15803d;
+      --warning: #d97706;
+      --info: #2563eb;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.15);
     }
 
     body.dark-mode {
-      --background: #121212;
-      --text: #e0e0e0;
-      --card-bg: #1e1e1e;
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --text-color: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --border-color: #334155;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
     body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: var(--background);
-      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
       padding-bottom: 100px;
-      transition: background 0.3s, color 0.3s;
     }
 
-    .topbar {
+    /* Header */
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(179, 27, 27, 0.3);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .back-btn {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.3s;
+    }
+
+    .back-btn:hover {
+      background: rgba(255,255,255,0.3);
+      transform: translateX(-2px);
+    }
+
+    header img {
+      height: 32px;
+      filter: brightness(0) invert(1);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .icon-btn {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.3s;
+      backdrop-filter: blur(10px);
+    }
+
+    .icon-btn:hover {
+      background: rgba(255,255,255,0.25);
+      transform: scale(1.1);
+    }
+
+    /* Main Content */
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 24px 20px;
+    }
+
+    .page-header {
+      margin-bottom: 24px;
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* Balance Cards */
+    .balance-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .balance-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 3px solid transparent;
+    }
+
+    .balance-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .balance-card.active {
+      border-color: var(--primary);
+      background: rgba(179, 27, 27, 0.03);
+    }
+
+    .balance-card.active::after {
+      content: '✓';
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 24px;
+      height: 24px;
       background: var(--primary);
       color: white;
-      padding: 12px 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .balance-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .balance-amount {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .balance-number {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* Transfer Type Tabs */
+    .transfer-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .tab-btn {
+      padding: 12px 24px;
+      background: var(--card-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tab-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    /* Transfer Form Container */
+    .transfer-container {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+      display: none;
+    }
+
+    .transfer-container.active {
+      display: block;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Recipient Selection */
+    .recipient-section {
+      margin-bottom: 24px;
+    }
+
+    .section-label {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .recipient-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .recipient-chip {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 12px;
+      background: var(--bg-color);
+      border: 2px solid var(--border-color);
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .recipient-chip:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .recipient-chip.active {
+      border-color: var(--primary);
+      background: rgba(179, 27, 27, 0.05);
+    }
+
+    .recipient-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .recipient-name {
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+    }
+
+    .add-recipient {
+      border-style: dashed;
+    }
+
+    .add-recipient .recipient-avatar {
+      background: var(--border-color);
+      color: var(--text-secondary);
+      font-size: 24px;
+    }
+
+    /* Form Elements */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-color);
+    }
+
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      font-size: 16px;
+      background: var(--bg-color);
+      color: var(--text-color);
+      transition: all 0.3s;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(179, 27, 27, 0.1);
+    }
+
+    .amount-input-wrapper {
+      position: relative;
+    }
+
+    .currency-symbol {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .amount-input {
+      padding-left: 40px;
+      font-size: 28px;
+      font-weight: 800;
+    }
+
+    .available-balance {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 8px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .topbar img {
-      height: 30px;
-    }
-
-    .topbar button {
+    .max-btn {
+      color: var(--primary);
+      font-weight: 700;
+      cursor: pointer;
       background: none;
-      border: 1px solid white;
-      color: white;
-      padding: 6px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-left: 10px;
-    }
-
-    .container {
-      max-width: 500px;
-      margin: 30px auto;
-      background: var(--card-bg);
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
-    }
-
-    h2 {
-      text-align: center;
-      color: var(--primary);
-      margin-bottom: 20px;
-    }
-
-    .balance-box {
-      font-size: 16px;
-      margin-bottom: 15px;
-      text-align: center;
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-    }
-
-    input, select {
-      padding: 12px;
-      margin-bottom: 15px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-    }
-
-    button[type="submit"] {
-      padding: 12px;
-      background: var(--primary);
-      color: white;
       border: none;
-      border-radius: 4px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
+      font-size: 13px;
     }
 
-    button[type="submit"]:hover {
-      background: #911010;
-    }
-
-    #transfer-message {
-      margin-top: 10px;
-      font-weight: bold;
-      text-align: center;
-    }
-
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      background: var(--card-bg);
-      border-top: 1px solid #ccc;
+    /* Quick Amounts */
+    .quick-amounts {
       display: flex;
-      justify-content: space-around;
-      padding: 10px 0;
+      gap: 10px;
+      margin-top: 12px;
+      flex-wrap: wrap;
     }
 
-    .bottom-nav a {
-      text-align: center;
-      color: var(--text);
-      font-size: 12px;
-      text-decoration: none;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .bottom-nav a.active {
-      color: var(--primary);
-      font-weight: bold;
-    }
-
-    .bottom-nav img {
-      height: 24px;
-      margin-bottom: 4px;
-    }
-
-    /* NEW STYLES FOR TRANSFER TYPE TOGGLE */
-    .transfer-type-toggle {
-      display: flex;
-      background: #e0e0e0;
-      border-radius: 8px;
-      padding: 4px;
-      margin-bottom: 20px;
-    }
-
-    .transfer-type-toggle button {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      background: transparent;
-      color: var(--text);
+    .quick-amount {
+      padding: 10px 20px;
+      background: var(--bg-color);
+      border: 2px solid var(--border-color);
+      border-radius: 20px;
       font-size: 14px;
-      font-weight: bold;
+      font-weight: 700;
       cursor: pointer;
-      border-radius: 6px;
       transition: all 0.3s;
     }
 
-    .transfer-type-toggle button.active {
+    .quick-amount:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Schedule Options */
+    .schedule-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .schedule-option {
+      padding: 16px;
+      background: var(--bg-color);
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .schedule-option:hover {
+      border-color: var(--primary);
+    }
+
+    .schedule-option.active {
+      border-color: var(--primary);
+      background: rgba(179, 27, 27, 0.05);
+    }
+
+    .schedule-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .schedule-title {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .schedule-desc {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    /* Recurring Options */
+    .recurring-options {
+      display: none;
+      background: var(--bg-color);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .recurring-options.active {
+      display: block;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; max-height: 0; }
+      to { opacity: 1; max-height: 500px; }
+    }
+
+    .frequency-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .frequency-btn {
+      padding: 12px;
+      background: white;
+      border: 2px solid var(--border-color);
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .frequency-btn:hover, .frequency-btn.active {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Review Section */
+    .review-section {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border: 2px solid var(--success);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    body.dark-mode .review-section {
+      background: rgba(21, 128, 61, 0.1);
+    }
+
+    .review-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(21, 128, 61, 0.2);
+    }
+
+    .review-row:last-child {
+      border-bottom: none;
+    }
+
+    .review-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .review-value {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .review-amount {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--success);
+    }
+
+    /* Security Badge */
+    .security-badge {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(37, 99, 235, 0.1);
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .security-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--info);
+      color: white;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .security-text h4 {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .security-text p {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* Submit Button */
+    .submit-btn {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      border: none;
+      padding: 18px 32px;
+      border-radius: 14px;
+      font-size: 17px;
+      font-weight: 800;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .submit-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(179, 27, 27, 0.4);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .submit-btn.processing {
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    /* Recent Transfers */
+    .recent-section {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .section-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .view-all {
+      font-size: 14px;
+      color: var(--primary);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .transfer-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .transfer-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: var(--bg-color);
+      border-radius: 12px;
+      transition: all 0.3s;
+    }
+
+    .transfer-item:hover {
+      transform: translateX(4px);
+    }
+
+    .transfer-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .transfer-icon.sent {
+      background: #fee2e2;
+      color: var(--primary);
+    }
+
+    .transfer-icon.scheduled {
+      background: #fef3c7;
+      color: var(--warning);
+    }
+
+    .transfer-icon.recurring {
+      background: #dbeafe;
+      color: var(--info);
+    }
+
+    .transfer-info {
+      flex: 1;
+    }
+
+    .transfer-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .transfer-meta {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .transfer-amount {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    /* Success Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .success-modal {
+      background: var(--card-bg);
+      border-radius: 24px;
+      max-width: 420px;
+      width: 100%;
+      padding: 40px;
+      text-align: center;
+      animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes modalPop {
+      from { transform: scale(0.5); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .success-animation {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 24px;
+      position: relative;
+    }
+
+    .success-circle {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 60px;
+      animation: scaleIn 0.5s ease-out;
+    }
+
+    @keyframes scaleIn {
+      0% { transform: scale(0); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    .success-particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: var(--success);
+      border-radius: 50%;
+      animation: particle 1s ease-out forwards;
+    }
+
+    @keyframes particle {
+      0% { transform: translate(50%, 50%) scale(1); opacity: 1; }
+      100% { transform: translate(var(--x), var(--y)) scale(0); opacity: 0; }
+    }
+
+    .success-title {
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .success-text {
+      font-size: 15px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .success-details {
+      background: var(--bg-color);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .success-amount {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--success);
+      margin-bottom: 8px;
+    }
+
+    .success-to {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .success-to strong {
+      color: var(--text-color);
+    }
+
+    .success-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .success-btn {
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+    }
+
+    .success-btn.primary {
       background: var(--primary);
       color: white;
     }
 
-    .transfer-section {
-      display: none;
+    .success-btn.primary:hover {
+      background: var(--primary-dark);
     }
 
-    .transfer-section.active {
-      display: block;
+    .success-btn.secondary {
+      background: var(--bg-color);
+      color: var(--text-color);
     }
 
-    .input-group {
-      margin-bottom: 15px;
+    .success-btn.secondary:hover {
+      background: var(--border-color);
     }
 
-    .input-group label {
-      display: block;
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: var(--card-bg);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0 16px;
+      z-index: 100;
+    }
+
+    .nav-item {
+      text-align: center;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 12px;
+      border-radius: 12px;
+      transition: all 0.3s;
+      font-weight: 600;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-item.active {
+      background: rgba(179, 27, 27, 0.1);
+    }
+
+    .nav-icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: #1f2937;
+      color: white;
+      padding: 14px 28px;
+      border-radius: 12px;
       font-size: 14px;
-      margin-bottom: 5px;
-      color: var(--text);
-      font-weight: bold;
+      font-weight: 600;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 1001;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
 
-    .input-hint {
-      font-size: 12px;
-      color: #666;
-      margin-top: -10px;
-      margin-bottom: 15px;
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
     }
 
-    .recipient-preview {
-      padding: 12px;
-      background: #f0f0f0;
-      border-radius: 4px;
-      margin-bottom: 15px;
-      font-size: 14px;
+    /* Zelle Section */
+    .zelle-banner {
+      background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+      color: white;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
     }
 
-    body.dark-mode .recipient-preview {
-      background: #2a2a2a;
+    .zelle-banner:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .zelle-icon {
+      width: 56px;
+      height: 56px;
+      background: white;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: #7c3aed;
+      font-weight: 800;
+    }
+
+    .zelle-content h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .zelle-content p {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .schedule-options {
+        grid-template-columns: 1fr;
+      }
+      
+      .frequency-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .success-actions {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="topbar">
-    <img src="logo.png" alt="Wells Fargo" />
-    <div>
-      <button id="darkModeToggle">🌓</button>
-      <button onclick="logout()">Sign Off</button>
+  <header>
+    <div class="header-left">
+      <button class="back-btn" onclick="history.back()">←</button>
+      <img src="logo.png" alt="Wells Fargo" />
     </div>
-  </div>
-
-  <div class="container">
-    <h2>💸 Transfer Funds</h2>
-
-    <div class="balance-box">
-      Available Balance: <span id="user-balance">$0.00</span>
+    <div class="header-actions">
+      <button class="icon-btn" onclick="showHelp()">❓</button>
+      <button class="icon-btn" onclick="toggleDarkMode()">🌓</button>
     </div>
+  </header>
 
-    <!-- NEW: Transfer Type Toggle -->
-    <div class="transfer-type-toggle">
-      <button type="button" id="emailTab" class="active" onclick="switchTransferType('email')">📧 Email</button>
-      <button type="button" id="bankTab" onclick="switchTransferType('bank')">🏦 Bank Account</button>
+  <main>
+    <div class="page-header">
+      <h1 class="page-title">Pay & Transfer</h1>
+      <p class="page-subtitle">Send money securely to anyone</p>
     </div>
 
-    <form id="transfer-form">
-      <!-- Email Transfer Section -->
-      <div id="emailSection" class="transfer-section active">
-        <div class="input-group">
-          <label>Recipient's Email</label>
-          <input type="email" id="toEmail" placeholder="example@email.com" />
+    <!-- Zelle Banner -->
+    <div class="zelle-banner" onclick="selectMethod('zelle')">
+      <div class="zelle-icon">Z</div>
+      <div class="zelle-content">
+        <h3>Send with Zelle®</h3>
+        <p>Send money instantly to friends and family</p>
+      </div>
+      <span style="margin-left: auto; font-size: 20px;">›</span>
+    </div>
+
+    <!-- Account Selection -->
+    <div class="balance-grid">
+      <div class="balance-card active" onclick="selectFromAccount(this, 'checking')" style="position: relative;">
+        <div class="balance-label">From</div>
+        <div class="balance-amount" id="checkingBalance">$0.00</div>
+        <div class="balance-number">Everyday Checking ...7550</div>
+      </div>
+      <div class="balance-card" onclick="selectFromAccount(this, 'savings')" style="position: relative;">
+        <div class="balance-label">From</div>
+        <div class="balance-amount" id="savingsBalance">$0.00</div>
+        <div class="balance-number">Way2Save Savings ...6813</div>
+      </div>
+    </div>
+
+    <!-- Transfer Type Tabs -->
+    <div class="transfer-tabs">
+      <button class="tab-btn active" onclick="selectTransferType('internal')">
+        🏦 Internal
+      </button>
+      <button class="tab-btn" onclick="selectTransferType('external')">
+        🌐 External
+      </button>
+      <button class="tab-btn" onclick="selectTransferType('wire')">
+        ⚡ Wire
+      </button>
+      <button class="tab-btn" onclick="selectTransferType('international')">
+        🌍 Global
+      </button>
+    </div>
+
+    <!-- Internal Transfer -->
+    <div class="transfer-container active" id="container-internal">
+      <div class="recipient-section">
+        <div class="section-label">To</div>
+        <div class="recipient-grid">
+          <div class="recipient-chip" onclick="selectRecipient(this, 'savings')">
+            <div class="recipient-avatar">🏦</div>
+            <div class="recipient-name">Savings ...6813</div>
+          </div>
+          <div class="recipient-chip add-recipient" onclick="addInternalAccount()">
+            <div class="recipient-avatar">+</div>
+            <div class="recipient-name">Add Account</div>
+          </div>
         </div>
       </div>
 
-      <!-- Bank Account Transfer Section -->
-      <div id="bankSection" class="transfer-section">
-        <div class="input-group">
-          <label>Account Number</label>
-          <input type="text" id="accountNumber" placeholder="Enter account number" maxlength="17" />
+      <div class="form-group">
+        <label class="form-label">Amount</label>
+        <div class="amount-input-wrapper">
+          <span class="currency-symbol">$</span>
+          <input type="number" class="form-input amount-input" id="internalAmount" placeholder="0.00" step="0.01" min="0.01" oninput="updateReview()">
         </div>
-        <div class="input-group">
-          <label>Routing Number</label>
-          <input type="text" id="routingNumber" placeholder="9-digit routing number" maxlength="9" />
+        <div class="available-balance">
+          <span>Available: <strong id="availableInternal">$0.00</strong></span>
+          <button class="max-btn" onclick="setMaxAmount()">Max</button>
         </div>
-        <div class="input-hint">Both account number and routing number are required for bank transfers.</div>
+        <div class="quick-amounts">
+          <span class="quick-amount" onclick="setAmount(50)">$50</span>
+          <span class="quick-amount" onclick="setAmount(100)">$100</span>
+          <span class="quick-amount" onclick="setAmount(500)">$500</span>
+          <span class="quick-amount" onclick="setAmount(1000)">$1,000</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Memo (Optional)</label>
+        <input type="text" class="form-input" id="internalMemo" placeholder="What's this for?" maxlength="140">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">When</label>
+        <div class="schedule-options">
+          <div class="schedule-option active" onclick="selectSchedule(this, 'now')">
+            <div class="schedule-icon">⚡</div>
+            <div class="schedule-title">Now</div>
+            <div class="schedule-desc">Instant</div>
+          </div>
+          <div class="schedule-option" onclick="selectSchedule(this, 'later')">
+            <div class="schedule-icon">📅</div>
+            <div class="schedule-title">Later</div>
+            <div class="schedule-desc">Schedule date</div>
+          </div>
+          <div class="schedule-option" onclick="selectSchedule(this, 'recurring')">
+            <div class="schedule-icon">🔄</div>
+            <div class="schedule-title">Recurring</div>
+            <div class="schedule-desc">Auto repeat</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recurring Options -->
+      <div class="recurring-options" id="recurringOptions">
+        <div class="form-group">
+          <label class="form-label">Frequency</label>
+          <div class="frequency-grid">
+            <button class="frequency-btn active" onclick="selectFrequency(this, 'weekly')">Weekly</button>
+            <button class="frequency-btn" onclick="selectFrequency(this, 'biweekly')">Bi-weekly</button>
+            <button class="frequency-btn" onclick="selectFrequency(this, 'monthly')">Monthly</button>
+            <button class="frequency-btn" onclick="selectFrequency(this, 'custom')">Custom</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Start Date</label>
+          <input type="date" class="form-input" id="startDate">
+        </div>
+        <div class="form-group">
+          <label class="form-label">End Date (Optional)</label>
+          <input type="date" class="form-input" id="endDate">
+        </div>
+      </div>
+
+      <!-- Review Section -->
+      <div class="review-section" id="reviewSection" style="display: none;">
+        <div class="review-row">
+          <span class="review-label">Transfer Amount</span>
+          <span class="review-value review-amount" id="reviewAmount">$0.00</span>
+        </div>
+        <div class="review-row">
+          <span class="review-label">From</span>
+          <span class="review-value" id="reviewFrom">Everyday Checking ...7550</span>
+        </div>
+        <div class="review-row">
+          <span class="review-label">To</span>
+          <span class="review-value" id="reviewTo">Way2Save Savings ...6813</span>
+        </div>
+        <div class="review-row">
+          <span class="review-label">When</span>
+          <span class="review-value" id="reviewWhen">Today</span>
+        </div>
+        <div class="review-row" id="reviewFrequencyRow" style="display: none;">
+          <span class="review-label">Frequency</span>
+          <span class="review-value" id="reviewFrequency">Monthly</span>
+        </div>
+      </div>
+
+      <div class="security-badge">
+        <div class="security-icon">🔒</div>
+        <div class="security-text">
+          <h4>Bank-Level Security</h4>
+          <p>Your transfer is protected with 256-bit encryption</p>
+        </div>
+      </div>
+
+      <button class="submit-btn" onclick="submitTransfer('internal')" id="submitBtn">
+        🚀 Transfer Now
+      </button>
+    </div>
+
+    <!-- External Transfer -->
+    <div class="transfer-container" id="container-external">
+      <div class="form-group">
+        <label class="form-label">Recipient Name</label>
+        <input type="text" class="form-input" id="externalName" placeholder="Full name">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Account Type</label>
+        <div class="schedule-options" style="grid-template-columns: 1fr 1fr;">
+          <div class="schedule-option active" onclick="selectAccountType(this, 'checking')">
+            <div class="schedule-icon">💳</div>
+            <div class="schedule-title">Checking</div>
+          </div>
+          <div class="schedule-option" onclick="selectAccountType(this, 'savings')">
+            <div class="schedule-icon">🏦</div>
+            <div class="schedule-title">Savings</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Routing Number</label>
+        <input type="text" class="form-input" id="routingNumber" placeholder="9 digits" maxlength="9" onblur="validateRouting()">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Account Number</label>
+        <input type="text" class="form-input" id="accountNumber" placeholder="Account number" maxlength="17">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Confirm Account Number</label>
+        <input type="text" class="form-input" id="confirmAccount" placeholder="Re-enter account number" maxlength="17">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Amount</label>
+        <div class="amount-input-wrapper">
+          <span class="currency-symbol">$</span>
+          <input type="number" class="form-input amount-input" id="externalAmount" placeholder="0.00" step="0.01" min="0.01">
+        </div>
+        <div class="available-balance">
+          <span>Available: <strong id="availableExternal">$0.00</strong></span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Transfer Speed</label>
+        <div class="schedule-options">
+          <div class="schedule-option active" onclick="selectSpeed(this, 'standard')">
+            <div class="schedule-icon">🐢</div>
+            <div class="schedule-title">Standard</div>
+            <div class="schedule-desc">Free • 1-3 days</div>
+          </div>
+          <div class="schedule-option" onclick="selectSpeed(this, 'expedited')">
+            <div class="schedule-icon">🐇</div>
+            <div class="schedule-title">Expedited</div>
+            <div class="schedule-desc">$5 • Next day</div>
+          </div>
+          <div class="schedule-option" onclick="selectSpeed(this, 'wire')">
+            <div class="schedule-icon">⚡</div>
+            <div class="schedule-title">Wire</div>
+            <div class="schedule-desc">$15 • Same day</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="submit-btn" onclick="submitTransfer('external')">
+        🏦 Send to Bank
+      </button>
+    </div>
+
+    <!-- Wire Transfer -->
+    <div class="transfer-container" id="container-wire">
+      <div style="background: #fef3c7; padding: 16px; border-radius: 12px; margin-bottom: 20px; border-left: 4px solid var(--warning);">
+        <strong style="color: var(--warning); font-size: 14px;">⚠️ Important</strong>
+        <p style="font-size: 13px; margin-top: 8px; color: var(--text-color);">
+          Wire transfers are irreversible and typically processed same-day. Fee: $15 domestic / $30 international.
+        </p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Recipient Bank</label>
+        <input type="text" class="form-input" id="wireBank" placeholder="Bank name">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">SWIFT/BIC Code</label>
+        <input type="text" class="form-input" id="swiftCode" placeholder="8 or 11 characters">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Beneficiary Name</label>
+        <input type="text" class="form-input" id="wireName" placeholder="Full legal name">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Account/IBAN Number</label>
+        <input type="text" class="form-input" id="wireAccount" placeholder="Account or IBAN">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Amount</label>
+        <div class="amount-input-wrapper">
+          <span class="currency-symbol">$</span>
+          <input type="number" class="form-input amount-input" id="wireAmount" placeholder="0.00" step="0.01" min="0.01">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Purpose of Wire</label>
+        <select class="form-select" id="wirePurpose">
+          <option value="">Select purpose...</option>
+          <option value="personal">Personal/Family</option>
+          <option value="business">Business/Commercial</option>
+          <option value="education">Education</option>
+          <option value="investment">Investment</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <button class="submit-btn" onclick="submitTransfer('wire')">
+        ⚡ Send Wire
+      </button>
+    </div>
+
+    <!-- International Transfer -->
+    <div class="transfer-container" id="container-international">
+      <div style="background: #dbeafe; padding: 16px; border-radius: 12px; margin-bottom: 20px; border-left: 4px solid var(--info);">
+        <strong style="color: var(--info); font-size: 14px;">🌍 Global Transfer</strong>
+        <p style="font-size: 13px; margin-top: 8px; color: var(--text-color);">
+          Send money to 200+ countries. Exchange rates apply. Delivery typically 1-5 business days.
+        </p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Send To</label>
+        <select class="form-select" id="countrySelect" onchange="updateCurrency()">
+          <option value="">Select country...</option>
+          <option value="GBR">🇬🇧 United Kingdom</option>
+          <option value="CAN">🇨🇦 Canada</option>
+          <option value="MEX">🇲🇽 Mexico</option>
+          <option value="IND">🇮🇳 India</option>
+          <option value="PHL">🇵🇭 Philippines</option>
+          <option value="CHN">🇨🇳 China</option>
+          <option value="AUS">🇦🇺 Australia</option>
+          <option value="DEU">🇩🇪 Germany</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Recipient Gets</label>
+        <div class="amount-input-wrapper">
+          <span class="currency-symbol" id="targetCurrency">€</span>
+          <input type="number" class="form-input amount-input" id="intlAmount" placeholder="0.00" step="0.01" oninput="convertCurrency()">
+        </div>
+        <div class="available-balance">
+          <span id="exchangeRate">Rate: 1 USD = 0.85 EUR</span>
+          <span style="color: var(--text-secondary);">•</span>
+          <span id="feeEstimate">Fee: $5.00</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">You Send (USD)</label>
+        <div class="amount-input-wrapper">
+          <span class="currency-symbol">$</span>
+          <input type="number" class="form-input amount-input" id="usdAmount" placeholder="0.00" step="0.01" style="background: var(--border-color);" readonly>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Delivery Method</label>
+        <div class="schedule-options" style="grid-template-columns: 1fr 1fr;">
+          <div class="schedule-option active" onclick="selectDelivery(this, 'bank')">
+            <div class="schedule-icon">🏦</div>
+            <div class="schedule-title">Bank Deposit</div>
+            <div class="schedule-desc">1-3 days</div>
+          </div>
+          <div class="schedule-option" onclick="selectDelivery(this, 'cash')">
+            <div class="schedule-icon">💵</div>
+            <div class="schedule-title">Cash Pickup</div>
+            <div class="schedule-desc">Minutes</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="submit-btn" onclick="submitTransfer('international')">
+        🌍 Send Globally
+      </button>
+    </div>
+
+    <!-- Recent Transfers -->
+    <div class="recent-section">
+      <div class="section-header-row">
+        <h3 style="font-size: 18px; font-weight: 700;">Recent Transfers</h3>
+        <a href="transactions.html" class="view-all">View All →</a>
+      </div>
+      
+      <div class="transfer-list" id="recentTransfers">
+        <div class="transfer-item">
+          <div class="transfer-icon sent">↑</div>
+          <div class="transfer-info">
+            <div class="transfer-title">To Savings ...6813</div>
+            <div class="transfer-meta">Today • Internal</div>
+          </div>
+          <div class="transfer-amount">-$500.00</div>
+        </div>
         
-        <!-- Recipient Preview -->
-        <div id="bankRecipientPreview" class="recipient-preview" style="display: none;">
-          <strong>Recipient Bank:</strong> <span id="bankName"></span>
+        <div class="transfer-item">
+          <div class="transfer-icon scheduled">📅</div>
+          <div class="transfer-info">
+            <div class="transfer-title">To Mom (Zelle)</div>
+            <div class="transfer-meta">Tomorrow • Scheduled</div>
+          </div>
+          <div class="transfer-amount">-$200.00</div>
+        </div>
+        
+        <div class="transfer-item">
+          <div class="transfer-icon recurring">🔄</div>
+          <div class="transfer-info">
+            <div class="transfer-title">Rent Payment</div>
+            <div class="transfer-meta">Monthly • Auto-pay</div>
+          </div>
+          <div class="transfer-amount">-$1,200.00</div>
         </div>
       </div>
+    </div>
+  </main>
 
-      <div class="input-group">
-        <label>Amount (USD)</label>
-        <input type="number" id="amount" placeholder="0.00" min="0.01" step="0.01" required />
+  <!-- Success Modal -->
+  <div class="modal-overlay" id="successModal" onclick="closeModal(event)">
+    <div class="success-modal" onclick="event.stopPropagation()">
+      <div class="success-animation">
+        <div class="success-circle">✓</div>
+        <div class="success-particles" id="particles"></div>
       </div>
-
-      <div class="input-group">
-        <label>Memo (Optional)</label>
-        <input type="text" id="memo" placeholder="What's this for?" maxlength="140" />
+      <h3 class="success-title">Transfer Sent!</h3>
+      <p class="success-text" id="successText">Your money is on its way securely.</p>
+      
+      <div class="success-details">
+        <div class="success-amount" id="successAmount">$0.00</div>
+        <div class="success-to">to <strong id="successTo">Recipient</strong></div>
       </div>
-
-      <button type="submit">Send Money</button>
-    </form>
-    <div id="transfer-message"></div>
+      
+      <div class="success-actions">
+        <button class="success-btn secondary" onclick="closeModal(null)">Done</button>
+        <button class="success-btn primary" onclick="shareReceipt()">📤 Share</button>
+      </div>
+    </div>
   </div>
 
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Bottom Navigation -->
   <nav class="bottom-nav">
-    <a href="dashboard.html">
-      <img src="icons/home.svg" alt="Dashboard"/>
-      Accounts
+    <a href="dashboard.html" class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+      Home
     </a>
-    <a href="transfer.html" class="active">
-      <img src="icons/transfer.svg" alt="Transfer"/>
+    <a href="transfer.html" class="nav-item active">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+        <polyline points="17 6 23 6 23 12"></polyline>
+      </svg>
       Transfer
     </a>
-    <a href="#">
-      <img src="icons/deposit.svg" alt="Deposit"/>
+    <a href="deposit.html" class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 2v20M2 12h20"></path>
+      </svg>
       Deposit
     </a>
-    <a href="#">
-      <img src="icons/explore.svg" alt="Explore"/>
+    <a href="explore.html" class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 16v-4M12 8h.01"></path>
+      </svg>
       Explore
     </a>
-    <a href="settings.html">
-      <img src="icons/menu.svg" alt="Settings"/>
+    <a href="settings.html" class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M12 1v6m0 6v6m4.22-10.22l4.24-4.24M6.34 6.34L2.1 2.1m17.9 17.9l-4.24-4.24M6.34 17.66l-4.24 4.24"></path>
+      </svg>
       Menu
     </a>
   </nav>
@@ -294,196 +1463,323 @@
   <script>
     const BASE_URL = 'https://backend15-nnmy.onrender.com';
     const token = localStorage.getItem('userToken');
+    
     if (!token) {
-      alert('Not logged in');
-      location.href = 'index.html';
+      showToast('Session expired. Please login again.');
+      setTimeout(() => window.location.href = 'index.html', 2000);
     }
 
-    let currentTransferType = 'email';
+    let fromAccount = 'checking';
+    let toAccount = 'savings';
+    let scheduleType = 'now';
+    let frequency = 'monthly';
+    let transferSpeed = 'standard';
 
-    document.getElementById('darkModeToggle').addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchBalances();
+      setupDateInputs();
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
     });
 
-    const balanceEl = document.getElementById('user-balance');
-    async function animateBalance(newVal) {
-      const start = parseFloat(balanceEl.textContent.replace(/[^0-9.-]+/g, '')) || 0;
-      const duration = 800;
-      const step = (newVal - start) / (duration / 16);
-      let current = start;
-      function update() {
-        current += step;
-        if ((step > 0 && current < newVal) || (step < 0 && current > newVal)) {
-          balanceEl.textContent = current.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-          requestAnimationFrame(update);
-        } else {
-          balanceEl.textContent = newVal.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-        }
-      }
-      update();
-    }
-
-    async function refreshBalance() {
+    async function fetchBalances() {
       try {
-        const resp = await fetch(`${BASE_URL}/api/bank/balance`, { headers: { Authorization: `Bearer ${token}` } });
-        const data = await resp.json();
-        if (resp.ok) {
-          animateBalance(parseFloat(data.balance || 0));
-        }
-      } catch (err) {
-        console.error('Balance fetch failed', err);
-      }
-    }
-    refreshBalance();
-
-    // NEW: Switch between email and bank transfer
-    function switchTransferType(type) {
-      currentTransferType = type;
-      
-      // Update toggle buttons
-      document.getElementById('emailTab').classList.toggle('active', type === 'email');
-      document.getElementById('bankTab').classList.toggle('active', type === 'bank');
-      
-      // Show/hide sections
-      document.getElementById('emailSection').classList.toggle('active', type === 'email');
-      document.getElementById('bankSection').classList.toggle('active', type === 'bank');
-      
-      // Clear message
-      document.getElementById('transfer-message').textContent = '';
-      
-      // Update required attributes
-      document.getElementById('toEmail').required = type === 'email';
-      document.getElementById('accountNumber').required = type === 'bank';
-      document.getElementById('routingNumber').required = type === 'bank';
-    }
-
-    const msgEl = document.getElementById('transfer-message');
-
-    // Email validation (existing functionality)
-    document.getElementById('toEmail').addEventListener('blur', async function() {
-      const email = this.value.trim();
-      if (!email || currentTransferType !== 'email') return;
-      try {
-        const resp = await fetch(`${BASE_URL}/api/auth/user?email=${email}`, {
+        const res = await fetch(`${BASE_URL}/api/bank/balance`, {
           headers: { Authorization: `Bearer ${token}` }
-        });
-        const data = await resp.json();
-        msgEl.style.color = resp.ok ? 'black' : 'orange';
-        msgEl.textContent = resp.ok ? `Recipient: ${data.name}` : 'Recipient not found';
-      } catch (err) {
-        console.error(err);
-      }
-    });
-
-    // NEW: Bank account validation
-    document.getElementById('routingNumber').addEventListener('blur', validateBankAccount);
-    document.getElementById('accountNumber').addEventListener('blur', validateBankAccount);
-
-    async function validateBankAccount() {
-      if (currentTransferType !== 'bank') return;
-      
-      const routing = document.getElementById('routingNumber').value.trim();
-      const account = document.getElementById('accountNumber').value.trim();
-      
-      if (!routing || !account) return;
-      
-      // Basic validation
-      if (routing.length !== 9 || !/^\d{9}$/.test(routing)) {
-        msgEl.style.color = 'orange';
-        msgEl.textContent = 'Routing number must be 9 digits';
-        return;
-      }
-      
-      try {
-        const resp = await fetch(`${BASE_URL}/api/bank/validate`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify({ routingNumber: routing, accountNumber: account })
-        });
-        const data = await resp.json();
-        
-        if (resp.ok && data.valid) {
-          msgEl.style.color = 'green';
-          msgEl.textContent = `✓ Valid account at ${data.bankName || 'Verified Bank'}`;
-          document.getElementById('bankName').textContent = data.bankName || 'Verified Bank';
-          document.getElementById('bankRecipientPreview').style.display = 'block';
-        } else {
-          msgEl.style.color = 'orange';
-          msgEl.textContent = data.error || 'Unable to verify account';
-          document.getElementById('bankRecipientPreview').style.display = 'none';
-        }
-      } catch (err) {
-        console.error('Bank validation error:', err);
-      }
-    }
-
-    document.getElementById('transfer-form').addEventListener('submit', async e => {
-      e.preventDefault();
-      msgEl.textContent = '';
-      msgEl.style.color = 'black';
-      
-      const amount = parseFloat(document.getElementById('amount').value);
-      const memo = document.getElementById('memo').value.trim();
-      
-      let payload = { amount, memo, transferType: currentTransferType };
-      
-      if (currentTransferType === 'email') {
-        const toEmail = document.getElementById('toEmail').value.trim();
-        if (!toEmail) {
-          msgEl.style.color = 'red';
-          msgEl.textContent = 'Please enter recipient email';
-          return;
-        }
-        payload.toEmail = toEmail;
-      } else {
-        const accountNumber = document.getElementById('accountNumber').value.trim();
-        const routingNumber = document.getElementById('routingNumber').value.trim();
-        
-        if (!accountNumber || !routingNumber) {
-          msgEl.style.color = 'red';
-          msgEl.textContent = 'Please enter both account and routing numbers';
-          return;
-        }
-        
-        payload.accountNumber = accountNumber;
-        payload.routingNumber = routingNumber;
-      }
-      
-      try {
-        const res = await fetch(`${BASE_URL}/api/transfer`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify(payload)
         });
         const data = await res.json();
         if (res.ok) {
-          msgEl.style.color = 'green';
-          msgEl.textContent = 'Transfer successful!';
-          await refreshBalance();
-          setTimeout(() => location.href = 'dashboard.html', 1500);
-        } else {
-          msgEl.style.color = 'red';
-          msgEl.textContent = data.error || 'Transfer failed.';
+          const balance = parseFloat(data.balance || 0);
+          document.getElementById('checkingBalance').textContent = '$' + balance.toFixed(2);
+          document.getElementById('savingsBalance').textContent = '$0.00';
+          document.getElementById('availableInternal').textContent = '$' + balance.toFixed(2);
+          document.getElementById('availableExternal').textContent = '$' + balance.toFixed(2);
         }
-      } catch {
-        msgEl.style.color = 'orange';
-        msgEl.textContent = 'Network error.';
+      } catch (err) {
+        console.error('Balance fetch error:', err);
       }
-    });
-
-    function logout() {
-      localStorage.removeItem('userToken');
-      location.href = 'index.html';
     }
 
-    // Initialize
-    switchTransferType('email');
+    function setupDateInputs() {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('startDate').value = today;
+      document.getElementById('startDate').min = today;
+    }
+
+    // Account Selection
+    function selectFromAccount(element, account) {
+      fromAccount = account;
+      document.querySelectorAll('.balance-card').forEach(card => card.classList.remove('active'));
+      element.classList.add('active');
+      updateReview();
+    }
+
+    // Transfer Type Selection
+    function selectTransferType(type) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      document.querySelectorAll('.transfer-container').forEach(container => {
+        container.classList.remove('active');
+      });
+      document.getElementById(`container-${type}`).classList.add('active');
+    }
+
+    function selectMethod(method) {
+      if (method === 'zelle') {
+        showToast('Zelle coming soon! 🚀');
+      }
+    }
+
+    // Recipient Selection
+    function selectRecipient(element, account) {
+      toAccount = account;
+      document.querySelectorAll('.recipient-chip').forEach(chip => chip.classList.remove('active'));
+      element.classList.add('active');
+      updateReview();
+    }
+
+    function addInternalAccount() {
+      showToast('Account linking coming soon!');
+    }
+
+    // Amount Functions
+    function setAmount(amount) {
+      document.getElementById('internalAmount').value = amount;
+      updateReview();
+    }
+
+    function setMaxAmount() {
+      const max = parseFloat(document.getElementById('checkingBalance').textContent.replace(/[^0-9.-]+/g, ''));
+      document.getElementById('internalAmount').value = max.toFixed(2);
+      updateReview();
+    }
+
+    function updateReview() {
+      const amount = parseFloat(document.getElementById('internalAmount').value) || 0;
+      const reviewSection = document.getElementById('reviewSection');
+      
+      if (amount > 0) {
+        reviewSection.style.display = 'block';
+        document.getElementById('reviewAmount').textContent = '$' + amount.toFixed(2);
+        document.getElementById('submitBtn').textContent = '🚀 Transfer $' + amount.toFixed(2);
+      } else {
+        reviewSection.style.display = 'none';
+        document.getElementById('submitBtn').textContent = '🚀 Transfer Now';
+      }
+    }
+
+    // Schedule Selection
+    function selectSchedule(element, type) {
+      scheduleType = type;
+      document.querySelectorAll('.schedule-option').forEach(opt => opt.classList.remove('active'));
+      element.classList.add('active');
+      
+      const recurringOptions = document.getElementById('recurringOptions');
+      const reviewFrequencyRow = document.getElementById('reviewFrequencyRow');
+      
+      if (type === 'recurring') {
+        recurringOptions.classList.add('active');
+        reviewFrequencyRow.style.display = 'flex';
+        document.getElementById('reviewWhen').textContent = 'Recurring';
+      } else {
+        recurringOptions.classList.remove('active');
+        reviewFrequencyRow.style.display = 'none';
+        document.getElementById('reviewWhen').textContent = type === 'now' ? 'Today' : 'Scheduled';
+      }
+    }
+
+    function selectFrequency(element, freq) {
+      frequency = freq;
+      document.querySelectorAll('.frequency-btn').forEach(btn => btn.classList.remove('active'));
+      element.classList.add('active');
+      document.getElementById('reviewFrequency').textContent = freq.charAt(0).toUpperCase() + freq.slice(1);
+    }
+
+    // External Transfer Options
+    function selectAccountType(element, type) {
+      document.querySelectorAll('#container-external .schedule-option').forEach(opt => opt.classList.remove('active'));
+      element.classList.add('active');
+    }
+
+    function selectSpeed(element, speed) {
+      transferSpeed = speed;
+      document.querySelectorAll('#container-external .schedule-option').forEach(opt => opt.classList.remove('active'));
+      element.classList.add('active');
+    }
+
+    function validateRouting() {
+      const routing = document.getElementById('routingNumber').value;
+      if (routing.length === 9) {
+        showToast('✓ Routing number validated');
+      }
+    }
+
+    // International Transfer
+    const exchangeRates = {
+      GBR: 0.79, CAN: 1.36, MEX: 17.50, IND: 83.50,
+      PHL: 56.50, CHN: 7.25, AUS: 1.52, DEU: 0.92
+    };
+
+    const currencies = {
+      GBR: '£', CAN: 'C$', MEX: '$', IND: '₹',
+      PHL: '₱', CHN: '¥', AUS: 'A$', DEU: '€'
+    };
+
+    function updateCurrency() {
+      const country = document.getElementById('countrySelect').value;
+      if (country) {
+        document.getElementById('targetCurrency').textContent = currencies[country];
+        document.getElementById('exchangeRate').textContent = `Rate: 1 USD = ${exchangeRates[country]} ${currencies[country]}`;
+      }
+    }
+
+    function convertCurrency() {
+      const country = document.getElementById('countrySelect').value;
+      const foreignAmount = parseFloat(document.getElementById('intlAmount').value) || 0;
+      if (country && foreignAmount) {
+        const usdAmount = foreignAmount / exchangeRates[country];
+        document.getElementById('usdAmount').value = usdAmount.toFixed(2);
+      }
+    }
+
+    function selectDelivery(element, method) {
+      document.querySelectorAll('#container-international .schedule-option').forEach(opt => opt.classList.remove('active'));
+      element.classList.add('active');
+    }
+
+    // Submit Transfer
+    async function submitTransfer(type) {
+      const btn = event.target;
+      btn.disabled = true;
+      btn.classList.add('processing');
+      
+      let amount = 0;
+      let recipient = '';
+      
+      if (type === 'internal') {
+        amount = parseFloat(document.getElementById('internalAmount').value) || 0;
+        recipient = toAccount === 'savings' ? 'Way2Save Savings ...6813' : 'Everyday Checking ...7550';
+      } else if (type === 'external') {
+        amount = parseFloat(document.getElementById('externalAmount').value) || 0;
+        recipient = document.getElementById('externalName').value || 'External Account';
+      } else if (type === 'wire') {
+        amount = parseFloat(document.getElementById('wireAmount').value) || 0;
+        recipient = document.getElementById('wireName').value || 'Wire Recipient';
+      } else if (type === 'international') {
+        amount = parseFloat(document.getElementById('usdAmount').value) || 0;
+        const country = document.getElementById('countrySelect');
+        recipient = country.options[country.selectedIndex].text;
+      }
+      
+      if (amount <= 0) {
+        showToast('Please enter a valid amount');
+        btn.disabled = false;
+        btn.classList.remove('processing');
+        return;
+      }
+      
+      // Simulate API call
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.classList.remove('processing');
+        
+        showSuccess(amount, recipient, type);
+      }, 2000);
+    }
+
+    function showSuccess(amount, recipient, type) {
+      document.getElementById('successAmount').textContent = '$' + amount.toFixed(2);
+      document.getElementById('successTo').textContent = recipient;
+      
+      const texts = {
+        internal: 'Your transfer is complete!',
+        external: 'Your transfer will arrive in 1-3 business days.',
+        wire: 'Your wire transfer is being processed.',
+        international: 'Your global transfer is on its way.'
+      };
+      document.getElementById('successText').textContent = texts[type];
+      
+      // Create particles
+      const particles = document.getElementById('particles');
+      particles.innerHTML = '';
+      for (let i = 0; i < 12; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        const angle = (i / 12) * Math.PI * 2;
+        const distance = 60 + Math.random() * 20;
+        particle.style.setProperty('--x', Math.cos(angle) * distance + 'px');
+        particle.style.setProperty('--y', Math.sin(angle) * distance + 'px');
+        particle.style.left = '50%';
+        particle.style.top = '50%';
+        particle.style.animationDelay = (i * 0.05) + 's';
+        particles.appendChild(particle);
+      }
+      
+      document.getElementById('successModal').classList.add('active');
+      
+      // Add to recent transfers
+      addRecentTransfer(type, amount, recipient);
+    }
+
+    function addRecentTransfer(type, amount, recipient) {
+      const list = document.getElementById('recentTransfers');
+      const item = document.createElement('div');
+      item.className = 'transfer-item';
+      item.style.animation = 'slideUp 0.3s ease-out';
+      
+      const icons = { internal: '↑', external: '↗', wire: '⚡', international: '🌍' };
+      const types = { internal: 'Internal', external: 'External', wire: 'Wire', international: 'Global' };
+      
+      item.innerHTML = `
+        <div class="transfer-icon sent">${icons[type]}</div>
+        <div class="transfer-info">
+          <div class="transfer-title">To ${recipient}</div>
+          <div class="transfer-meta">Just now • ${types[type]}</div>
+        </div>
+        <div class="transfer-amount">-$${amount.toFixed(2)}</div>
+      `;
+      
+      list.insertBefore(item, list.firstChild);
+    }
+
+    function shareReceipt() {
+      showToast('Receipt shared! 📤');
+      closeModal(null);
+    }
+
+    // Utilities
+    function showHelp() {
+      showToast('💬 Support chat coming soon!');
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+      showToast(document.body.classList.contains('dark-mode') ? '🌙 Dark mode on' : '☀️ Light mode on');
+    }
+
+    function closeModal(event) {
+      if (!event || event.target.classList.contains('modal-overlay')) {
+        document.getElementById('successModal').classList.remove('active');
+      }
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // Close modal on escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+      }
+    });
   </script>
 </body>
 </html>
