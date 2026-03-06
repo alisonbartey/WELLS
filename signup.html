@@ -3,232 +3,1269 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Wells Fargo - Enroll</title>
+  <title>Enroll | Wells Fargo</title>
   <link rel="icon" href="logo.png" type="image/png" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f8f9fa;
+    :root {
+      --primary: #b31b1b;
+      --primary-light: #dc2626;
+      --primary-dark: #8f1515;
+      --secondary: #003366;
+      --bg-color: #f8f9fa;
+      --card-bg: #ffffff;
+      --text-color: #111827;
+      --text-secondary: #6b7280;
+      --border-color: #e5e7eb;
+      --success: #15803d;
+      --warning: #d97706;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e5e7eb 100%);
+      color: var(--text-color);
+      min-height: 100vh;
+    }
+
+    /* Header */
     header {
-      background-color: #b31b1b;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
       color: white;
-      padding: 15px;
+      padding: 16px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(179, 27, 27, 0.3);
     }
-    header .logo {
+
+    .logo {
       display: flex;
       align-items: center;
+      gap: 12px;
     }
-    header .logo img {
-      height: 35px;
-      margin-right: 10px;
+
+    .logo img {
+      height: 40px;
+      filter: brightness(0) invert(1);
     }
-    header .links a {
+
+    .logo-text {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .header-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .header-links a {
       color: white;
-      margin-left: 15px;
       text-decoration: none;
-      font-weight: bold;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: all 0.3s;
+      background: rgba(255,255,255,0.1);
     }
-    header .links a:hover {
-      text-decoration: underline;
+
+    .header-links a:hover {
+      background: rgba(255,255,255,0.2);
+      transform: translateY(-2px);
     }
-    main {
-      max-width: 500px;
-      margin: 30px auto;
+
+    .header-links a.primary {
       background: white;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      padding: 20px;
+      color: var(--primary);
     }
-    h2 {
-      text-align: center;
-      color: #b31b1b;
-      margin-top: 0;
+
+    /* Progress Bar */
+    .progress-container {
+      max-width: 600px;
+      margin: 30px auto 0;
+      padding: 0 20px;
     }
-    form input {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 16px;
+
+    .progress-bar {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      margin-bottom: 30px;
     }
-    form button {
-      width: 100%;
-      padding: 12px;
-      background-color: #b31b1b;
-      border: none;
+
+    .progress-bar::before {
+      content: '';
+      position: absolute;
+      top: 15px;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--border-color);
+      z-index: 0;
+    }
+
+    .progress-fill {
+      position: absolute;
+      top: 15px;
+      left: 0;
+      height: 4px;
+      background: var(--primary);
+      z-index: 1;
+      transition: width 0.5s ease;
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      z-index: 2;
+    }
+
+    .step-number {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .step.active .step-number {
+      background: var(--primary);
       color: white;
-      font-weight: bold;
-      border-radius: 4px;
+      transform: scale(1.1);
+    }
+
+    .step.completed .step-number {
+      background: var(--success);
+      color: white;
+    }
+
+    .step-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .step.active .step-label {
+      color: var(--primary);
+    }
+
+    /* Main Container */
+    .main-container {
+      max-width: 600px;
+      margin: 0 auto 40px;
+      padding: 0 20px;
+    }
+
+    .form-card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 24px;
+    }
+
+    .form-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .form-header h1 {
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .form-header p {
       font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    /* Form Steps */
+    .form-step {
+      display: none;
+    }
+
+    .form-step.active {
+      display: block;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-color);
+    }
+
+    .form-label span {
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 16px 16px 16px 48px;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      font-size: 16px;
+      transition: all 0.3s;
+      background: var(--bg-color);
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(179, 27, 27, 0.1);
+    }
+
+    .form-input.error {
+      border-color: #ef4444;
+      background: #fef2f2;
+    }
+
+    .form-input.success {
+      border-color: var(--success);
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+      color: var(--text-secondary);
+    }
+
+    .input-status {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 20px;
+      color: var(--text-secondary);
+    }
+
+    /* Password Strength */
+    .password-strength {
+      margin-top: 12px;
+    }
+
+    .strength-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .strength-meter {
+      height: 6px;
+      background: var(--border-color);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .strength-fill {
+      height: 100%;
+      width: 0;
+      transition: all 0.3s;
+      border-radius: 3px;
+    }
+
+    .strength-weak { background: #ef4444; width: 33%; }
+    .strength-fair { background: var(--warning); width: 50%; }
+    .strength-good { background: #3b82f6; width: 75%; }
+    .strength-strong { background: var(--success); width: 100%; }
+
+    /* Requirements List */
+    .requirements {
+      background: var(--bg-color);
+      padding: 16px;
+      border-radius: 12px;
+      margin-top: 16px;
+    }
+
+    .requirement {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      transition: all 0.3s;
+    }
+
+    .requirement:last-child {
+      margin-bottom: 0;
+    }
+
+    .requirement.met {
+      color: var(--success);
+    }
+
+    .requirement-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      transition: all 0.3s;
+    }
+
+    .requirement.met .requirement-icon {
+      background: var(--success);
+      border-color: var(--success);
+      color: white;
+    }
+
+    /* Checkbox */
+    .checkbox-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      accent-color: var(--primary);
       cursor: pointer;
     }
-    form button:hover {
-      background-color: #911010;
-    }
-    .form-links {
-      text-align: center;
-      margin-top: 10px;
+
+    .checkbox-group label {
       font-size: 14px;
+      line-height: 1.5;
+      color: var(--text-color);
+      cursor: pointer;
     }
-    .form-links a {
-      color: #003366;
-      text-decoration: none;
+
+    .checkbox-group a {
+      color: var(--primary);
+      font-weight: 600;
     }
-    .form-links a:hover {
-      text-decoration: underline;
-    }
-    .security-center, footer {
-      max-width: 800px;
-      margin: 30px auto;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      padding: 20px;
-      font-size: 14px;
-    }
-    .security-center h3, footer h3 {
-      color: #003366;
-      margin-top: 0;
-    }
-    .security-center ul {
-      list-style: none;
-      padding: 0;
-    }
-    .security-center ul li {
-      margin-bottom: 10px;
-    }
-    .security-center ul li::before {
-      content: "• ";
-      color: red;
-    }
-    footer .footer-links {
+
+    /* Buttons */
+    .btn-group {
       display: flex;
-      flex-wrap: wrap;
-      gap: 30px;
-      margin-top: 20px;
+      gap: 12px;
+      margin-top: 32px;
     }
-    footer .footer-links div {
-      min-width: 150px;
+
+    .btn {
+      flex: 1;
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
-    footer a {
-      color: #003366;
-      text-decoration: none;
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
     }
-    footer a:hover {
-      text-decoration: underline;
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(179, 27, 27, 0.3);
     }
-    footer p {
-      text-align: center;
-      margin-top: 20px;
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: var(--bg-color);
+      color: var(--text-color);
+      border: 2px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Security Badge */
+    .security-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 20px;
+      background: rgba(37, 99, 235, 0.05);
+      border-radius: 16px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(37, 99, 235, 0.1);
+    }
+
+    .security-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--secondary);
+      color: white;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .security-text h4 {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--secondary);
+    }
+
+    .security-text p {
       font-size: 12px;
-      color: #555;
+      color: var(--text-secondary);
+    }
+
+    /* Success Step */
+    .success-container {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .success-icon {
+      width: 120px;
+      height: 120px;
+      background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 60px;
+      margin: 0 auto 24px;
+      animation: scaleIn 0.5s ease-out;
+    }
+
+    @keyframes scaleIn {
+      0% { transform: scale(0); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    .success-title {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .success-text {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .success-details {
+      background: var(--bg-color);
+      padding: 24px;
+      border-radius: 16px;
+      margin-bottom: 32px;
+      text-align: left;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .detail-value {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    /* Info Cards */
+    .info-section {
+      display: grid;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .info-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .info-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(179, 27, 27, 0.1);
+      color: var(--primary);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .info-content h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .info-content p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--secondary);
+      color: white;
+      padding: 48px 24px 24px;
+    }
+
+    .footer-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+      margin-bottom: 32px;
+    }
+
+    .footer-column h4 {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .footer-column a {
+      display: block;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      font-size: 14px;
+      margin-bottom: 10px;
+      transition: all 0.3s;
+    }
+
+    .footer-column a:hover {
+      color: white;
+      transform: translateX(4px);
+    }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+      text-align: center;
+    }
+
+    .footer-bottom p {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 12px;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: white;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: #1f2937;
+      color: white;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 1000;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .form-card {
+        padding: 24px;
+      }
+      
+      .form-header h1 {
+        font-size: 24px;
+      }
+      
+      .btn-group {
+        flex-direction: column;
+      }
+      
+      .header-links {
+        display: none;
+      }
     }
   </style>
 </head>
 <body>
   <header>
     <div class="logo">
-      <img src="logo.png" alt="Wells Fargo Logo" />
-      <span><strong>WELLS FARGO</strong></span>
+      <img src="logo.png" alt="Wells Fargo" />
+      <span class="logo-text">WELLS FARGO</span>
     </div>
-    <div class="links">
+    <div class="header-links">
       <a href="index.html">Sign In</a>
       <a href="#">Locations</a>
       <a href="#">Español</a>
+      <a href="index.html" class="primary">Already a customer?</a>
     </div>
   </header>
 
-  <main>
-    <h2>Enroll Now</h2>
-    <form id="signup-form">
-      <input type="text" id="name" placeholder="Full Name" required />
-      <input type="email" id="email" placeholder="Email Address" required />
-      <input type="password" id="password" placeholder="Password" required />
-      <button type="submit">Create Account</button>
-      <div class="form-links">
-        <a href="index.html">Already have an account? Sign In</a>
+  <!-- Progress Bar -->
+  <div class="progress-container">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+      <div class="step active" id="step1-indicator">
+        <div class="step-number">1</div>
+        <div class="step-label">Personal</div>
       </div>
-    </form>
-  </main>
-
-  <section class="security-center">
-    <h3>Security Center</h3>
-    <ul>
-      <li>Never share your password, account, or personal information</li>
-      <li>We will never ask for your account information via email</li>
-      <li>Report suspicious activity immediately</li>
-      <li>Always access your account through wellsfargo.com</li>
-    </ul>
-    <a href="#">Learn more about online security</a>
-  </section>
-
-  <footer>
-    <div class="footer-links">
-      <div>
-        <h3>Products & Services</h3>
-        <a href="#">Checking Accounts</a><br>
-        <a href="#">Credit Cards</a><br>
-        <a href="#">Home Loans</a><br>
-        <a href="#">Personal Loans</a><br>
-        <a href="#">Retirement</a>
+      <div class="step" id="step2-indicator">
+        <div class="step-number">2</div>
+        <div class="step-label">Security</div>
       </div>
-      <div>
-        <h3>Online Security</h3>
-        <a href="#">Security Center</a><br>
-        <a href="#">Fraud Information</a><br>
-        <a href="#">Report Fraud</a><br>
-        <a href="#">Privacy & Cookies</a>
+      <div class="step" id="step3-indicator">
+        <div class="step-number">3</div>
+        <div class="step-label">Verify</div>
       </div>
-      <div>
-        <h3>Customer Service</h3>
-        <a href="#">Contact Us</a><br>
-        <a href="#">FAQs</a><br>
-        <a href="#">Find ATMs/Branches</a><br>
-        <a href="#">Accessibility</a>
+      <div class="step" id="step4-indicator">
+        <div class="step-number">4</div>
+        <div class="step-label">Done</div>
       </div>
     </div>
-    <p>
-      © 2024 Wells Fargo Bank, N.A. All rights reserved. Member FDIC. Equal Housing Lender<br>
-      <a href="#">Privacy</a> | <a href="#">Security</a> | <a href="#">Terms & Conditions</a> | <a href="#">Ad Choices</a>
-    </p>
+  </div>
+
+  <div class="main-container">
+    <!-- Step 1: Personal Information -->
+    <div class="form-card">
+      <div class="form-header">
+        <h1>Create Your Account</h1>
+        <p>Join millions of customers who trust Wells Fargo</p>
+      </div>
+
+      <form id="enroll-form">
+        <!-- Step 1 -->
+        <div class="form-step active" id="step1">
+          <div class="security-badge">
+            <div class="security-icon">🔒</div>
+            <div class="security-text">
+              <h4>Bank-Level Security</h4>
+              <p>Your information is protected with 256-bit encryption</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Full Legal Name <span>(as it appears on your ID)</span></label>
+            <div class="input-wrapper">
+              <span class="input-icon">👤</span>
+              <input type="text" class="form-input" id="fullName" placeholder="John Michael Smith" required onblur="validateName()">
+              <span class="input-status" id="nameStatus"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email Address <span>(you'll use this to sign in)</span></label>
+            <div class="input-wrapper">
+              <span class="input-icon">✉️</span>
+              <input type="email" class="form-input" id="email" placeholder="john.smith@email.com" required onblur="validateEmail()">
+              <span class="input-status" id="emailStatus"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Phone Number <span>(for security alerts)</span></label>
+            <div class="input-wrapper">
+              <span class="input-icon">📱</span>
+              <input type="tel" class="form-input" id="phone" placeholder="(555) 123-4567" required onblur="validatePhone()">
+              <span class="input-status" id="phoneStatus"></span>
+            </div>
+          </div>
+
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary" onclick="nextStep(2)">
+              Continue →
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 2: Security -->
+        <div class="form-step" id="step2">
+          <div class="form-group">
+            <label class="form-label">Create Password</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔑</span>
+              <input type="password" class="form-input" id="password" placeholder="Min 8 characters" required oninput="checkPasswordStrength()">
+              <button type="button" class="password-toggle" onclick="togglePassword()">👁️</button>
+            </div>
+            
+            <div class="password-strength">
+              <div class="strength-label">
+                <span>Password strength</span>
+                <span id="strengthText">Enter password</span>
+              </div>
+              <div class="strength-meter">
+                <div class="strength-fill" id="strengthFill"></div>
+              </div>
+            </div>
+
+            <div class="requirements">
+              <div class="requirement" id="req-length">
+                <span class="requirement-icon">✓</span>
+                <span>At least 8 characters</span>
+              </div>
+              <div class="requirement" id="req-upper">
+                <span class="requirement-icon">✓</span>
+                <span>One uppercase letter</span>
+              </div>
+              <div class="requirement" id="req-lower">
+                <span class="requirement-icon">✓</span>
+                <span>One lowercase letter</span>
+              </div>
+              <div class="requirement" id="req-number">
+                <span class="requirement-icon">✓</span>
+                <span>One number</span>
+              </div>
+              <div class="requirement" id="req-special">
+                <span class="requirement-icon">✓</span>
+                <span>One special character (!@#$%^&*)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Confirm Password</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔐</span>
+              <input type="password" class="form-input" id="confirmPassword" placeholder="Re-enter your password" required oninput="checkMatch()">
+              <span class="input-status" id="matchStatus"></span>
+            </div>
+          </div>
+
+          <div class="btn-group">
+            <button type="button" class="btn btn-secondary" onclick="prevStep(1)">
+              ← Back
+            </button>
+            <button type="button" class="btn btn-primary" onclick="nextStep(3)" id="step2Btn" disabled>
+              Continue →
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 3: Verification -->
+        <div class="form-step" id="step3">
+          <div class="form-group">
+            <label class="form-label">Enter Verification Code</label>
+            <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">
+              We sent a 6-digit code to <strong id="verifyEmail">your email</strong>
+            </p>
+            <div class="input-wrapper">
+              <span class="input-icon">🔢</span>
+              <input type="text" class="form-input" id="verifyCode" placeholder="123456" maxlength="6" style="letter-spacing: 8px; font-size: 24px; text-align: center; padding-left: 16px;">
+            </div>
+            <p style="font-size: 13px; margin-top: 12px;">
+              Didn't receive it? <a href="#" onclick="resendCode()" style="color: var(--primary); font-weight: 600;">Resend code</a>
+            </p>
+          </div>
+
+          <div class="checkbox-group">
+            <input type="checkbox" id="terms" required onchange="toggleSubmit()">
+            <label for="terms">
+              I agree to the <a href="#">Online Access Agreement</a>, 
+              <a href="#">Privacy Policy</a>, and 
+              <a href="#">Electronic Communications Disclosure</a>
+            </label>
+          </div>
+
+          <div class="btn-group">
+            <button type="button" class="btn btn-secondary" onclick="prevStep(2)">
+              ← Back
+            </button>
+            <button type="submit" class="btn btn-primary" id="submitBtn" disabled>
+              ✓ Create Account
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 4: Success -->
+        <div class="form-step" id="step4">
+          <div class="success-container">
+            <div class="success-icon">🎉</div>
+            <h2 class="success-title">Welcome to Wells Fargo!</h2>
+            <p class="success-text">
+              Your account has been successfully created. You're now ready to manage your money with confidence.
+            </p>
+            
+            <div class="success-details">
+              <div class="detail-row">
+                <span class="detail-label">Account Number</span>
+                <span class="detail-value" id="newAccountNum">...7550</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Routing Number</span>
+                <span class="detail-value">121000248</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Email</span>
+                <span class="detail-value" id="successEmail">-</span>
+              </div>
+            </div>
+
+            <button type="button" class="btn btn-primary" onclick="goToDashboard()" style="width: 100%;">
+              🚀 Go to Dashboard
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="info-section">
+      <div class="info-card">
+        <div class="info-icon">🛡️</div>
+        <div class="info-content">
+          <h3>Fraud Protection</h3>
+          <p>Advanced monitoring protects your account 24/7. Zero liability guarantee for unauthorized transactions.</p>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">📱</div>
+        <div class="info-content">
+          <h3>Mobile Banking</h3>
+          <p>Deposit checks, transfer money, and pay bills from anywhere with our award-winning app.</p>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">💰</div>
+        <div class="info-content">
+          <h3>Early Pay Day</h3>
+          <p>Get your paycheck up to 2 days early with direct deposit. No extra fees, no waiting.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-column">
+        <h4>Products & Services</h4>
+        <a href="#">Checking Accounts</a>
+        <a href="#">Savings Accounts</a>
+        <a href="#">Credit Cards</a>
+        <a href="#">Home Loans</a>
+        <a href="#">Personal Loans</a>
+        <a href="#">Investment Services</a>
+      </div>
+      <div class="footer-column">
+        <h4>Online Security</h4>
+        <a href="#">Security Center</a>
+        <a href="#">Fraud Information</a>
+        <a href="#">Report Fraud</a>
+        <a href="#">Identity Theft Protection</a>
+        <a href="#">Privacy & Cookies</a>
+      </div>
+      <div class="footer-column">
+        <h4>Customer Service</h4>
+        <a href="#">Contact Us</a>
+        <a href="#">FAQs</a>
+        <a href="#">Find ATMs/Branches</a>
+        <a href="#">Accessibility</a>
+        <a href="#">Language Services</a>
+      </div>
+      <div class="footer-column">
+        <h4>About Wells Fargo</h4>
+        <a href="#">Careers</a>
+        <a href="#">Investor Relations</a>
+        <a href="#">Corporate Responsibility</a>
+        <a href="#">Newsroom</a>
+        <a href="#">Diversity & Inclusion</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>
+        © 2024 Wells Fargo Bank, N.A. All rights reserved. Member FDIC. Equal Housing Lender.<br>
+        NMLSR ID 399801
+      </p>
+      <div class="footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Security</a>
+        <a href="#">Terms & Conditions</a>
+        <a href="#">Ad Choices</a>
+        <a href="#">Site Map</a>
+      </div>
+    </div>
   </footer>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
 
   <script>
     const BASE_URL = 'https://backend15-nnmy.onrender.com';
+    let currentStep = 1;
+    let formData = {};
 
-    document.getElementById('signup-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const name = document.getElementById('name').value;
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-
-      try {
-        const res = await fetch(`${BASE_URL}/api/auth/register`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, password })
-        });
-
-        const data = await res.json();
-
-        if (res.ok) {
-          alert('Account created successfully! You can now sign in.');
-          window.location.href = 'index.html';
-        } else {
-          alert(data.error || 'Signup failed.');
-        }
-      } catch (err) {
-        console.error('Signup error:', err);
-        alert('Network error. Please try again.');
+    // Validation Functions
+    function validateName() {
+      const name = document.getElementById('fullName').value;
+      const status = document.getElementById('nameStatus');
+      const input = document.getElementById('fullName');
+      
+      if (name.length < 3) {
+        input.classList.add('error');
+        status.textContent = '❌';
+        return false;
+      } else {
+        input.classList.remove('error');
+        input.classList.add('success');
+        status.textContent = '✓';
+        return true;
       }
+    }
+
+    function validateEmail() {
+      const email = document.getElementById('email').value;
+      const status = document.getElementById('emailStatus');
+      const input = document.getElementById('email');
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      
+      if (!regex.test(email)) {
+        input.classList.add('error');
+        status.textContent = '❌';
+        return false;
+      } else {
+        input.classList.remove('error');
+        input.classList.add('success');
+        status.textContent = '✓';
+        return true;
+      }
+    }
+
+    function validatePhone() {
+      const phone = document.getElementById('phone').value;
+      const status = document.getElementById('phoneStatus');
+      const input = document.getElementById('phone');
+      const cleaned = phone.replace(/\D/g, '');
+      
+      if (cleaned.length !== 10) {
+        input.classList.add('error');
+        status.textContent = '❌';
+        return false;
+      } else {
+        input.classList.remove('error');
+        input.classList.add('success');
+        status.textContent = '✓';
+        // Format phone number
+        input.value = `(${cleaned.slice(0,3)}) ${cleaned.slice(3,6)}-${cleaned.slice(6)}`;
+        return true;
+      }
+    }
+
+    function checkPasswordStrength() {
+      const password = document.getElementById('password').value;
+      const fill = document.getElementById('strengthFill');
+      const text = document.getElementById('strengthText');
+      
+      // Check requirements
+      const hasLength = password.length >= 8;
+      const hasUpper = /[A-Z]/.test(password);
+      const hasLower = /[a-z]/.test(password);
+      const hasNumber = /[0-9]/.test(password);
+      const hasSpecial = /[!@#$%^&*]/.test(password);
+      
+      // Update requirement indicators
+      document.getElementById('req-length').classList.toggle('met', hasLength);
+      document.getElementById('req-upper').classList.toggle('met', hasUpper);
+      document.getElementById('req-lower').classList.toggle('met', hasLower);
+      document.getElementById('req-number').classList.toggle('met', hasNumber);
+      document.getElementById('req-special').classList.toggle('met', hasSpecial);
+      
+      // Calculate strength
+      let strength = 0;
+      if (hasLength) strength++;
+      if (hasUpper) strength++;
+      if (hasLower) strength++;
+      if (hasNumber) strength++;
+      if (hasSpecial) strength++;
+      
+      // Update meter
+      fill.className = 'strength-fill';
+      if (strength <= 2) {
+        fill.classList.add('strength-weak');
+        text.textContent = 'Weak';
+        text.style.color = '#ef4444';
+      } else if (strength === 3) {
+        fill.classList.add('strength-fair');
+        text.textContent = 'Fair';
+        text.style.color = '#d97706';
+      } else if (strength === 4) {
+        fill.classList.add('strength-good');
+        text.textContent = 'Good';
+        text.style.color = '#3b82f6';
+      } else {
+        fill.classList.add('strength-strong');
+        text.textContent = 'Strong';
+        text.style.color = '#15803d';
+      }
+      
+      checkMatch();
+      updateStep2Button();
+    }
+
+    function checkMatch() {
+      const password = document.getElementById('password').value;
+      const confirm = document.getElementById('confirmPassword').value;
+      const status = document.getElementById('matchStatus');
+      const input = document.getElementById('confirmPassword');
+      
+      if (!confirm) {
+        status.textContent = '';
+        return false;
+      }
+      
+      if (password === confirm) {
+        input.classList.remove('error');
+        input.classList.add('success');
+        status.textContent = '✓ Match';
+        status.style.color = '#15803d';
+        return true;
+      } else {
+        input.classList.add('error');
+        input.classList.remove('success');
+        status.textContent = '❌ No match';
+        status.style.color = '#ef4444';
+        return false;
+      }
+    }
+
+    function togglePassword() {
+      const password = document.getElementById('password');
+      const confirm = document.getElementById('confirmPassword');
+      const type = password.type === 'password' ? 'text' : 'password';
+      password.type = type;
+      confirm.type = type;
+    }
+
+    function updateStep2Button() {
+      const password = document.getElementById('password').value;
+      const confirm = document.getElementById('confirmPassword').value;
+      const btn = document.getElementById('step2Btn');
+      
+      const hasLength = password.length >= 8;
+      const hasUpper = /[A-Z]/.test(password);
+      const hasLower = /[a-z]/.test(password);
+      const hasNumber = /[0-9]/.test(password);
+      const hasSpecial = /[!@#$%^&*]/.test(password);
+      const matches = password === confirm && confirm !== '';
+      
+      btn.disabled = !(hasLength && hasUpper && hasLower && hasNumber && hasSpecial && matches);
+    }
+
+    function toggleSubmit() {
+      const terms = document.getElementById('terms').checked;
+      const code = document.getElementById('verifyCode').value.length === 6;
+      document.getElementById('submitBtn').disabled = !(terms && code);
+    }
+
+    // Navigation
+    function nextStep(step) {
+      // Validate current step
+      if (step === 2) {
+        if (!validateName() || !validateEmail() || !validatePhone()) {
+          showToast('Please fix errors before continuing');
+          return;
+        }
+        formData.name = document.getElementById('fullName').value;
+        formData.email = document.getElementById('email').value;
+        formData.phone = document.getElementById('phone').value;
+        document.getElementById('verifyEmail').textContent = formData.email;
+      }
+      
+      if (step === 3) {
+        formData.password = document.getElementById('password').value;
+        // Simulate sending verification code
+        setTimeout(() => {
+          showToast('📧 Verification code sent! (Use: 123456)');
+        }, 500);
+      }
+      
+      // Update UI
+      document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+      document.getElementById(`step${step}`).classList.add('active');
+      
+      // Update progress
+      document.querySelectorAll('.step').forEach((s, i) => {
+        s.classList.remove('active', 'completed');
+        if (i + 1 < step) s.classList.add('completed');
+        if (i + 1 === step) s.classList.add('active');
+      });
+      
+      document.getElementById('progressFill').style.width = `${(step - 1) * 33.33}%`;
+      currentStep = step;
+    }
+
+    function prevStep(step) {
+      nextStep(step);
+    }
+
+    function resendCode() {
+      showToast('📧 New code sent! (Use: 123456)');
+    }
+
+    // Form Submission
+    document.getElementById('enroll-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Creating Account...';
+      
+      // Simulate API call
+      setTimeout(async () => {
+        try {
+          // In real implementation:
+          // const res = await fetch(`${BASE_URL}/api/auth/register`, {
+          //   method: 'POST',
+          //   headers: { 'Content-Type': 'application/json' },
+          //   body: JSON.stringify(formData)
+          // });
+          
+          // Show success
+          document.getElementById('successEmail').textContent = formData.email;
+          nextStep(4);
+          document.getElementById('progressFill').style.width = '100%';
+          
+          // Store token
+          localStorage.setItem('userToken', 'demo-token-' + Date.now());
+          localStorage.setItem('userName', formData.name);
+          
+        } catch (err) {
+          showToast('Error creating account. Please try again.');
+          btn.disabled = false;
+          btn.textContent = '✓ Create Account';
+        }
+      }, 2000);
+    });
+
+    function goToDashboard() {
+      window.location.href = 'dashboard.html';
+    }
+
+    // Utilities
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // Verification code input formatting
+    document.getElementById('verifyCode').addEventListener('input', function(e) {
+      this.value = this.value.replace(/[^0-9]/g, '');
+      toggleSubmit();
     });
   </script>
 </body>
