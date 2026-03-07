@@ -902,7 +902,7 @@
         const data = await res.json();
         if (!res.ok) throw new Error(data.message);
 
-        allTransactions = data;
+        allTransactions = data.transactions;
         renderTransactions();
       } catch (err) {
         console.error('Transaction error:', err);
