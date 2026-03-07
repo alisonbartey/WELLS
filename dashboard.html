@@ -858,7 +858,7 @@
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.message);
-        updateGreeting(data.name);
+        updateGreeting(data.fullName);
       } catch (err) {
         console.error('User fetch error:', err);
         showToast('Session expired');
