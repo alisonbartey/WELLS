@@ -973,7 +973,7 @@
         const data = await res.json();
         
         if (res.ok) {
-          document.getElementById('displayName').textContent = data.fullName;
+          document.getElementById('displayName').textContent = data.full_name;
           document.getElementById('displayEmail').textContent = data.email;
           document.getElementById('nameInput').value = data.name;
           document.getElementById('emailInput').value = data.email;
