@@ -860,7 +860,7 @@
     const data = await res.json();
     if (!res.ok) throw new Error(data.message);
 
-    const name = data.fullName || data.email || "Customer";
+    const name = data.name || data.email || "Customer";
     updateGreeting(name.split(" ")[0]); // first name only
 
   } catch (err) {
