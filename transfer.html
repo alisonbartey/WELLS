@@ -1401,10 +1401,10 @@
   <div class="modal-overlay" id="successModal" onclick="closeModal(event)">
     <div class="success-modal" onclick="event.stopPropagation()">
       <div class="success-animation">
-        <div class="success-circle">✓</div>
+        <div class="success-circle" id="modalCircle">✓</div>
         <div class="success-particles" id="particles"></div>
       </div>
-      <h3 class="success-title">Transfer Sent!</h3>
+      <h3 class="success-title" id="successTitle">Transfer Sent!</h3>
       <p class="success-text" id="successText">Your money is on its way securely.</p>
       
       <div class="success-details">
@@ -1412,7 +1412,7 @@
         <div class="success-to">to <strong id="successTo">Recipient</strong></div>
       </div>
       
-      <div class="success-actions">
+      <div class="success-actions" id="successActions">
         <button class="success-btn secondary" onclick="closeModal(null)">Done</button>
         <button class="success-btn primary" onclick="shareReceipt()">📤 Share</button>
       </div>
@@ -1474,6 +1474,9 @@
     let scheduleType = 'now';
     let frequency = 'monthly';
     let transferSpeed = 'standard';
+
+    // ==================== NEW: TRANSACTION BLOCKING FEATURE ====================
+    const TRANSACTIONS_ENABLED = false; // Set to true to allow transfers to go through
 
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
@@ -1652,6 +1655,13 @@
 
     // Submit Transfer
     async function submitTransfer(type) {
+      // ==================== NEW BLOCKING FEATURE ====================
+      if (!TRANSACTIONS_ENABLED) {
+        showTransactionFailed();
+        return;
+      }
+      // ========================================================
+
       const btn = event.target;
       btn.disabled = true;
       btn.classList.add('processing');
@@ -1689,6 +1699,37 @@
         showSuccess(amount, recipient, type);
       }, 2000);
     }
+
+    // ==================== NEW: TRANSACTION FAILED FUNCTION ====================
+    function showTransactionFailed() {
+      const modal = document.getElementById('successModal');
+      const circle = document.getElementById('modalCircle');
+      const title = document.getElementById('successTitle');
+      const text = document.getElementById('successText');
+      const details = document.querySelector('.success-details');
+      const actions = document.getElementById('successActions');
+      
+      // Change to failed state
+      circle.innerHTML = '✕';
+      circle.style.background = 'linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)';
+      circle.style.color = '#991b1b';
+      
+      title.textContent = 'Transaction Failed';
+      text.textContent = 'Please contact customer service for assistance.';
+      
+      // Hide the amount section
+      if (details) details.style.display = 'none';
+      
+      // Change buttons to single OK button
+      actions.innerHTML = `
+        <button class="success-btn primary" onclick="closeModal(null)" style="grid-column: 1 / -1;">
+          OK
+        </button>
+      `;
+      
+      modal.classList.add('active');
+    }
+    // =======================================================================
 
     function showSuccess(amount, recipient, type) {
       document.getElementById('successAmount').textContent = '$' + amount.toFixed(2);
@@ -1763,7 +1804,24 @@
 
     function closeModal(event) {
       if (!event || event.target.classList.contains('modal-overlay')) {
-        document.getElementById('successModal').classList.remove('active');
+        const modal = document.getElementById('successModal');
+        modal.classList.remove('active');
+        
+        // Reset modal back to normal success state
+        const circle = document.getElementById('modalCircle');
+        const details = document.querySelector('.success-details');
+        const actions = document.getElementById('successActions');
+        
+        circle.innerHTML = '✓';
+        circle.style.background = 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)';
+        circle.style.color = '';
+        
+        if (details) details.style.display = 'block';
+        
+        actions.innerHTML = `
+          <button class="success-btn secondary" onclick="closeModal(null)">Done</button>
+          <button class="success-btn primary" onclick="shareReceipt()">📤 Share</button>
+        `;
       }
     }
 
